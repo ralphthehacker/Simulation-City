@@ -13,9 +13,17 @@ gnus-own [ambition];; You can set private variables by using the "-" operand. It
 
 to setup;; "to" represents the function called when the setup button is pressed
   clear-all;; Cleans the map of any agent or patch in the map
+  setup-gnus
+  setup-lions
   setup-turtles ;; Calls the setup-turtles function defined below. It doesnt mean that this is a subfunction of setup. It's just an arbitrarily defined function name
   setup-patches;; same thing
   reset-ticks;; Sets clock to zero
+end
+
+
+
+to setup-gnus
+  create-gnus
 end
 
 to setup-turtles ;; Create turtles is a built in function that creates agents and "number" represents the slider in the interface. 
@@ -232,7 +240,7 @@ energy-from-grass
 energy-from-grass
 0
 100
-20
+15
 1
 1
 NIL
