@@ -21,3 +21,21 @@ You can make basically anything with this and link several modules combined.
 
 
 ## Schedule and design: ##
+
+
+agents and ecstensions
+cells in a grid
+factory to generate map
+functions to move in the map
+overall heuristics
+
+
+
+
+
+
+
+
+
+
+
