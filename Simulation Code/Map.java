@@ -6,7 +6,7 @@
  */
 public class Map {
 	/* A map contains a 2-D array (in row major column, like a GBA game for simplicty) of all the map consituents */
-	MapConstituents[] layout;
+	MapConstituent[] layout;
 
 	/*TO DO: generate different aspects of the map randomely */
 	public Map() {

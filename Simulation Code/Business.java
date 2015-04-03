@@ -26,10 +26,11 @@ public class Business extends MapConstituent {
 		/* Call the calculateBasicNeedsScore() method to establish the rest of the map constituent attributes */
 		calculateBasicNeedsScore();
 
-		/* Generate a random work type from the options in the enum */
-		type = WorkType.values()[randInt(WorkType.values)];  //just some enum foolery
-
 		Random rand = new Random();
+
+		/* Generate a random work type from the options in the enum */
+		type = WorkType.values()[rand.nextInt(WorkType.values().length)];  //just some enum foolery
+
 
 		//remember that work quality is out of 10
 		workQuality = rand.nextInt(10) + 1;

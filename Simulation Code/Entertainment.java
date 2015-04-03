@@ -14,15 +14,16 @@ public class Entertainment extends MapConstituent {
 
 	/* Constructor in which the attributes are randomely generated */
 	public Entertainment(Position pos, Map map) {
+		Random rand = new Random();
 		/* Initialize age to zero and the position to the one passed in */
 		age = 0;
 		this.pos = pos;
 
 		/* Generate a random entertainment type from the options in the enum */
-		type = EntertainmentType.values()[randInt(EntertainmentType.values)];  //just some enum foolery
+		type = EntertainmentType.values()[rand.nextInt(EntertainmentType.values().length)];  //just some enum foolery
 
 		/* price is on a scale from 1 to 10 */
-		price = new Random().nextInt(10) + 1;
+		price = rand.nextInt(10) + 1;
 
 		/* An establishment initially has room for 100 people */
 		occupancy = 100;

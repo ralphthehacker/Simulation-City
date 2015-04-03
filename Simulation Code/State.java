@@ -18,7 +18,7 @@ public class State {
 		currState = TypesOfStates.sleep;
 	}
 
-	public updateState(Personality personality) {
+	public void updateState(Personality personality) {
 
 		// TO DO: write out state machine with transitions based on probability
 	}

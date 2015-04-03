@@ -30,7 +30,7 @@ public class Residence extends MapConstituent {
 		worth = calculateHouseWorth(map) * (quality / 5);
 
 		/* assume no money is put down */
-		morgageLeft = price;
+		morgageLeft = worth;
 
 		/* Call the calculateBasicNeedsScore() method to establish the rest of the map constituent attributes */
 		calculateBasicNeedsScore();
@@ -48,7 +48,7 @@ public class Residence extends MapConstituent {
 		foodScore = 0;
 
 		/* the shelter is proportional to the quality and price of the home */
-		shelterScore = quality * price ;
+		shelterScore = quality * worth ;
 	}
 
 	public int calculateHouseWorth(Map map) {
@@ -60,5 +60,6 @@ public class Residence extends MapConstituent {
 		if so, find it's value, and divide this by the distance from the business to the residence
 		complete this summation.  Add in an adjustement factor
 		*/
+		return 0;
 	}
 }

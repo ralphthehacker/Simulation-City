@@ -9,6 +9,6 @@ public class Coordinator {
 		//TO DO: instantiate all the necessary classes
 
 		/* make the overall map array.  Also have the entertainment places, businesses, and
-		houses in their own individual arrays for ease of tracking. 
+		houses in their own individual arrays for ease of tracking. */
 	}
 }

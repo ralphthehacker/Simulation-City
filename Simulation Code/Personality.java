@@ -7,7 +7,7 @@ import java.util.Random;
  *
  */
 
-public class Person {
+public class Personality {
 
 	/* As always, skill, ambition, and contentment are on a 1 to 10 scale */
 	private int skill, ambition, contentment;
@@ -16,7 +16,7 @@ public class Person {
 	Thus, the first type listed is the least preferrable, while the last is the most */
 	private WorkType[] preferredWork;
 
-	public Person() {
+	public Personality() {
 		Random rand = new Random();
 
 		/*randomely assign skill and ambition */
