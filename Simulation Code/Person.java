@@ -32,9 +32,11 @@ public class Person {
 		state = State.SLEEP;
 	}
 
-
-
 	//time elapse method
-	public void timeElapse() {}
-
+	public void timeElapse() {
+		if (state.equals(State.SLEEP)) {
+			shelterNeed = Math.min(shelterNeed + 1, 10);
+			foodNeed = Math.max(foodNeed - 1, 1);
+		}
+	}
 }

@@ -12,6 +12,7 @@ public class StateMachine {
 	public static State getNextState(State currentState, Person person) {
 
 		// TO DO: write out state machine with transitions based on probability
+		return State.SLEEP;
 	}
 
 }
