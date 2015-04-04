@@ -22,13 +22,14 @@ public class Person {
 	private Personality personality;
 	private boolean hasChild;
 	private int childAge;
-	private State currState;
+	private State state;
 
 	public Person() {
 		personality = new Personality();
 		hasChild = false;
 		childAge = 0;
 		money = 100;
+		state = State.SLEEP;
 	}
 
 
