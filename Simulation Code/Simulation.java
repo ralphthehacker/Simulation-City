@@ -1,9 +1,9 @@
 /**
- * This class represents the coordinator class, aka the main class
+ * This class represents the simulation class, aka the main class
  * @author lsmoore
  */
 
-public class Coordinator {
+public class Simulation {
 
 	public static void main(String[] args) {
 		//TO DO: instantiate all the necessary classes
