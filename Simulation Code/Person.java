@@ -14,6 +14,7 @@ public class Person {
 
 	/* These needs are on a 1 to 10 scale, with 10 being the most dire need */
 	private int foodNeed, shelterNeed, funNeed;
+	private int money;
 
 	/* People start out 18 */
 	private int age = 18;
@@ -27,7 +28,7 @@ public class Person {
 		personality = new Personality();
 		hasChild = false;
 		childAge = 0;
-		
+		money = 100;
 	}
 
 
