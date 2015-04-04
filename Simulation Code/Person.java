@@ -38,5 +38,7 @@ public class Person {
 			shelterNeed = Math.min(shelterNeed + 1, 10);
 			foodNeed = Math.max(foodNeed - 1, 1);
 		}
+		
+		state = StateMachine.getNextState(state, this);
 	}
 }
