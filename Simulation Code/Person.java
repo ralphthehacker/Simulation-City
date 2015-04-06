@@ -23,6 +23,7 @@ public class Person {
 	private boolean hasChild;
 	private int childAge;
 	private State state;
+    private Position currentPosition;
 
 	public Person() {
 		personality = new Personality();

@@ -7,7 +7,6 @@
 public class Map {
 	/* A map contains a 2-D array (in row major column, like a GBA game for simplicty) of all the map consituents */
 	public static final int STARTING_POPULATION = 100;
-	
 	private MapConstituent[] layout;
 	private Person[] population;
 
