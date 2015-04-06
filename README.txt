@@ -1,8 +1,3 @@
 After a long discussion, we decided to build our model from the ground up in Java.  We'd rather have the satisfaction of doing everything scratch than building on top of a robust piece of software.  
 
-For this week, we intend to create the basic classes and software hierarchy.  Lawrence will get the ball rolling by making an outline of the classes, and Ralph and Sal will flesh those classes out and add on with the necessary methods and supporting classes.  
-
-
-
-
-
+For this week, we intend to create the basic classes and software hierarchy.  Lawrence will get the ball rolling by making an outline of the classes, and Ralph and Sal will flesh those classes out and add on with the necessary methods and supporting classes.
