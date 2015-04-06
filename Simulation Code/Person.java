@@ -14,7 +14,7 @@ public class Person {
 
 	/* These needs are on a 1 to 10 scale, with 10 being the most dire need */
 	private int foodNeed, shelterNeed, funNeed;
-	private int money;
+    private int money;
 
 	/* People start out 18 */
 	private int age = 18;
@@ -23,9 +23,8 @@ public class Person {
 	private boolean hasChild;
 	private int childAge;
 	private State state;
-    private Position currentPosition;
 
-	public Person() {
+	public Person(Position initialPosition) {
 		personality = new Personality();
 		hasChild = false;
 		childAge = 0;
@@ -33,8 +32,10 @@ public class Person {
 		state = State.SLEEP;
 	}
 
+
 	// Update the person's needs and/or state
 	public void update(int time) {
+
 		if (state.equals(State.SLEEP)) {
 			shelterNeed = Math.min(shelterNeed + 1, 10);
 			foodNeed = Math.max(foodNeed - 1, 1);
@@ -42,4 +43,66 @@ public class Person {
 		
 		state = StateMachine.getNextState(state, this);
 	}
+
+    private int[] getNeeds()
+    //** Returns an array with a person's needs. //
+    {
+        int[] attributes ={foodNeed,shelterNeed,funNeed};
+        return attributes;
+    }
+    private void setNeeds(int[] needs)
+    //** Resets a person's needs to the desired attributes.//
+    {
+        foodNeed = needs[0];
+        shelterNeed = needs[1];
+        funNeed = needs[2];
+    }
+
+    //*
+    // Getters and setters
+    //
+    // *//
+
+    private Personality getPersonality() {
+        //** Pretty much self explanatory *//
+        return this.personality;
+    }
+
+
+
+    public void setPersonality(Personality personality) {
+        this.personality = personality;
+    }
+
+    public int getMoney() {
+        return money;
+    }
+
+    public void setMoney(int money) {
+        this.money = money;
+    }
+
+    public State getState() {
+        return state;
+    }
+
+    public void setState(State state) {
+        this.state = state;
+    }
+
+    public boolean isHasChild() {
+        return hasChild;
+    }
+
+    public void setHasChild(boolean hasChild) {
+        this.hasChild = hasChild;
+    }
+
+    public int getChildAge() {
+        return childAge;
+    }
+
+    public void setChildAge(int childAge) {
+        this.childAge = childAge;
+    }
 }
