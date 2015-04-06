@@ -5,18 +5,15 @@
 
 public class Simulation {
 
-	public static final int TIMESTEPS = 100;
-	public static final int
-
 	public static void main(String[] args) {
-		int totalTimesteps, startingTime;
+		int totalTimesteps = 100, time = 0;
 
 		// Parse command-line arguments
 		for (int i = 0; i < args.length; i += 2) {
 			if (args[i].equals("-ts")) {
 				totalTimesteps = Integer.parseInt(args[i+1]);
 			} else if (args[i].equals("-st")) {
-				startingTime = Integer.parseInt(args[i+1]);
+				time = Integer.parseInt(args[i+1]);
 			}
 		}
 
@@ -24,7 +21,7 @@ public class Simulation {
 
 		// Run the simulation
 		for (int i = 0; i < totalTimesteps; i++) {
-			map.update();
+			map.update(time);
 		}
 
 		/* make the overall map array.  Also have the entertainment places, businesses, and

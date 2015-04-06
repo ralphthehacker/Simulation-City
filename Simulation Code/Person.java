@@ -32,8 +32,8 @@ public class Person {
 		state = State.SLEEP;
 	}
 
-	//time elapse method
-	public void timeElapse() {
+	// Update the person's needs and/or state
+	public void update(int time) {
 		if (state.equals(State.SLEEP)) {
 			shelterNeed = Math.min(shelterNeed + 1, 10);
 			foodNeed = Math.max(foodNeed - 1, 1);

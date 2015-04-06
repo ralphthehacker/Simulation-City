@@ -20,10 +20,10 @@ public class Map {
 	}
 
 	/* Update the map with time */
-	public void update() {
+	public void update(int time) {
 		//To be done when everything is connected and time is implemented
 		for (Person p : population) {
-			p.timeElapse();
+			p.update(time);
 		}
 	}
 }
