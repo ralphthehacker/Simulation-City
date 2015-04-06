@@ -1,0 +1,10 @@
+CX 4230 Checkpoint C
+
+For this week, we set out to establish just the bare bones of the simulation.  First, we drafted a brief software architecture (written in vague UML fashion) to give us a rough sense of the organization.  A picture of this model, albeit not in 1080p, should be in the repository.  Then we began coding everything up based on this plan, starting with just the class attributes and constructors.  In a few cases, we went beyond that and begin to flesh the classes out.  At the current time, we have most of the classes set up, and we just need to get down to the heart of the simulation. Based on the work so far, we have a fairly clear idea of how to do everything.  This week was an exceptionally busy one for us all, so this milestone simply served as a launching pad for the next two weeks, during which we intend to do the brunt of the work.
+
+In terms of navigating the code, the class names and methods should be fairly self explanatory.  Nothing complex in the way of linking classes together has been done yet.  
+
+On a final note, as we briefly mentioned in the README, we decided to abandon netLogo in favor of buidling it ourselves in good ol' Java.  The rationale was simple: it would be more fun and engaging to create something from scratch than build on top of something already so robust.  Hopefully we can make enough progress to approach a robust model ourselves, and we certaintly intend to over the next few weeks.  
+
+Thanks,
+Team Lawrence/Sal/Ralph
