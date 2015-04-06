@@ -14,6 +14,7 @@ public class Person {
 
 	/* These needs are on a 1 to 10 scale, with 10 being the most dire need */
 	private int foodNeed, shelterNeed, funNeed;
+	private int money;
 
 	/* People start out 18 */
 	private int age = 18;
@@ -21,18 +22,23 @@ public class Person {
 	private Personality personality;
 	private boolean hasChild;
 	private int childAge;
-	private State currState;
+	private State state;
 
 	public Person() {
 		personality = new Personality();
 		hasChild = false;
 		childAge = 0;
-		
+		money = 100;
+		state = State.SLEEP;
 	}
 
-
-
 	//time elapse method
-	public void timeElapse() {}
-
+	public void timeElapse() {
+		if (state.equals(State.SLEEP)) {
+			shelterNeed = Math.min(shelterNeed + 1, 10);
+			foodNeed = Math.max(foodNeed - 1, 1);
+		}
+		
+		state = StateMachine.getNextState(state, this);
+	}
 }
