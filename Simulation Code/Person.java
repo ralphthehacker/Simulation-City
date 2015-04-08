@@ -12,6 +12,8 @@ import java.util.Random;
 
 public class Person {
 
+    public static int ADULT_AGE = 18;
+
 	/* These needs are on a 1 to 10 scale, with 10 being the most dire need */
 	private int foodNeed, shelterNeed, funNeed;
     private int money;
@@ -24,12 +26,29 @@ public class Person {
 	private int childAge;
 	private State state;
 
-	public Person() {
+    private Business workplace;
+    private Residence residence;
+
+    public static Person createRandomPerson(Residence residence, Business workplace) {
+        Random random = new Random();
+        Person p = new Person(residence, workplace);
+        p.hasChild = random.nextBoolean();
+        if (p.hasChild) {
+            p.childAge = (int) (ADULT_AGE*random.nextDouble());
+        }
+        p.money = (int) (300*random.nextDouble());
+
+        return p;
+    }
+
+	public Person(Residence residence, Business workplace) {
 		personality = new Personality();
 		hasChild = false;
 		childAge = 0;
 		money = 100;
 		state = State.SLEEP;
+        this.residence = residence;
+        this.workplace = workplace;
 	}
 
 
@@ -41,7 +60,8 @@ public class Person {
 			foodNeed = Math.max(foodNeed - 1, 1);
 		}
 		
-		state = StateMachine.getNextState(this);
+		// TODO: Uncomment next line when StateMachine works
+		//state = StateMachine.getNextState(this);
 	}
 
 

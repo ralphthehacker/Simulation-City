@@ -9,6 +9,8 @@ public class Simulation {
 		int totalTimesteps = 100, time = 0;
 
 		// Parse command-line arguments
+		// -ts timesteps
+		// -st starting time
 		for (int i = 0; i < args.length; i += 2) {
 			if (args[i].equals("-ts")) {
 				totalTimesteps = Integer.parseInt(args[i+1]);
