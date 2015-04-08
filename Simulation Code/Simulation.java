@@ -24,6 +24,9 @@ public class Simulation {
 		// Run the simulation
 		for (int i = 0; i < totalTimesteps; i++) {
 			map.update(time);
+			
+			// Increment time. If time is midnight, set time to 0
+			time = time == 23 ? 0 : time+1;
 		}
 
 		/* make the overall map array.  Also have the entertainment places, businesses, and

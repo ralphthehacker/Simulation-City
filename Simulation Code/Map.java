@@ -31,7 +31,14 @@ public class Map {
 
 	/* Update the map with time */
 	public void update(int time) {
-		//To be done when everything is connected and time is implemented
+		// At the beginning of every day, update businesses
+		if (time == 0) {
+			for (Business b : businesses) {
+				b.update(time);
+			}
+		}
+		
+		// Every hour, update persons
 		for (Person p : population) {
 			p.update(time);
 		}

@@ -61,4 +61,9 @@ public class Business extends MapConstituent {
 		funScore = 0;
 		foodScore = 0;
 	}
+	
+	// This method is called by simulator once every 24 timesteps
+	public void update(int time) {
+		
+	}
 }
