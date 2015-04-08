@@ -24,7 +24,7 @@ public class Person {
 	private int childAge;
 	private State state;
 
-	public Person(Position initialPosition) {
+	public Person() {
 		personality = new Personality();
 		hasChild = false;
 		childAge = 0;
@@ -41,16 +41,17 @@ public class Person {
 			foodNeed = Math.max(foodNeed - 1, 1);
 		}
 		
-		state = StateMachine.getNextState(state, this);
+		state = StateMachine.getNextState(this);
 	}
 
-    private int[] getNeeds()
+
+    public int[] getNeeds()
     //** Returns an array with a person's needs. //
     {
         int[] attributes ={foodNeed,shelterNeed,funNeed};
         return attributes;
     }
-    private void setNeeds(int[] needs)
+    public void setNeeds(int[] needs)
     //** Resets a person's needs to the desired attributes.//
     {
         foodNeed = needs[0];
@@ -63,7 +64,7 @@ public class Person {
     //
     // *//
 
-    private Personality getPersonality() {
+    public Personality getPersonality() {
         //** Pretty much self explanatory *//
         return this.personality;
     }
