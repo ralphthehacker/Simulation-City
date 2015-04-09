@@ -170,14 +170,35 @@ public class StateMachine {
     public static Double calculateProbabilityWithAttributes(State state, ArrayList<Integer> attributes)
 
     {
-        //TODO: Write down all the possible attribute weights for all status. Consider adding randomness
+        //TODO: Make sure it is necessary to normalize the initial vector
+
+        //Normalizing the original attributes
+        attributes = LinearAlgebraModule.normalizeVector(attributes);
+
+        //Get the importance coefficients for the current state
+        ArrayList<Double> coefficients = getCoefficientsForState(state);
+
+        //Get the final weighed probability
+        Double probabilityValue = LinearAlgebraModule.dotProductProbability(attributes,coefficients);
+
+        // And return this probability
+        return probabilityValue;
+
+    }
+
+    ///This helper function determines the importance coefficient for a determined state. It's worth mentioning that this vector is normalized.
+    public static ArrayList<Double> getCoefficientsForState(State state)
+
+    //TODO: Write down all the possible attribute weights for all status. Consider adding randomness
+
+    {
+        //Initializing the vector
+        ArrayList<Double> coefficients = new ArrayList<Double>();
 
 
-
-        //Check which state we currently have and then update the probability based on a person's personality and the time of day.
+        //Determine the coefficients in this conditional statement
         if(state == State.SLEEP)
         {
-
 
 
         } else if(state == State.BREAKFAST_HOME){
@@ -202,9 +223,15 @@ public class StateMachine {
             }
         }
 
-        return 0.0;
+        //Normalizing it
+        ArrayList<Double> normalizedCoefficients = LinearAlgebraModule.normalizeVector(coefficients);
+        return normalizedCoefficients;
+
 
     }
+
+
+
 
     //*
     // Gets the state with the highest probability in the dictionary
@@ -229,9 +256,11 @@ public class StateMachine {
         return bins[randomSample]; //Returns the selected state
     }
 
+
+
     class impossibleProbabilityException extends Exception
     {
-
+        //TODO: CONSIDER ADDING THIS LATER TO THE CALCULATE PROBABILITIES FUNCTION TO PREVENT BUGS
         public impossibleProbabilityException(String message,State curState,Person curPerson) {
             super("The probability of a variable has exceeded 100% for " + curPerson.toString() + " at state " + curState.toString());
         }
