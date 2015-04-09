@@ -9,7 +9,8 @@ import java.util.Random;
 
 public class Personality {
 
-	/* As always, skill, ambition, and contentment are on a 1 to 10 scale */
+
+    /* As always, skill, ambition, and contentment are on a 1 to 10 scale */
 	private int skill, ambition, contentment;
 
 	/* preferredWork is an array of types of work, where they are listed in increasing enthusasim.
@@ -28,5 +29,37 @@ public class Personality {
 
 		//TO DO: initialize the preferred work array
 	}
+
+    public int getSkill() {
+        return skill;
+    }
+
+    public void setSkill(int skill) {
+        this.skill = skill;
+    }
+
+    public int getAmbition() {
+        return ambition;
+    }
+
+    public void setAmbition(int ambition) {
+        this.ambition = ambition;
+    }
+
+    public int getContentment() {
+        return contentment;
+    }
+
+    public void setContentment(int contentment) {
+        this.contentment = contentment;
+    }
+
+    public WorkType[] getPreferredWork() {
+        return preferredWork;
+    }
+
+    public void setPreferredWork(WorkType[] preferredWork) {
+        this.preferredWork = preferredWork;
+    }
 
 }

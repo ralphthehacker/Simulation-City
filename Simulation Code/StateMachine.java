@@ -1,3 +1,5 @@
+import sun.jvm.hotspot.jdi.DoubleValueImpl;
+
 import java.awt.*;
 import java.util.*;
 import java.util.Map;
@@ -10,12 +12,13 @@ import java.util.Map;
  */
 
 public class StateMachine {
+    public static int time;
 
+    public static State getNextState(Person person, int time) {
+        person = person;
+        StateMachine.time = time;
 
-
-	public static State getNextState(Person person) {
-
-		// TODO: write out state machine with transitions based on probability
+        // TODO: write out state machine with transitions based on probability
         //TODO: comment this more throughly later
 
 		State currentState = person.getState();//Current person's state
@@ -109,14 +112,98 @@ public class StateMachine {
         }
         if (stateDictionary.size() == 1){
             return stateDictionary;} // If there's only one state transition, return that with 100% chance
-        HashMap<State,Double> newStateDictionary = new HashMap<State, Double>();
 
-        //**TODO: Make the math model after lunch.
-        // Possible bugs: Probability > 1, Stuck at the same state, going to bed at 12PM,
-        // sleeping/working 1 hour, Working forever,Inhuman schedule
-        //
-        // **//
+        HashMap<State,Double> newStateDictionary = new HashMap<State, Double>();// Creating the new map with updated probabilities
+
+
+        // We will now create a vector of attributes [N0,N2...N(N-1)] that corresponds to the values every single attribute
+        // After that, we will pass this vector of attributes to the calculateProbabilityWithAttributes function.
+        // What this function does is simple. It basically takes the dot product of our current attribute values
+        // with every state's coefficient vector. In a more simple language, this basically weighs our person's priorities
+        // and other extraneous factors to see how much it matters for an agent to stay on that state. For example, the time
+        // period and his ambition/ amount of money matter a lot to determine whether an agent will transition to go/leave work.
+        // At the same time, this agent may be craving for food or for entertainment, which is also a very important adversarial
+        // factor to determine the probability of transition
+
+
+        //Initial attributes considered.:
+        //A0 = The time of day in which a state transition is called. (int from 0-23)
+        //A1 = The amount of money a person currently has weighed by the personality factors
+        //A2 = A person's need for food
+        //A3 = A person's need for Shelter
+        //A4 = A person's need for entertainment
+        //A5 = A person's ambition. I know that this factor is already weighed in A1, but ambitious people work more expecting future gains
+        //      Think of A5 as that 1 hour of sleep that was replaced by a working hour simply because a person wants success
+
+
+
+        ArrayList<Integer> attributeVector = new ArrayList<Integer>();//Our vector
+        attributeVector.add(StateMachine.time); //A0
+        attributeVector.add(person.getMoneyImportance()); //A1
+        attributeVector.add(person.getNeeds()[0]); //A2
+        attributeVector.add(person.getNeeds()[1]); //A3
+        attributeVector.add(person.getNeeds()[2]); //A4
+        attributeVector.add(person.getPersonality().getAmbition()); //A5
+
+        Set<Map.Entry<State,Double>> frontier = stateDictionary.entrySet(); // The frontier of all <State,Probability> pairs
+
+        //For every (State,Probability) pair in the frontier of all possible states
+        for(Map.Entry<State,Double> pair : frontier) {
+
+            // Getting the current pair's state and probability
+            State state = pair.getKey();
+
+
+            //Now we pass the vector and determine the transition
+            Double newProbability = calculateProbabilityWithAttributes(state,attributeVector);
+
+            //And add it to the probability distribuition
+            newStateDictionary.put(state,newProbability);
+
+
+
+        }
         return newStateDictionary;
+    }
+
+
+    public static Double calculateProbabilityWithAttributes(State state, ArrayList<Integer> attributes)
+
+    {
+        //TODO: Write down all the possible attribute weights for all status. Consider adding randomness
+
+
+
+        //Check which state we currently have and then update the probability based on a person's personality and the time of day.
+        if(state == State.SLEEP)
+        {
+
+
+
+        } else if(state == State.BREAKFAST_HOME){
+
+
+        } else if(state == State.BREAKFAST_OUT){
+
+
+        } else if(state == State.WORK){
+
+
+
+        } else if(state == State.DINNER_OUT){
+
+
+        } else if(state == State.SHOP){
+
+
+
+        } else {
+            if (state == State.DINNER_HOME) {
+            }
+        }
+
+        return 0.0;
+
     }
 
     //*
@@ -141,6 +228,7 @@ public class StateMachine {
         int randomSample = new Random().nextInt(100); //Random selection
         return bins[randomSample]; //Returns the selected state
     }
+
     class impossibleProbabilityException extends Exception
     {
 

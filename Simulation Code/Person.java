@@ -13,7 +13,6 @@ import java.util.Random;
 public class Person {
 
     public static int ADULT_AGE = 18;
-
 	/* These needs are on a 1 to 10 scale, with 10 being the most dire need */
 	private int foodNeed, shelterNeed, funNeed;
     private int money;
@@ -61,9 +60,20 @@ public class Person {
 		}
 		
 		// TODO: Uncomment next line when StateMachine works
-		//state = StateMachine.getNextState(this);
+		//state = StateMachine.getNextState(this,time);
 	}
 
+
+    public int getMoneyImportance()
+    {
+        //Just setting up and wondering how to make this accurate yet with enough variability between individuals
+        int money = this.getMoney();
+        int ambition = personality.getAmbition();
+        int skill = personality.getSkill();
+        int contentment = personality.getContentment();
+        //TODO: DETERMINE HOW PERSONALITY PARAMETERS RELATE TO THE MONEY IMPORTANCE. ERASE THIS WHEN DONE
+        return 1;
+    }
 
     public int[] getNeeds()
     //** Returns an array with a person's needs. //
