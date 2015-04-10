@@ -114,7 +114,7 @@ public class Person {
 		}
 		
 		// TODO: Uncomment next line when StateMachine works
-		//state = StateMachine.getNextState(this,time);
+		this.state = StateMachine.getNextState(this,time);
 	}
 
 

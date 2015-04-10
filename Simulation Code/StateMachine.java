@@ -1,3 +1,6 @@
+import com.sun.org.apache.bcel.internal.generic.NEW;
+
+import javax.sound.sampled.Line;
 import java.awt.*;
 import java.util.*;
 import java.util.Map;
@@ -13,15 +16,15 @@ public class StateMachine {
     public static int time;
 
     public static State getNextState(Person person, int time) {
-        person = person;
+        //Getting current time
         StateMachine.time = time;
 
-        // TODO: write out state machine with transitions based on probability
-        //TODO: comment this more throughly later
+        //Current person's state
+		State currentState = person.getState();
 
-		State currentState = person.getState();//Current person's state
-        HashMap<State,Double> possibleStates = determinePossibleStates(currentState,person);// Determines the probabilities of the next states
-        State nextState = getBestState(possibleStates);// Picks a state
+        // Determines the probabilities of the next states
+        HashMap<State,Double> possibleStates = determinePossibleStates(currentState,person);
+        State nextState = getBestState(possibleStates);// Picks a state based on the probability distribution
         return nextState;
 
 
@@ -95,6 +98,7 @@ public class StateMachine {
         //It is guaranteed that the dictionary will have at least one transition
 
         HashMap<State,Double> finalMap = calculateTransitionFunction(stateDictionary,person);
+        int a = 0 ;
         return finalMap;
 
     }
@@ -127,7 +131,7 @@ public class StateMachine {
         //Initial attributes considered.:
         //A0 = The time of day in which a state transition is called. (int from 0-23)
         //A1 = The amount of money a person currently has weighed by the personality factors
-        //A2 = A person's need for food
+        //A2 = A person's need for food.
         //A3 = A person's need for Shelter
         //A4 = A person's need for entertainment
         //A5 = A person's ambition. I know that this factor is already weighed in A1, but ambitious people work more expecting future gains
@@ -158,9 +162,19 @@ public class StateMachine {
             //And add it to the probability distribuition
             newStateDictionary.put(state,newProbability);
 
-
-
         }
+        //TODO comment this line if you want to see the probabilities
+//        System.out.println("Before");
+//        System.out.println(newStateDictionary);
+
+
+        //This line removes irrelevant values from the distribution
+        newStateDictionary = weighProbabilities(newStateDictionary);
+        System.out.println("The distribution is");
+        System.out.println(newStateDictionary);
+
+//        System.out.println("After");
+//        System.out.println(newStateDictionary);
         return newStateDictionary;
     }
 
@@ -170,13 +184,12 @@ public class StateMachine {
     {
         //TODO: Make sure it is necessary to normalize the initial vector
 
-        //Normalizing the original attributes
-        attributes = LinearAlgebraModule.normalizeVector(attributes);
-
+        //No need to normalize the initial attributes.They are all in the same scale from 1 to 10
         //Get the importance coefficients for the current state
         ArrayList<Double> coefficients = getCoefficientsForState(state);
 
         //Get the final weighed probability
+
         Double probabilityValue = LinearAlgebraModule.dotProductProbability(attributes,coefficients);
 
         // And return this probability
@@ -186,6 +199,8 @@ public class StateMachine {
     }
 
     ///This helper function determines the importance coefficient for a determined state. It's worth mentioning that this vector is normalized.
+    // The coefficient can either be negative or positive. Positive coefficients facilitate a transition while negative coefficients make a
+    // transition less likely
     public static ArrayList<Double> getCoefficientsForState(State state)
 
     //TODO: Write down all the possible attribute weights for all status. Consider adding randomness
@@ -195,81 +210,155 @@ public class StateMachine {
         ArrayList<Double> coefficients = new ArrayList<Double>();
 
         Double theta0,theta1,theta2,theta3,theta4,theta5;
+        //t0 = How much the time of day in which a state transition is called affects this state transition.
+        //t1 = How much a person's money importance affects this state transition
+        //t2 = How much a person's need for food affects this state transition
+        //t3 = How much a person's need for shelter affects this state transition
+        //t4 = How much a person's need for entertainment affects this state transition
+        //t5 = How much extra ambition matters in this state. Will always be either 0.1,0 or -0.1
 
-        //Determine the coefficients in this conditional statement
+
+        //Determine the coefficients in this conditional statement.They are all going to be also on a scale of 0 to 10
         if(state.equals(State.SLEEP))
         {
             //Using time to determine the weight.
-            if (StateMachine.time >=23 && StateMachine.time <= 7){theta0 = 0.9;}else{theta0 = 0.1;}
-            theta1 = 0.1;
-            theta2 = 0.1;
-            theta3 = 0.1;
-            theta4 = 0.1;
-            theta5 = 0.1;
+            if (StateMachine.time >=23 || StateMachine.time <= 7)
+                {theta0 = 25.0;}
+            else
+                {theta0 = 0.1;}  // Very unlikely for someone to sleep outside of the range
+            theta1 = -2.5;// If a person needs more money she will sleep less
+            theta2 = 0.5;//Not exactly important
+            theta3 = 5.0;// The more you need shelter, the more likely you are to fall asleep
+            theta4 = 0.5;//Not exactly important
+            theta5 = -1.0;// More ambition, less sleep
 
 
         } else if(state.equals(State.BREAKFAST_HOME)){
-            theta0 = 0.1;
-            theta1 = 0.1;
-            theta2 = 0.1;
-            theta3 = 0.1;
-            theta4 = 0.1;
-            theta5 = 0.1;
+            if (StateMachine.time >=6 && StateMachine.time <= 10)
+                {theta0 = 4.0;}
+            else
+                {theta0 = 0.1;}
+            theta1 = 1.0;//If a person values money, she'll want to stay home instead of going out and waste money
+            theta2 = 9.0;// Most important factor
+            theta3 = 0.0;// Neutral
+            theta4 = -2.0;// Eating out is a novelty
+            theta5 = 1.0;// Ambitious individuals don't want to waste money
 
         } else if(state.equals(State.BREAKFAST_OUT)){
-            theta0 = 0.1;
-            theta1 = 0.1;
-            theta2 = 0.1;
-            theta3 = 0.1;
-            theta4 = 0.1;
-            theta5 = 0.1;
+            if (StateMachine.time >=6 && StateMachine.time <= 10)
+                {theta0 = 4.0;}
+            else
+                {theta0 = 0.1;}
+            theta1 = -1.0;//If a person values money, she'll want to stay home instead of going out and waste money
+            theta2 = 9.0;// Most important factor
+            theta3 = 0.0;// Neutral
+            theta4 = 2.0;// Eating out is a novelty
+            theta5 = -1.0;// Ambitious individuals don't want to waste money
 
         } else if(state.equals(State.WORK)){
-            if (StateMachine.time >=9 && StateMachine.time <= 5){theta0 = 0.9;}else{theta0 = 0.1;}            theta1 = 0.1;
-            theta2 = 0.1;
-            theta3 = 0.1;
-            theta4 = 0.1;
-            theta5 = 0.1;
+            if (StateMachine.time >=9 && StateMachine.time <= 17)
+                {theta0 = 25.0;}
+            else
+                {theta0 = 2.0;}
+            theta1 = 4.0; // If you like to make money you will want to stay and work
+            theta2 = -2.0; // More hunger = Less work
+            theta3 = 0.0; // Doesn't matter
+            theta4 = -2.0; // More bored = less work
+            theta5 = 1.0; // More ambition = more work
 
         } else if(state.equals(State.DINNER_OUT)){
-            theta0 = 0.1;
-            theta1 = 0.1;
-            theta2 = 0.1;
-            theta3 = 0.1;
-            theta4 = 0.1;
-            theta5 = 0.1;
-
+            if (StateMachine.time >=17 && StateMachine.time <= 22)
+                {theta0 = 7.0;}
+            else
+                {theta0 = 0.1;}
+            theta1 = -1.0;//If a person values money, she'll want to stay home instead of going out and waste money
+            theta2 = 6.0;// Most important factor
+            theta3 = 0.0;// Neutral
+            theta4 = 2.0;// Eating out is a novelty
+            theta5 = -1.0;// Ambitious individuals don't want to waste money
         } else if(state.equals(State.SHOP)){
-
-            theta0 = 0.1;
-            theta1 = 0.1;
-            theta2 = 0.1;
-            theta3 = 0.1;
-            theta4 = 0.1;
-            theta5 = 0.1;
+            //A person can sho anytime after work
+            if ((StateMachine.time >=17 && StateMachine.time <= 22))
+                {theta0 = 7.0;}
+            else
+                {theta0 = 0.1;}
+            theta1 = -3.0;// Don't want to spend money
+            theta2 = 0.0;
+            theta3 = 0.0;
+            theta4 = 5.0;// The more entertainment you need the more likely you are to shop
+            theta5 = -1.0;// Most ambitious people delay reward even though some ambitious people unwind a lot.
 
         } else {
             if (state.equals(State.DINNER_HOME)) {
-                theta0 = 0.1;
-                theta1 = 0.1;
-                theta2 = 0.1;
-                theta3 = 0.1;
-                theta4 = 0.1;
-                theta5 = 0.1;
+                if (StateMachine.time >=5 && StateMachine.time <= 9){theta0 = 7.0;}else{theta0 = 0.1;}
+                theta1 = 1.0;//If a person values money, she'll want to stay home instead of going out and waste money
+                theta2 = 6.0;// Most important factor
+                theta3 = 0.0;// Neutral
+                theta4 = -2.0;// Eating out is a novelty
+                theta5 = 1.0;// Ambitious individuals don't want to waste money
             } else
             {
                 throw new InputMismatchException("An unknown state is being passed to the state machine");
             }
         }
+        //Adding the parameters to the vector
+        coefficients.add(theta0);
+        coefficients.add(theta1);
+        coefficients.add(theta2);
+        coefficients.add(theta3);
+        coefficients.add(theta4);
+        coefficients.add(theta5);
 
-        //Normalizing it
-        ArrayList<Double> normalizedCoefficients = LinearAlgebraModule.normalizeVector(coefficients);
-        return normalizedCoefficients;
+        return coefficients;
 
 
     }
 
+    //Eliminates impossible transitions(negative values) and weighs the probability of the other alternatives
+    public static HashMap<State,Double> weighProbabilities(HashMap<State,Double> map)
+    {
+        //Preprocessing: Checking if any attribute is negative;
 
+        ArrayList<State> negativeVals = new ArrayList<State>();
+        for(State key : map.keySet())
+        {
+            State test = key;
+            //If the probability is negative, remove that state from the map. It is irrelevant
+            if(map.get(test) < 0.0)
+            {
+
+                negativeVals.add(key);//Adding the key to the set of negative valued keys
+                // Just removing directly results in a concurrency error
+            }
+        }
+        for(State key : negativeVals)//Removing the irrelevant values
+        {
+            map.remove(key);
+        }
+
+
+
+
+        HashMap<State,Double> newMap = new HashMap<State, Double>();
+        ArrayList<Double> vals = new ArrayList<Double>();
+        ArrayList<State> states = new ArrayList<State>();
+
+
+        //Getting current values
+        for(Map.Entry<State,Double> entry : map.entrySet())
+        {
+            states.add(entry.getKey());
+            vals.add(entry.getValue());
+        }
+
+        //Weighing those values
+        LinearAlgebraModule.normalizeVector(vals);
+        for(int i = 0; i < vals.size() ; i++)
+        {
+            newMap.put(states.get(i), vals.get(i));
+        }
+        return newMap;
+    }
 
 
     //*
@@ -281,20 +370,22 @@ public class StateMachine {
         // times 100. Then, the bins are randomly sampled to determine the result
 
         int pointer = 0; // this will allow us to know where to start filling the bins
-        State[] bins = new State[100];
-        for(Map.Entry<State,Double> entry : stateDictionary.entrySet()) {
-            int number_of_bins = entry.getValue().intValue()*100; //Getting the number of bins to be filled
-            for(int j = pointer; j < number_of_bins;j++) //Adding a state to the bins
+        ArrayList<State> bins = new ArrayList<State>();
+        for(Map.Entry<State,Double> entry : stateDictionary.entrySet())
+        {
+            State curState = entry.getKey();
+            int number_of_bins = entry.getValue().intValue(); //Getting the number of bins to be filled
+            for(int j = pointer; j < number_of_bins + pointer;j++) //Adding a state to the bins
             {
-                bins[j] = entry.getKey(); // Placing the current state in the bin
+                bins.add(curState); // Placing the current state in the bin
             }
             pointer += number_of_bins; // Moving the pointer forward
 
         }
-        int randomSample = new Random().nextInt(100); //Random selection
-        return bins[randomSample]; //Returns the selected state
-    }
 
+        int randomSample = new Random().nextInt(bins.size()); //Random selection
+        return bins.get(randomSample); //Returns the selected state
+    }
 
 
     class impossibleProbabilityException extends Exception

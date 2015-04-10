@@ -1,3 +1,5 @@
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.InputMismatchException;
 
@@ -9,9 +11,20 @@ public class LinearAlgebraModule {
 
     //Takes in a vector and normalizes it so that the sum of all elements in a vector adds up to one
     // Where to use: Making the probabilities add to one, making attribute information relevant
-    public static ArrayList normalizeVector(ArrayList vector)
+    public static ArrayList normalizeVector(ArrayList<Double> vector)
     {
         //TODO: Finish this function. Consider putting all of those vector functions in an object later so that all classes can use it
+        Double magnitude = getVectorMagnitude(vector);
+        ArrayList<Double> newList =  new ArrayList<Double>();
+        for (Double d :vector)
+        {
+            Double newVal = d / magnitude;
+            if(newVal <= 0.0)
+            {
+                newVal = 0.0; // If the weighing results in a negative value than that state will never be selected
+            }
+            newList.add(LinearAlgebraModule.round(newVal, 4));// Rounding to two decimal places
+        }
         return new ArrayList();
 
     }
@@ -35,8 +48,6 @@ public class LinearAlgebraModule {
             resultVector.add(attributes.get(i) * coefficients.get(i));
         }
 
-        //Normalizing the result so we get a number from 0 to 1 as a result
-        normalizeVector(resultVector);
 
         //Calculating the same value and storing it in dotValue
         for (int i = 0; i < attributes.size(); i++)
@@ -45,6 +56,25 @@ public class LinearAlgebraModule {
         }
 
         return dotValue;
+    }
+
+    // This calculates the magnitude of a vector
+    public static Double getVectorMagnitude(ArrayList<Double> vector)
+    {
+        Double sum = 0.0;
+        for(Double n : vector)
+        {
+            sum = Math.abs(n) + sum;
+        }
+        return sum;
+
+    }
+    public static double round(double value, int places) {
+        if (places < 0) throw new IllegalArgumentException();
+
+        BigDecimal bd = new BigDecimal(value);
+        bd = bd.setScale(places, RoundingMode.HALF_UP);
+        return bd.doubleValue();
     }
 
 
