@@ -190,13 +190,15 @@ public class Business extends MapConstituent {
 		/* calculate companies productivity */
 		double productivityOfTheDay = calculateProductivity();
 
+		/* If we already have a full month of growth history, reset */
+		if (productHistory.size() == 30) 
+			productHistory.removeRange(0, 29);
 
-		if 
+		/* Add today's productivity score to the tally */
+		productHistory.add(productivityOfTheDay);
+		
+		/* Decide on what to do: grow, contract, or do nothing */
 		decideFuture();
-		//Decide future dictates whether to expand, contract, or do neither
-		decideFuture();
-
-
 	}
 
 
