@@ -1,5 +1,3 @@
-import sun.jvm.hotspot.jdi.DoubleValueImpl;
-
 import java.awt.*;
 import java.util.*;
 import java.util.Map;
@@ -7,7 +5,7 @@ import java.util.Map;
 /**
  * This class represents the different states of an individual in the map
  * A personality consists of a person's skill, ambition, contentment, and preferred type of work
- * @author Lawrence Moore
+ * @author Ralph Blanes
  *
  */
 
@@ -166,7 +164,7 @@ public class StateMachine {
         return newStateDictionary;
     }
 
-
+    //This function is used to
     public static Double calculateProbabilityWithAttributes(State state, ArrayList<Integer> attributes)
 
     {
@@ -184,6 +182,7 @@ public class StateMachine {
         // And return this probability
         return probabilityValue;
 
+
     }
 
     ///This helper function determines the importance coefficient for a determined state. It's worth mentioning that this vector is normalized.
@@ -195,31 +194,71 @@ public class StateMachine {
         //Initializing the vector
         ArrayList<Double> coefficients = new ArrayList<Double>();
 
+        Double theta0,theta1,theta2,theta3,theta4,theta5;
 
         //Determine the coefficients in this conditional statement
-        if(state == State.SLEEP)
+        if(state.equals(State.SLEEP))
         {
+            //Using time to determine the weight.
+            if (StateMachine.time >=23 && StateMachine.time <= 7){theta0 = 0.9;}else{theta0 = 0.1;}
+            theta1 = 0.1;
+            theta2 = 0.1;
+            theta3 = 0.1;
+            theta4 = 0.1;
+            theta5 = 0.1;
 
 
-        } else if(state == State.BREAKFAST_HOME){
+        } else if(state.equals(State.BREAKFAST_HOME)){
+            theta0 = 0.1;
+            theta1 = 0.1;
+            theta2 = 0.1;
+            theta3 = 0.1;
+            theta4 = 0.1;
+            theta5 = 0.1;
 
+        } else if(state.equals(State.BREAKFAST_OUT)){
+            theta0 = 0.1;
+            theta1 = 0.1;
+            theta2 = 0.1;
+            theta3 = 0.1;
+            theta4 = 0.1;
+            theta5 = 0.1;
 
-        } else if(state == State.BREAKFAST_OUT){
+        } else if(state.equals(State.WORK)){
+            if (StateMachine.time >=9 && StateMachine.time <= 5){theta0 = 0.9;}else{theta0 = 0.1;}            theta1 = 0.1;
+            theta2 = 0.1;
+            theta3 = 0.1;
+            theta4 = 0.1;
+            theta5 = 0.1;
 
+        } else if(state.equals(State.DINNER_OUT)){
+            theta0 = 0.1;
+            theta1 = 0.1;
+            theta2 = 0.1;
+            theta3 = 0.1;
+            theta4 = 0.1;
+            theta5 = 0.1;
 
-        } else if(state == State.WORK){
+        } else if(state.equals(State.SHOP)){
 
-
-
-        } else if(state == State.DINNER_OUT){
-
-
-        } else if(state == State.SHOP){
-
-
+            theta0 = 0.1;
+            theta1 = 0.1;
+            theta2 = 0.1;
+            theta3 = 0.1;
+            theta4 = 0.1;
+            theta5 = 0.1;
 
         } else {
-            if (state == State.DINNER_HOME) {
+            if (state.equals(State.DINNER_HOME)) {
+                theta0 = 0.1;
+                theta1 = 0.1;
+                theta2 = 0.1;
+                theta3 = 0.1;
+                theta4 = 0.1;
+                theta5 = 0.1;
+            } else
+            {
+                throw new InputMismatchException("An unknown state is being passed to the state machine");
             }
         }
 
