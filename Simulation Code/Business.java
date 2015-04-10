@@ -21,7 +21,7 @@ public class Business extends MapConstituent {
 	/* Keeps track of the change of productivity in the last 30 days.
 	If the net productivity meets a threshold growth, then the company growth */
 
-	private ArrayList<Integer> productHistory = new ArrayList<Integer>();
+	private ArrayList<Double> productHistory = new ArrayList<Double>();
 
 	/* Keeps track of the last five growth decision by the company 
 	If the company has declined five times in a row, it goes out of business */
@@ -174,16 +174,6 @@ public class Business extends MapConstituent {
 
 	}
 
-	/*TO DO: model how business expand/contract over time based on conceptual model */
-	private void expand() {
-		//increase networth, hire more people, increase pay
-	}
-	private void contract() {
-		//do the opposite of above -q
-	}
-
-	/*TO DO: implement fire, hire, and other business success related functions */
-	private void decideFuture() {}
 
 	/* This method is called by simulator once every 24 timesteps */
 	public void update() {
@@ -192,13 +182,25 @@ public class Business extends MapConstituent {
 
 		/* If we already have a full month of growth history, reset */
 		if (productHistory.size() == 30) 
-			productHistory.removeRange(0, 29);
+			while(productHistory.size() !=0 ) {
+				productHistory.remove(0);
+			}
 
 		/* Add today's productivity score to the tally */
 		productHistory.add(productivityOfTheDay);
 		
 		/* Decide on what to do: grow, contract, or do nothing */
 		decideFuture();
+	}
+
+	/*TO DO: implement fire, hire, and other business success related functions */
+	private void decideFuture() {}
+
+	private void expand() {
+		//increase networth, hire more people, increase pay
+	}
+	private void contract() {
+		//do the opposite of above -q
 	}
 
 
