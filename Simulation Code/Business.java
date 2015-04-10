@@ -58,26 +58,15 @@ public class Business extends MapConstituent {
 
 	/* Checks if the company wants to hire the person based on skills and personality */
 	public boolean willHire(Person person) {
-		/* get personality */
-		Personality personality = person.getPersonality();
-
-		/* get skill and ambition */
-		int skill = personality.getSkill();
-		int ambition = personality.getAmbition();
-		WorkType preferredWork = personality.getPreferredWork();
-
-		/* Calculates enthusiasm multiplyer: .5 if not prefered area of work, 1 otherwise */
-		double enthusiasm = preferredWork == type ? 1 : 0.5;  
+		
+		/* Calculate employee score */
+		double applicantScore = calculateEmployeeScore(person);
 
 		/* Calculate threshold score to hire.  On a scale of .2 to 10 */
 		double threshold = workQuality * (pay / MAX_PAY);
 
-		/* Calculate applicant score. On a scale of 1 to 10. 
-		The divide by 10 scales the value appropiately*/
-		double applicantScore = (skill * ambition * enthusiasm) / (10);
 
 		/* Check if applicant is elligible to work here */
-
 		if (applicantScore >= threshold) {
 			return true;
 		}
@@ -93,16 +82,29 @@ public class Business extends MapConstituent {
 		/* get skill and ambition */
 		int skill = personality.getSkill();
 		int ambition = personality.getAmbition();
+		int contentment = personality.getContentment();
 		WorkType preferredWork = personality.getPreferredWork();
+
+		/* Get basic needs scores */
+		int[] needs = person.getNeeds();
+
+		/* Gauge how much in need the person is */
+		double wellBeing = 0
+		for (int i = 0; i < needs.length; i++) {
+			wellBeing += needs[i]; 
+		}
+
+		/* Scale the score */
+		wellBeing /= 30;
 
 		/* Calculates enthusiasm multiplyer: .5 if not prefered area of work, 1 otherwise */
 		double enthusiasm = preferredWork == type ? 1 : 0.5; 
 
-		/* Calculate applicant score. On a scale of 1 to 10. 
+		/* Calculate applicant score. On a scale of 0 to 10. 
 		The divide by 10 scales the value appropiately*/
-		double applicantScore = (skill * ambition * enthusiasm) / (10);
+		double employeeScore = (skill * ambition * enthusiasm * contentment * wellBeing) / (100);
 
-		//Still in progress
+		return employeeScore;
 	}
 
 	/* Hires a person */
