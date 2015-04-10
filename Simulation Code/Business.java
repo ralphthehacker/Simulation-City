@@ -17,7 +17,10 @@ public class Business extends MapConstituent {
 	/* Keeps track of the change of productivity in the last 30 days.
 	If the net productivity meets a threshold growth, then the company growth */
 
-	private int[] growthHistory = new int[30];
+	private ArrayList<Integer> productHistory = new ArrayList<Integer>();
+
+	/* Keeps track of the last five growth decision by the company 
+	If the company has declined five times in a row, it goes out of business */
 
 	/* List of current employees */
 	private ArrayList<Person> employeeList = new ArrayList<Person>();
@@ -54,6 +57,16 @@ public class Business extends MapConstituent {
 		/* Start with zero employees (The person class is in charge of getting people hired */
 		numEmployees = 0;
 
+		/* Initialize networth. It should always be equal to total pay to employees times 5 */
+		networh = (pay * numEmployees * 5)
+	}
+
+	/* Calculates what the basic needs scores are for a business */
+	public void calculateBasicNeedsScore() {
+		/* Businesses don't provide shelter, fun, or food (they do pay you though) */
+		shelterScore = 0;
+		funScore = 0;
+		foodScore = 0;
 	}
 
 	/* Checks if the company wants to hire the person based on skills and personality */
@@ -110,6 +123,7 @@ public class Business extends MapConstituent {
 	/* Hires a person */
 	public void hire(Person person) {
 		employeeList.add(person);
+		numEmployees++;
 	}
 
 	/* Fires the worst employee */
@@ -130,6 +144,12 @@ public class Business extends MapConstituent {
 			}
 		}
 		employeeList.remove(minPerson);
+		minPerson.getFired();
+	}
+
+	/* Calculates the overall productivity of the company by tallying the productivity of the employees */
+	private double calculateProductivity() {
+
 	}
 
 	/*TO DO: model how business expand/contract over time based on conceptual model */
@@ -140,20 +160,21 @@ public class Business extends MapConstituent {
 	private void calculateProductivity() {}
 	private void decideFuture() {}
 
-	public void calculateBasicNeedsScore() {
-		/* Businesses don't provide shelter, fun, or food (they do pay you though) */
-		shelterScore = 0;
-		funScore = 0;
-		foodScore = 0;
-	}
-
 	/* This method is called by simulator once every 24 timesteps */
 	public void timeElapse(int time) {
+		//TO DO: finish mofo
+		double productivityOfTheDay = calculateProductivity();
+		//edit growthBackLog
+		//Decide future dictates whether to expand, contract, or do neither
 		decideFuture();
-		//something like growthHistory.add(calculateProductivity());
+
 
 	}
 
+
+
+
+	/* Getters */
 	public void getPayRate() {
 		return pay;
 	}
