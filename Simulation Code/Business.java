@@ -101,8 +101,8 @@ public class Business extends MapConstituent {
 		double enthusiasm = preferredWork == type ? 1 : 0.5; 
 
 		/* Calculate applicant score. On a scale of 0 to 10. 
-		The divide by 10 scales the value appropiately*/
-		double employeeScore = (skill * ambition * enthusiasm * contentment * wellBeing) / (100);
+		The divide by 100 scales the value appropiately*/
+		double employeeScore = (skill * ambition * contentment * enthusiasm * wellBeing) / (100);
 
 		return employeeScore;
 	}
@@ -112,13 +112,31 @@ public class Business extends MapConstituent {
 		employeeList.add(person);
 	}
 
+	/* Fires the worst employee */
+	private void fire() {
+		/* Set up variables to parse array of employees for the worst performing individual */
+		Person minPerson = null;
+		double minScore = 100;
+		double score = 0;
+
+		for (Person employee: employeeList) {
+			/* Find the persons score */
+			score = calculateEmployeeScore(employee);
+
+			/* If the calculated scores is less than all others, update worst employee */
+			if (score < minScore) {
+				minPerson = employee;
+				minScore = score;
+			}
+		}
+		employeeList.remove(minPerson);
+	}
 
 	/*TO DO: model how business expand/contract over time based on conceptual model */
 	private void expand() {}
 	private void contract() {}
 
 	/*TO DO: implement fire, hire, and other business success related functions */
-	private void fire() {}
 	private void calculateProductivity() {}
 	private void decideFuture() {}
 
