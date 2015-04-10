@@ -13,9 +13,8 @@ public class Personality {
     /* As always, skill, ambition, and contentment are on a 1 to 10 scale */
 	private int skill, ambition, contentment;
 
-	/* preferredWork is an array of types of work, where they are listed in increasing enthusasim.
-	Thus, the first type listed is the least preferrable, while the last is the most */
-	private WorkType[] preferredWork;
+	/* preferred work is the area of work the individual is most inclined toward */
+	private WorkType preferredWork;
 
 	public Personality() {
 		Random rand = new Random();
@@ -27,7 +26,8 @@ public class Personality {
 		/* Start contentment at 5 by default */
 		contentment = 5;
 
-		//TO DO: initialize the preferred work array
+		/* Randomely generates the preferred area of work */
+        type = WorkType.values()[rand.nextInt(WorkType.values().length)];  //just some enum foolery
 	}
 
     public int getSkill() {
