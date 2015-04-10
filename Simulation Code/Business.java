@@ -60,7 +60,7 @@ public class Business extends MapConstituent {
 		numEmployees = 0;
 
 		/* Initialize networth. It should always be equal to total pay to employees times 5 */
-		networth = (pay * numEmployees * 5);
+		netWorth = (pay * numEmployees * 5);
 	}
 
 	/* Calculates what the basic needs scores are for a business */
@@ -164,7 +164,6 @@ public class Business extends MapConstituent {
 	}
 
 	/*TO DO: implement fire, hire, and other business success related functions */
-	private void calculateProductivity() {}
 	private void decideFuture() {}
 
 	/* This method is called by simulator once every 24 timesteps */
@@ -180,7 +179,7 @@ public class Business extends MapConstituent {
 
 
 	/* Getters */
-	public void getPayRate() {
+	public int getPayRate() {
 		return pay;
 	}
 }

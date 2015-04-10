@@ -15,7 +15,5 @@ public abstract class MapConstituent {
 
 	/* These are the methods that elements of the will have */
 	public abstract void update();
-	public abstract void expand();
-	public abstract void contract();
 	public abstract void calculateBasicNeedsScore();
 }

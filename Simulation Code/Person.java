@@ -61,7 +61,7 @@ public class Person {
         /* find place of work by iterating through all workplaces */
         int i = 0;
         boolean workFound = false;
-        while (i < workplace.length; i++ && !workFound) {
+        while (i < workplace.length && !workFound) {
             Business work = workplace[i];
 
             /* check if the work will hire the person */
@@ -94,7 +94,7 @@ public class Person {
 			foodNeed = Math.max(foodNeed - 6, 0);
 			funNeed = Math.max(funNeed - 7, 0);
 		} else if (state.equals(State.WORK)) {
-			money += workplace.getPayRate(personality);
+			money += workplace.getPayRate();
 		} else if (state.equals(State.DINNER_OUT)) {
 			money -= 10;
 			foodNeed = Math.max(foodNeed - 6,  0);
@@ -188,7 +188,7 @@ public class Person {
         this.childAge = childAge;
     }
 
-    public void hasWork() {
+    public boolean hasWork() {
         return workplace != null;
     }
 
