@@ -28,26 +28,51 @@ public class Person {
     private Business workplace;
     private Residence residence;
 
-    public static Person createRandomPerson(Residence residence, Business workplace) {
+    /* Creates a random person by calling the constructor below */
+
+    public static Person createRandomPerson(Residence residence, Business[] workplace) {
         Random random = new Random();
         Person p = new Person(residence, workplace);
-        p.hasChild = random.nextBoolean();
-        if (p.hasChild) {
-            p.childAge = (int) (ADULT_AGE*random.nextDouble());
-        }
-        p.money = (int) (300*random.nextDouble());
+
+        /* No need to make babies just yet */
+
+        // p.hasChild = random.nextBoolean();
+
+        //  /* Set the child age to 1 */
+        // if (p.hasChild) {
+        //     p.childAge = 1;
+        // }
+
+        p.money = (int) (300 * random.nextDouble());
 
         return p;
     }
 
-	public Person(Residence residence, Business workplace) {
+    /* The constructor of the Person class; takes in residence and workplac */
+
+	public Person(Residence residence, Business[] workplace) {
 		personality = new Personality();
 		hasChild = false;
 		childAge = 0;
 		money = 100;
 		state = State.SLEEP;
         this.residence = residence;
-        this.workplace = workplace;
+
+        /* find place of work by iterating through all workplaces */
+        int i = 0;
+        boolean workFound = false;
+        while (i < workplace.length; i++ && !workFound) {
+            Business work = workplace[i];
+
+            /* check if the work will hire the person */
+            if (work.willHire(this)) {
+                work.hire(this);
+                this.workplace = work;
+                workFound = true;
+            }
+            i++;
+        }
+
 	}
 
 
@@ -75,24 +100,22 @@ public class Person {
         return 1;
     }
 
+    /* Returns an array with a person's needs. */
     public int[] getNeeds()
-    //** Returns an array with a person's needs. //
     {
         int[] attributes ={foodNeed,shelterNeed,funNeed};
         return attributes;
     }
+
+    /* Resets a person's needs to the desired attributes. */
     public void setNeeds(int[] needs)
-    //** Resets a person's needs to the desired attributes.//
     {
         foodNeed = needs[0];
         shelterNeed = needs[1];
         funNeed = needs[2];
     }
 
-    //*
-    // Getters and setters
-    //
-    // *//
+    /* Getters and setters */
 
     public Personality getPersonality() {
         //** Pretty much self explanatory *//
@@ -135,5 +158,9 @@ public class Person {
 
     public void setChildAge(int childAge) {
         this.childAge = childAge;
+    }
+
+    public void hasWork() {
+        return workplace != null;
     }
 }

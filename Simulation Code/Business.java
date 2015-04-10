@@ -1,4 +1,5 @@
 import java.util.Random;
+import java.util.ArrayList;
 
 /**
  * This class represents a business
@@ -13,9 +14,20 @@ public class Business extends MapConstituent {
 	Something not to forget is how this influences the contentment of a person*/
 	private int workQuality, pay, numEmployees, netWorth;
 
+	/* Keeps track of the change of productivity in the last 30 days.
+	If the net productivity meets a threshold growth, then the company growth */
+
+	private int[] growthHistory = new int[30];
+
+	/* List of current employees */
+	private ArrayList<Person> employeeList = new ArrayList<Person>();
+
 
 	/* the variable to store the type of company, which is a public enum */
 	private WorkType type;
+
+	/* minimum initial pay and maximum initial pay */
+	private final int MIN_PAY = 20, MAX_PAY = 270;
 
 	/* Constructor in which the attributes are randomely generated */
 	public Business(Position pos) {
@@ -32,38 +44,97 @@ public class Business extends MapConstituent {
 		type = WorkType.values()[rand.nextInt(WorkType.values().length)];  //just some enum foolery
 
 
-		//remember that work quality is out of 10
+		/* remember that work quality is out of 10 */
 		workQuality = rand.nextInt(10) + 1;
 
 		/* pay is based on work quality and type of job. 
-		   Pay ranges from 20 to 270 thousand.  5 and 20 below are just adjustement factos*/
-		pay = workQuality * rand.nextInt(5) * type.ordinal() + 20;
+		   Pay ranges from 20 to 270 thousand.  5 is just an adjustement factor*/
+		pay = workQuality * rand.nextInt(5) * type.ordinal() + MIN_PAY;
 
-		/* Start with anywhere from 100 to 200 employees */
-		numEmployees = rand.nextInt(100) + 100;
+		/* Start with zero employees (The person class is in charge of getting people hired */
+		numEmployees = 0;
 
 	}
 
+	/* Checks if the company wants to hire the person based on skills and personality */
+	public boolean willHire(Person person) {
+		/* get personality */
+		Personality personality = person.getPersonality();
+
+		/* get skill and ambition */
+		int skill = personality.getSkill();
+		int ambition = personality.getAmbition();
+		WorkType preferredWork = personality.getPreferredWork();
+
+		/* Calculates enthusiasm multiplyer: .5 if not prefered area of work, 1 otherwise */
+		double enthusiasm = preferredWork == type ? 1 : 0.5;  
+
+		/* Calculate threshold score to hire.  On a scale of .2 to 10 */
+		double threshold = workQuality * (pay / MAX_PAY);
+
+		/* Calculate applicant score. On a scale of 1 to 10. 
+		The divide by 10 scales the value appropiately*/
+		double applicantScore = (skill * ambition * enthusiasm) / (10);
+
+		/* Check if applicant is elligible to work here */
+
+		if (applicantScore >= threshold) {
+			return true;
+		}
+		return false;
+	}
+
+	/* Calculates the performance of the employee */
+	private double calculateEmployeeScore(Person person) {
+
+		/* get personality */
+		Personality personality = person.getPersonality();
+
+		/* get skill and ambition */
+		int skill = personality.getSkill();
+		int ambition = personality.getAmbition();
+		WorkType preferredWork = personality.getPreferredWork();
+
+		/* Calculates enthusiasm multiplyer: .5 if not prefered area of work, 1 otherwise */
+		double enthusiasm = preferredWork == type ? 1 : 0.5; 
+
+		/* Calculate applicant score. On a scale of 1 to 10. 
+		The divide by 10 scales the value appropiately*/
+		double applicantScore = (skill * ambition * enthusiasm) / (10);
+
+		//Still in progress
+	}
+
+	/* Hires a person */
+	public void hire(Person person) {
+		employeeList.add(person);
+	}
+
+
 	/*TO DO: model how business expand/contract over time based on conceptual model */
-	public void timeElapse() {}
-	public void expand() {}
-	public void contract() {}
+	private void expand() {}
+	private void contract() {}
 
 	/*TO DO: implement fire, hire, and other business success related functions */
-	public void hire() {}
-	public void fire() {}
-	public void calculateProductivity() {}
-	public void decideFuture() {}
+	private void fire() {}
+	private void calculateProductivity() {}
+	private void decideFuture() {}
 
 	public void calculateBasicNeedsScore() {
-		/* Businesses don't provide shelter, fun, or food (they do pay you though)*/
+		/* Businesses don't provide shelter, fun, or food (they do pay you though) */
 		shelterScore = 0;
 		funScore = 0;
 		foodScore = 0;
 	}
 	
-	// This method is called by simulator once every 24 timesteps
-	public void update(int time) {
-		
+	/* This method is called by simulator once every 24 timesteps */
+	public void timeElapse(int time) {
+		decideFuture();
+		//something like growthHistory.add(calculateProductivity());
+
+	}
+
+	public void getPayRate() {
+		return pay;
 	}
 }
