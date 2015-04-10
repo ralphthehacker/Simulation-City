@@ -124,12 +124,14 @@ public class Business extends MapConstituent {
 
 	/* Hires a person */
 	public void hire(Person person) {
+		// TODO: Make sure that hiring is a function of employee (net worth), skills, and ambition
 		employeeList.add(person);
 		numEmployees++;
 	}
 
 	/* Fires the worst employee */
 	private void fire() {
+		//TODO: Make sure that firing is a function of skills, ambition, contentment, and needs.
 		/* Set up variables to parse array of employees for the worst performing individual */
 		Person minPerson = null;
 		double minScore = 100;
@@ -174,6 +176,7 @@ public class Business extends MapConstituent {
 		//Decide future dictates whether to expand, contract, or do neither
 		decideFuture();
 
+		//TODO: See if any employee should be fired.
 
 	}
 

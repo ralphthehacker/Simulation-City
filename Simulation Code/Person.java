@@ -61,6 +61,9 @@ public class Person {
 
         /* find place of work by iterating through all workplaces */
         int i = 0;
+
+        // TODO: Do not always take the first company in the list that hires.
+        // This gives a disadvantage to companies that come later in the list.
         boolean workFound = false;
         while (i < workplace.length && !workFound) {
             Business work = workplace[i];
@@ -95,6 +98,7 @@ public class Person {
 			foodNeed = Math.max(foodNeed - 6, 0);
 			funNeed = Math.max(funNeed - 7, 0);
 		} else if (state.equals(State.WORK)) {
+            // TODO: If person is unemployed, look for job
 			money += workplace.getPayRate();
 		} else if (state.equals(State.DINNER_OUT)) {
 			money -= 10;
