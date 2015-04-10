@@ -6,6 +6,7 @@ import java.util.Random;
  * An agent also a personality
  * If an agent has a child, they must spend more on food each month until the child turns 18
  * An agent has a current state, which essentially means where the agent is at any give ninstance
+ * Don't forget to take into account when a person is unemployed 
  * @author Lawrence Moore
  *
  */
