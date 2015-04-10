@@ -62,6 +62,15 @@ public class Business extends MapConstituent {
 		foodScore = 0;
 	}
 	
+	public int getPayRate(Personality personality) {
+		int payRate = pay;
+		
+		// Use geometric mean of skill and ambition to determine bonus pay
+		payRate += Math.sqrt(personality.getSkill()*personality.getAmbition());
+		
+		return payRate;
+	}
+	
 	// This method is called by simulator once every 24 timesteps
 	public void update(int time) {
 		
