@@ -60,7 +60,7 @@ public class Business extends MapConstituent {
 		numEmployees = 0;
 
 		/* Initialize networth. It should always be equal to total pay to employees times 5 */
-		networh = (pay * numEmployees * 5)
+		networth = (pay * numEmployees * 5);
 	}
 
 	/* Calculates what the basic needs scores are for a business */
@@ -104,7 +104,7 @@ public class Business extends MapConstituent {
 		int[] needs = person.getNeeds();
 
 		/* Gauge how much in need the person is */
-		double wellBeing = 0
+		double wellBeing = 0;
 		for (int i = 0; i < needs.length; i++) {
 			wellBeing += needs[i]; 
 		}
@@ -151,6 +151,7 @@ public class Business extends MapConstituent {
 
 	/* Calculates the overall productivity of the company by tallying the productivity of the employees */
 	private double calculateProductivity() {
+		return 0.0;
 
 	}
 
@@ -167,7 +168,7 @@ public class Business extends MapConstituent {
 	private void decideFuture() {}
 
 	/* This method is called by simulator once every 24 timesteps */
-	public void timeElapse(int time) {
+	public void update() {
 		//TO DO: finish mofo
 		double productivityOfTheDay = calculateProductivity();
 		//edit growthHistory

@@ -14,7 +14,7 @@ public abstract class MapConstituent {
 	int foodScore, shelterScore, funScore;
 
 	/* These are the methods that elements of the will have */
-	public abstract void timeElapse();
+	public abstract void update();
 	public abstract void expand();
 	public abstract void contract();
 	public abstract void calculateBasicNeedsScore();
