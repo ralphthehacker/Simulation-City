@@ -38,7 +38,7 @@ public class Residence extends MapConstituent {
 	}
 
 	/*TO DO: model how residences expand/contract over time based on conceptual model */
-	public void update() {}
+	public boolean update() {}
 	public void expand() {}
 	public void contract() {}
 

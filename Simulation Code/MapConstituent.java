@@ -14,6 +14,6 @@ public abstract class MapConstituent {
 	int foodScore, shelterScore, funScore;
 
 	/* These are the methods that elements of the will have */
-	public abstract void update();
+	public abstract boolean update();
 	public abstract void calculateBasicNeedsScore();
 }

@@ -31,7 +31,7 @@ public class GroceryStore extends MapConstituent {
 	}
 
 	/*TO DO: model how groceries expand/contract over time based on conceptual model */
-	public void timeElapse() {}
+	public boolean update {}
 	public void expand() {}
 	public void contract() {}
 

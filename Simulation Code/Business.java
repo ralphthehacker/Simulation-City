@@ -23,8 +23,9 @@ public class Business extends MapConstituent {
 
 	private ArrayList<Double> productHistory = new ArrayList<Double>();
 
-	/* Keeps track of the last five growth decision by the company 
-	If the company has declined five times in a row, it goes out of business */
+	/* Keeps track of the last five company decision by the company 
+	If the company has declined five times in a row, it goes out of business. 
+	+1 will be used to denote expansion.  0 denotes no action.  -1 denotes contraction*/
 	private ArrayDeque<Integer> growthHistory = new ArrayDeque<Integer>();
 
 	/* List of current employees */
@@ -153,8 +154,11 @@ public class Business extends MapConstituent {
 				minScore = score;
 			}
 		}
-		employeeList.remove(minPerson);
-		minPerson.getFired();
+
+		if (minPerson == null) {
+			employeeList.remove(minPerson);
+			minPerson.getFired();
+		}
 	}
 
 	/* Calculates the overall productivity of the company by tallying the productivity of the employees */
@@ -166,7 +170,7 @@ public class Business extends MapConstituent {
 			score += calculateEmployeeScore(person);
 		}
 
-		/* return the overall average productivity score per employee */
+		/* return the overall average productivity score per employee, on a scal from 0 to 10 */
 		if (employeeList.size() > 0) {
 			return score / employeeList.size();
 		}
@@ -175,32 +179,140 @@ public class Business extends MapConstituent {
 	}
 
 
-	/* This method is called by simulator once every 24 timesteps */
-	public void update() {
-		/* calculate companies productivity */
+	/* This method is called by simulator once every 24 timesteps.
+	The function return true if the business does not shut down.
+	Otherwise, it returns true */
+	public boolean update() {
+		/* calculate the average productivity of the employee*/
+		boolean companyStatus = true;
 		double productivityOfTheDay = calculateProductivity();
 
-		/* If we already have a full month of growth history, reset */
+		/* If we already have a full month of growth history */
 		if (productHistory.size() == 30) 
+			/* Decide on what to do: grow, contract, or do nothing. 
+			DecideFuture returns false if the company shuts down; true otherwise*/
+			companyStatus = decideFuture();
+
+			/* Now we reset the list */
 			while(productHistory.size() !=0 ) {
 				productHistory.remove(0);
 			}
 
 		/* Add today's productivity score to the tally */
 		productHistory.add(productivityOfTheDay);
-		
-		/* Decide on what to do: grow, contract, or do nothing */
-		decideFuture();
+		return companyStatus;
 	}
 
-	/*TO DO: implement fire, hire, and other business success related functions */
-	private void decideFuture() {}
+	/*Decides the what action to take: expand, contract, or do nothing.
+	If the company contracts for five straight months, it shuts down. 
+	In this case, the function return false.  
+	Otherwise, it returns true */
+	private boolean decideFuture() {
+		/* First, calculate the net productivity of the company */
+		double netProductivity = 0;
+		for (Double product: productHistory) {
+			netProductivity += product;
+		}
 
-	private void expand() {
-		//increase networth, hire more people, increase pay
+		int averageScoreToGrow = 8;
+		int averageScoretoContract = 5;
+
+		/*As a reminder, the growth history represents the actions taken in the last five months
+		+1 means it expanded.  -1 means it contracted.  0 means it did nothing */
+
+		growthHistory.removeLast();
+		/* See if the company can expand */
+		if ( (netProductivity/ 30) >= averageScoreToGrow) {
+			expand();
+			growthHistory.addFirst(+1);
+		} else if ( (netProductivity/ 30) < averageScoretoContract) {
+			contract();
+			growthHistory.addFirst(-1);
+		} else {
+			growthHistory.addFirst(0);
+		}
+
+		/* Gauge the overall trend of company by looking at the growthHistory.
+		If the company has contracted all five previous months, it must shut down */
+		int[] lastFiveMonths = new int[5];
+
+		//First we unroll the queue
+		for (int i = 0; i < 5; i++) {
+			lastFiveMonths[i] = growthHistory.removeLast();
+		}
+
+		/* Check if all were contractions (sorry for the ugly code) */
+		if ((lastFiveMonths[1] + lastFiveMonths[2] + lastFiveMonths[3] + lastFiveMonths[4] + lastFiveMonths[5]) == -5) {
+			shutdownCompany();
+			return false;
+		} else {
+			/* Restore growth history */
+			for (int i = 0; i < 5; i++) {
+				growthHistory.addFirst(lastFiveMonths[i]);
+			}
+			return true;
+		}
+
 	}
+
+	/* When a business expands, it increases its networth, hires more people, increases pay */
+	private void expand() 
+	{
+		/* Generic constants */
+		double netWorthMultiplyer = 1.1;
+		int employeeNumIncrease = 10;
+		double payIncrease = 1.05;
+		double chanceOfQualityIncrease = .2;
+
+		/* Edits value properly */
+		netWorth *= netWorthMultiplyer;
+		maxNumEmployees += employeeNumIncrease;
+		pay *= payIncrease;
+
+		/* Increase the quality according to some chance */
+		Random rand = new Random();
+		if ( rand.nextDouble() <= chanceOfQualityIncrease) {
+			workQuality++;
+		}
+	}
+
+	/* When a business contracts, it decreases its networth, fires more people, decreases pay */
 	private void contract() {
-		//do the opposite of above -q
+		/* Generic constants */
+		double netWorthMultiplyer = 1.1;
+		int employeeNumDecrease = 10;
+		double payIncrease = 1.05;
+		double chanceOfQualityIncrease = .2;
+
+		/* Edits value properly */
+		netWorth /= netWorthMultiplyer;
+		maxNumEmployees -= employeeNumDecrease;
+		pay /= payIncrease;
+
+		/* Fire these people */
+		int i = 0;
+		while (i < employeeNumDecrease && employeeList.size() > 0) {
+			fire();
+		}
+
+		/* Increase the quality according to some chance */
+		Random rand = new Random();
+		if (rand.nextDouble() <= chanceOfQualityIncrease) {
+			workQuality--;
+		}
+	}
+
+
+	/* In case the employee leaves the company */
+	public void leaveCompany(Person person) {
+		employeeList.remove(person);
+	}
+
+	/* Close down the company, which means fire everyone */
+	public void shutdownCompany() {
+		while (employeeList.size() > 0) {
+			fire();
+		}
 	}
 
 
