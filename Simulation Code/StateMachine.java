@@ -1,5 +1,3 @@
-import sun.jvm.hotspot.jdi.DoubleValueImpl;
-
 import java.awt.*;
 import java.util.*;
 import java.util.Map;
