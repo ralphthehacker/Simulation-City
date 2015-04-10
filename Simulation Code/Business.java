@@ -1,5 +1,6 @@
 import java.util.Random;
 import java.util.ArrayList;
+import java.util.ArrayDeque;
 
 /**
  * This class represents a business
@@ -21,6 +22,7 @@ public class Business extends MapConstituent {
 
 	/* Keeps track of the last five growth decision by the company 
 	If the company has declined five times in a row, it goes out of business */
+	private ArrayDeque<Integer> growthHistory = new ArrayDeque<Integer>();
 
 	/* List of current employees */
 	private ArrayList<Person> employeeList = new ArrayList<Person>();
@@ -153,8 +155,12 @@ public class Business extends MapConstituent {
 	}
 
 	/*TO DO: model how business expand/contract over time based on conceptual model */
-	private void expand() {}
-	private void contract() {}
+	private void expand() {
+		//increase networth, hire more people, increase pay
+	}
+	private void contract() {
+		//do the opposite of above -q
+	}
 
 	/*TO DO: implement fire, hire, and other business success related functions */
 	private void calculateProductivity() {}
@@ -164,14 +170,12 @@ public class Business extends MapConstituent {
 	public void timeElapse(int time) {
 		//TO DO: finish mofo
 		double productivityOfTheDay = calculateProductivity();
-		//edit growthBackLog
+		//edit growthHistory
 		//Decide future dictates whether to expand, contract, or do neither
 		decideFuture();
 
 
 	}
-
-
 
 
 	/* Getters */
