@@ -13,7 +13,10 @@ public class Business extends MapConstituent {
 	/* In addition to the variables of MapConstituent, we have several additional attributes that describe a business.
 	Note that work quality is on a 1-10 scale, and pay and networth are in the thousands
 	Something not to forget is how this influences the contentment of a person*/
-	private int workQuality, pay, numEmployees, netWorth;
+	private int workQuality, pay, netWorth;
+
+	/* maximum number of employees the company can currently have */
+	private int maxNumEmployees;
 
 	/* Keeps track of the change of productivity in the last 30 days.
 	If the net productivity meets a threshold growth, then the company growth */
@@ -56,11 +59,11 @@ public class Business extends MapConstituent {
 		   Pay ranges from 20 to 270 thousand.  5 is just an adjustement factor*/
 		pay = workQuality * rand.nextInt(5) * type.ordinal() + MIN_PAY;
 
-		/* Start with zero employees (The person class is in charge of getting people hired */
-		numEmployees = 0;
+		/* Start with a max of 100 employees */
+		maxNumEmployees = 100;
 
 		/* Initialize networth. It should always be equal to total pay to employees times 5 */
-		netWorth = (pay * numEmployees * 5);
+		netWorth = (pay * maxNumEmployees * 5);
 	}
 
 	/* Calculates what the basic needs scores are for a business */
@@ -82,10 +85,10 @@ public class Business extends MapConstituent {
 
 
 		/* Check if applicant is elligible to work here */
-		if (applicantScore >= threshold) {
-			return true;
+		if (applicantScore < threshold || employeeList.size() < maxNumEmployees) {
+			return false;
 		}
-		return false;
+		return true;
 	}
 
 	/* Calculates the performance of the employee */
@@ -122,16 +125,19 @@ public class Business extends MapConstituent {
 		return employeeScore;
 	}
 
-	/* Hires a person */
-	public void hire(Person person) {
-		// TODO: Make sure that hiring is a function of employee (net worth), skills, and ambition
-		employeeList.add(person);
-		numEmployees++;
+	/* Hires a person 
+	Returns a boolean true if there's space */
+	public boolean hire(Person person) {
+		/* Check if there's room */
+		if (employeeList.size() < maxNumEmployees) {
+			employeeList.add(person);
+			return true;
+		}
+		return false;
 	}
 
 	/* Fires the worst employee */
 	private void fire() {
-		//TODO: Make sure that firing is a function of skills, ambition, contentment, and needs.
 		/* Set up variables to parse array of employees for the worst performing individual */
 		Person minPerson = null;
 		double minScore = 100;
@@ -153,7 +159,18 @@ public class Business extends MapConstituent {
 
 	/* Calculates the overall productivity of the company by tallying the productivity of the employees */
 	private double calculateProductivity() {
-		return 0.0;
+		double score = 0;
+
+		/* find the productivity score of each employee (which is on a scal from 0 to 10) */
+		for (Person person: employeeList) {
+			score += calculateEmployeeScore(person);
+		}
+
+		/* return the overall average productivity score per employee */
+		if (employeeList.size() > 0) {
+			return score / employeeList.size();
+		}
+		return 0;
 
 	}
 
@@ -170,13 +187,15 @@ public class Business extends MapConstituent {
 
 	/* This method is called by simulator once every 24 timesteps */
 	public void update() {
-		//TO DO: finish mofo
+		/* calculate companies productivity */
 		double productivityOfTheDay = calculateProductivity();
-		//edit growthHistory
+
+
+		if 
+		decideFuture();
 		//Decide future dictates whether to expand, contract, or do neither
 		decideFuture();
 
-		//TODO: See if any employee should be fired.
 
 	}
 
@@ -184,5 +203,9 @@ public class Business extends MapConstituent {
 	/* Getters */
 	public int getPayRate() {
 		return pay;
+	}
+
+	public WorkType getWorkType() {
+		return type;
 	}
 }
