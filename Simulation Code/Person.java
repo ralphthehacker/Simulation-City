@@ -78,10 +78,34 @@ public class Person {
 
 	// Update the person's needs and/or state
 	public void update(int time) {
-
+		
+		// Slowly decrement all needs.
+		foodNeed = Math.min(foodNeed + 1, 10);
+		shelterNeed = Math.min(shelterNeed + 1, 10);
+		funNeed = Math.min(funNeed + 1, 10);
+		
 		if (state.equals(State.SLEEP)) {
-			shelterNeed = Math.min(shelterNeed + 1, 10);
-			foodNeed = Math.max(foodNeed - 1, 1);
+			shelterNeed = Math.max(shelterNeed - 2, 0);
+		} else if (state.equals(State.BREAKFAST_HOME)) {
+			// TODO: Decrease food supply home
+			foodNeed = Math.max(foodNeed - 6, 0);
+		} else if (state.equals(State.BREAKFAST_OUT)) {
+			money -= 10;
+			foodNeed = Math.max(foodNeed - 6, 0);
+			funNeed = Math.max(funNeed - 7, 0);
+		} else if (state.equals(State.WORK)) {
+			money += workplace.getPayRate(personality);
+		} else if (state.equals(State.DINNER_OUT)) {
+			money -= 10;
+			foodNeed = Math.max(foodNeed - 6,  0);
+			funNeed = Math.max(funNeed - 7, 0);
+		} else if (state.equals(State.SHOP)) {
+			// TODO: Increase food supply at home instead
+			money -= 5;
+			foodNeed = Math.max(foodNeed - 6, 0);
+		} else if(state.equals(State.DINNER_HOME)) {
+			// TODO: Decrease food supply at home
+			foodNeed = Math.max(foodNeed - 6, 0);
 		}
 		
 		// TODO: Uncomment next line when StateMachine works

@@ -27,7 +27,7 @@ public class Personality {
 		contentment = 5;
 
 		/* Randomely generates the preferred area of work */
-        type = WorkType.values()[rand.nextInt(WorkType.values().length)];  //just some enum foolery
+		preferredWork = WorkType.values()[rand.nextInt(WorkType.values().length)];  //just some enum foolery
 	}
 
     public int getSkill() {
@@ -54,11 +54,11 @@ public class Personality {
         this.contentment = contentment;
     }
 
-    public WorkType[] getPreferredWork() {
+    public WorkType getPreferredWork() {
         return preferredWork;
     }
 
-    public void setPreferredWork(WorkType[] preferredWork) {
+    public void setPreferredWork(WorkType preferredWork) {
         this.preferredWork = preferredWork;
     }
 
