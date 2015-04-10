@@ -28,35 +28,84 @@ public class Person {
     private Business workplace;
     private Residence residence;
 
-    public static Person createRandomPerson(Residence residence, Business workplace) {
+    /* Creates a random person by calling the constructor below */
+
+    public static Person createRandomPerson(Residence residence, Business[] workplace) {
         Random random = new Random();
         Person p = new Person(residence, workplace);
-        p.hasChild = random.nextBoolean();
-        if (p.hasChild) {
-            p.childAge = (int) (ADULT_AGE*random.nextDouble());
-        }
-        p.money = (int) (300*random.nextDouble());
+
+        /* No need to make babies just yet */
+
+        // p.hasChild = random.nextBoolean();
+
+        //  /* Set the child age to 1 */
+        // if (p.hasChild) {
+        //     p.childAge = 1;
+        // }
+
+        p.money = (int) (300 * random.nextDouble());
 
         return p;
     }
 
-	public Person(Residence residence, Business workplace) {
+    /* The constructor of the Person class; takes in residence and workplac */
+
+	public Person(Residence residence, Business[] workplace) {
 		personality = new Personality();
 		hasChild = false;
 		childAge = 0;
 		money = 100;
 		state = State.SLEEP;
         this.residence = residence;
-        this.workplace = workplace;
+
+        /* find place of work by iterating through all workplaces */
+        int i = 0;
+        boolean workFound = false;
+        while (i < workplace.length; i++ && !workFound) {
+            Business work = workplace[i];
+
+            /* check if the work will hire the person */
+            if (work.willHire(this)) {
+                work.hire(this);
+                this.workplace = work;
+                workFound = true;
+            }
+            i++;
+        }
+
 	}
 
 
 	// Update the person's needs and/or state
 	public void update(int time) {
-
+		
+		// Slowly decrement all needs.
+		foodNeed = Math.min(foodNeed + 1, 10);
+		shelterNeed = Math.min(shelterNeed + 1, 10);
+		funNeed = Math.min(funNeed + 1, 10);
+		
 		if (state.equals(State.SLEEP)) {
-			shelterNeed = Math.min(shelterNeed + 1, 10);
-			foodNeed = Math.max(foodNeed - 1, 1);
+			shelterNeed = Math.max(shelterNeed - 2, 0);
+		} else if (state.equals(State.BREAKFAST_HOME)) {
+			// TODO: Decrease food supply home
+			foodNeed = Math.max(foodNeed - 6, 0);
+		} else if (state.equals(State.BREAKFAST_OUT)) {
+			money -= 10;
+			foodNeed = Math.max(foodNeed - 6, 0);
+			funNeed = Math.max(funNeed - 7, 0);
+		} else if (state.equals(State.WORK)) {
+			money += workplace.getPayRate(personality);
+		} else if (state.equals(State.DINNER_OUT)) {
+			money -= 10;
+			foodNeed = Math.max(foodNeed - 6,  0);
+			funNeed = Math.max(funNeed - 7, 0);
+		} else if (state.equals(State.SHOP)) {
+			// TODO: Increase food supply at home instead
+			money -= 5;
+			foodNeed = Math.max(foodNeed - 6, 0);
+		} else if(state.equals(State.DINNER_HOME)) {
+			// TODO: Decrease food supply at home
+			foodNeed = Math.max(foodNeed - 6, 0);
 		}
 		
 		// TODO: Uncomment next line when StateMachine works
@@ -75,24 +124,26 @@ public class Person {
         return 1;
     }
 
+    /* Returns an array with a person's needs. */
     public int[] getNeeds()
-    //** Returns an array with a person's needs. //
     {
         int[] attributes ={foodNeed,shelterNeed,funNeed};
         return attributes;
     }
+
+    /* Resets a person's needs to the desired attributes. */
     public void setNeeds(int[] needs)
-    //** Resets a person's needs to the desired attributes.//
     {
         foodNeed = needs[0];
         shelterNeed = needs[1];
         funNeed = needs[2];
     }
 
-    //*
-    // Getters and setters
-    //
-    // *//
+    public void getFired() {
+        workplace = null;
+    }
+
+    /* Getters and setters */
 
     public Personality getPersonality() {
         //** Pretty much self explanatory *//
@@ -136,4 +187,9 @@ public class Person {
     public void setChildAge(int childAge) {
         this.childAge = childAge;
     }
+
+    public void hasWork() {
+        return workplace != null;
+    }
+
 }

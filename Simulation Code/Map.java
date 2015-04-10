@@ -18,14 +18,19 @@ public class Map {
 		businesses = new Business[STARTING_POPULATION/10];
 		population = new Person[STARTING_POPULATION];
 		
+		/*Creates list of random residences */
 		for (int i = 0; i < residences.length; i++) {
 			residences[i] = new Residence(new Position(0, 0));
 		}
+
+		/* Creates list of random businesses */
 		for (int i = 0; i < businesses.length; i++) {
 			businesses[i] = new Business(new Position(0, 0));
 		}
+
+		/* Creates the individual population */
 		for (int i = 0; i < population.length; i++) {
-			population[i] = Person.createRandomPerson(residences[i], businesses[i%businesses.length]);
+			population[i] = Person.createRandomPerson(residences[i], businesses);
 		}
 	}
 
