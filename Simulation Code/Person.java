@@ -139,6 +139,10 @@ public class Person {
         funNeed = needs[2];
     }
 
+    public void getFired() {
+        workplace = null;
+    }
+
     /* Getters and setters */
 
     public Personality getPersonality() {
@@ -187,4 +191,5 @@ public class Person {
     public void hasWork() {
         return workplace != null;
     }
+
 }
