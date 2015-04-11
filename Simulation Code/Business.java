@@ -86,7 +86,7 @@ public class Business extends MapConstituent {
 
 
 		/* Check if applicant is elligible to work here */
-		if (applicantScore < threshold || employeeList.size() < maxNumEmployees) {
+		if (applicantScore < threshold || employeeList.size() >= maxNumEmployees) {
 			return false;
 		}
 		return true;
