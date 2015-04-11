@@ -194,7 +194,7 @@ public class Business extends MapConstituent {
 			companyStatus = decideFuture();
 
 			/* Now we reset the list */
-			while(productHistory.size() !=0 ) {
+			while(productHistory.size() != 0 ) {
 				productHistory.remove(0);
 			}
 
@@ -221,7 +221,7 @@ public class Business extends MapConstituent {
 		+1 means it expanded.  -1 means it contracted.  0 means it did nothing */
 
 		growthHistory.removeLast();
-		/* See if the company can expand */
+		/* See if the company can expand (divide by 30 since there are 30 days of productivity) */
 		if ( (netProductivity/ 30) >= averageScoreToGrow) {
 			expand();
 			growthHistory.addFirst(+1);
