@@ -155,7 +155,7 @@ public class Business extends MapConstituent {
 			}
 		}
 
-		if (minPerson == null) {
+		if (minPerson != null) {
 			employeeList.remove(minPerson);
 			minPerson.getFired();
 		}
