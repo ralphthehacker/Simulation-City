@@ -60,6 +60,7 @@ public class Person {
         Business bestWork = null;
         double bestCompanyScore = 0;
         double companyScore = 0;
+        System.out.println(workplaces.length);
         while (i < workplaces.length) {
             Business work = workplaces[i];
 
@@ -75,7 +76,7 @@ public class Person {
             }
 
             /* Assuming a workplace that will hire the person is found, hire them */
-            if (bestWork == null) {
+            if (bestWork != null) {
                 bestWork.hire(this);
                 this.workplace = bestWork;
             }

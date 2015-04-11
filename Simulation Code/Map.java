@@ -39,7 +39,7 @@ public class Map {
 		// At the beginning of every day, update businesses
 		if (time == 0) {
 			for (Business b : businesses) {
-				b.update(time);
+				b.update();
 			}
 		}
 		
