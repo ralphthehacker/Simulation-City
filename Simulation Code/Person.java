@@ -201,5 +201,15 @@ public class Person {
     public boolean hasWork() {
         return workplace != null;
     }
-
+    
+    @Override
+    public String toString() {
+    	return new StringBuilder()
+    		.append("State: " + state + "\n")
+    		.append("Money: " + money + "\n")
+    		.append("Food Need: " + foodNeed + "\n")
+    		.append("Shelter Need: " + shelterNeed + "\n")
+    		.append("Fun Need: " + funNeed)
+    		.toString();
+    }
 }

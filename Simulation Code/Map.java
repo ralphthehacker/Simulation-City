@@ -64,16 +64,8 @@ public class Map {
 		
 		for (int i = 0; i < nPeople; i++) {
 			System.out.println("Person " + i);
-			printPersonStats(population[i]);
+			System.out.println(population[i]);
 			System.out.println();
 		}
-	}
-	
-	private void printPersonStats(Person p) {
-		System.out.println("State: " + p.getState());
-		System.out.println("Money: " + p.getMoney());
-		System.out.println("Food Need: " + p.getNeeds()[0]);
-		System.out.println("Shelter Need: " + p.getNeeds()[1]);
-		System.out.println("Fun Need: " + p.getNeeds()[2]);
 	}
 }
