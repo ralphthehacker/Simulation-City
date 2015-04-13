@@ -24,6 +24,6 @@ For this week, we planned to have a fully running simulation. We finished the bu
 
 
 
-LARRY: Entertainment and sexual reproduction
+LARRY: Entertainment and Asexual reproduction
 SALZY: Groceries and residence. 
 RAZZY : State machines. Hooking stuff up together. Making people choose what to do
