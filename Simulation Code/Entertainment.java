@@ -30,7 +30,9 @@ public class Entertainment extends MapConstituent {
 	}
 
 	/*TO DO: model how groceries expand/contract over time based on conceptual model */
-	public boolean update() {}
+	public boolean update() {
+		return false;
+	}
 	public void expand() {}
 	public void contract() {}
 

@@ -1,5 +1,3 @@
-import com.sun.org.apache.bcel.internal.generic.NEW;
-
 import javax.sound.sampled.Line;
 import java.awt.*;
 import java.util.*;
@@ -47,9 +45,9 @@ public class StateMachine {
         {
             //This is a sanity check. It makes sure we are passing the right parameters and that we have coherent values
 
-            if(state == null) {System.out.println("A null state is being passed");}
+            /*if(state == null) {System.out.println("A null state is being passed");}
             if(person.getState().equals(state) == false ){System.out.println("A different person is being compared with this state");}
-            if(person == null){System.out.println("A null person is being passed");}
+            if(person == null){System.out.println("A null person is being passed");}*/
             //Could have done this in a more elegant way. This works good enough so why?
             throw new ExceptionInInitializerError();
         }
@@ -170,8 +168,8 @@ public class StateMachine {
 
         //This line removes irrelevant values from the distribution
         newStateDictionary = weighProbabilities(newStateDictionary);
-        System.out.println("The distribution is");
-        System.out.println(newStateDictionary);
+//        System.out.println("The distribution is");
+//        System.out.println(newStateDictionary);
 
 //        System.out.println("After");
 //        System.out.println(newStateDictionary);

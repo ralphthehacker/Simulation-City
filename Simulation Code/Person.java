@@ -60,7 +60,7 @@ public class Person {
         Business bestWork = null;
         double bestCompanyScore = 0;
         double companyScore = 0;
-        System.out.println(workplaces.length);
+        
         while (i < workplaces.length) {
             Business work = workplaces[i];
 
