@@ -43,6 +43,8 @@ public class Simulation {
 			
 			// Print the statistics
 			if (time%statsInterval == 0) {
+				System.out.println("Time = " + time);
+				System.out.println("---------");
 				if (nPeopleStats != 0) {
 					map.printPeopleStats(nPeopleStats);
 				}
