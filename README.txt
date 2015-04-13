@@ -7,3 +7,23 @@ For this week, we intend to create the basic classes and software hierarchy.  La
 Checkpoint 2
 ------------
 For this week, we planned to have a fully running simulation. We finished the businesses, hiring and firing employees, looking for new jobs, and the state machine representation. The simulation is now functional. However, we only did superficial testing. We will spend next week testing the app and thinking about how to visualize the data.
+
+
+- Make transitions realistic in the state machine. Add relevancy parameter with higher priority over th
+
+- Making a person connect to the Groceries/Businesses/Entertainment through the SHOP.
+ Consider current state
+
+- Add more variability to places. Make people spend their cash in difference things. Make their choices state based
+
+-Residences: Buying shit and moving around. Ensuring people move around.
+
+- Ensuring that two Businesses/Home/Grocery/Entertainment don't stay in the same place
+
+- Visualization: Start with a simple print-like walkthrough. People moving from position X to position Y, doing Z. Also print the attributes: how much money and current parameters.
+
+
+
+LARRY: Entertainment and sexual reproduction
+SALZY: Groceries and residence. 
+RAZZY : State machines. Hooking stuff up together. Making people choose what to do
