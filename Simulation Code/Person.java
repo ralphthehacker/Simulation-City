@@ -1,3 +1,4 @@
+import java.util.ArrayList;
 import java.util.Random;
 
 /**
@@ -31,6 +32,9 @@ public class Person {
     private Business workplace;
     private Residence residence;
     private Position position;
+
+    /* Keeps track of the last five days (100 total hours) of a person's 3 basic needs*/
+    private ArrayList<Integer> healthStatus = new ArrayList<Integer>(100);
 
     /* Creates a random person by calling the constructor below */
 
@@ -93,6 +97,23 @@ public class Person {
 
     // Update the person's needs and/or state
     public boolean update(int time) {
+
+        /* Increase age */
+        if (time == 0) {
+            age++;
+        }
+
+        if (healthStatus.size() < 100) {
+            //Add the basic needs status to the Beginning of the list
+            healthStatus.add(0, healthScore());
+        } else {
+            //get rid of the oldest score
+            healthStatus.remove(99);
+            //Add newest to the front
+            healthStatus.add(0, healthScore());
+        }
+
+
         
         // Slowly decrement all needs.
         foodNeed = Math.min(foodNeed + 1, 10);
@@ -126,6 +147,16 @@ public class Person {
         
         // TODO: Uncomment next line when StateMachine works
         this.state = StateMachine.getNextState(this,time);
+        return false;
+    }
+
+    /* TO DO: Calculate the overall need of the person, weighting dire needs more */
+    private int healthScore() {
+        return 0;
+    }
+
+    /* TO DO: check if person dies */
+    private boolean checkHealth() {
         return false;
     }
 
