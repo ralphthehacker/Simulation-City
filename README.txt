@@ -16,7 +16,7 @@ For this week, we planned to have a fully running simulation. We finished the bu
 
 - Add more variability to places. Make people spend their cash in difference things. Make their choices state based
 
--Residences: Buying shit and moving around. Ensuring people move around.
+-Residences: Buying stuff and moving around. Ensuring people move around.
 
 - Ensuring that two Businesses/Home/Grocery/Entertainment don't stay in the same place
 
