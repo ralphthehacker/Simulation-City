@@ -90,7 +90,7 @@ public class Person {
 
 
     // Update the person's needs and/or state
-    public void update(int time) {
+    public boolean update(int time) {
         
         // Slowly decrement all needs.
         foodNeed = Math.min(foodNeed + 1, 10);
@@ -124,6 +124,7 @@ public class Person {
         
         // TODO: Uncomment next line when StateMachine works
         this.state = StateMachine.getNextState(this,time);
+        return false;
     }
 
 
