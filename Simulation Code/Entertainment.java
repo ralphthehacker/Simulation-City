@@ -131,4 +131,9 @@ public class Entertainment extends MapConstituent {
         return needsArr;
     }
 
+    public int getPrice() { return price; };
+
+    public int getQuality() { return quality; };
+
+
 }
