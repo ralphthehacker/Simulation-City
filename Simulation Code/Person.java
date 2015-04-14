@@ -6,7 +6,7 @@ import java.util.Random;
  * Agents have three basic needs: food, shelter, and fun
  * An agent also a personality
  * If an agent has a child, they must spend more on food each month until the child turns 18
- * An agent has a current state, which essentially means where the agent is at any give ninstance
+ * An agent has a current state, which essentially means where the agent is at any give instance
  * Don't forget to take into account when a person is unemployed 
  * @author Lawrence Moore
  *
@@ -113,50 +113,92 @@ public class Person {
             healthStatus.add(0, healthScore());
         }
 
+        /* Status is true if the person is alive, false if dead */
+        boolean status = checkHealth();
 
-        
-        // Slowly decrement all needs.
-        foodNeed = Math.min(foodNeed + 1, 10);
-        shelterNeed = Math.min(shelterNeed + 1, 10);
-        funNeed = Math.min(funNeed + 1, 10);
-        
-        if (state.equals(State.SLEEP)) {
-            shelterNeed = Math.max(shelterNeed - 2, 0);
-        } else if (state.equals(State.BREAKFAST_HOME)) {
-            // TODO: Decrease food supply home
-            foodNeed = Math.max(foodNeed - 6, 0);
-        } else if (state.equals(State.BREAKFAST_OUT)) {
-            money -= 10;
-            foodNeed = Math.max(foodNeed - 6, 0);
-            funNeed = Math.max(funNeed - 7, 0);
-        } else if (state.equals(State.WORK)) {
-            // TODO: If person is unemployed, look for job
-            money += workplace.getPayRate();
-        } else if (state.equals(State.DINNER_OUT)) {
-            money -= 10;
-            foodNeed = Math.max(foodNeed - 6,  0);
-            funNeed = Math.max(funNeed - 7, 0);
-        } else if (state.equals(State.SHOP)) {
-            // TODO: Increase food supply at home instead
-            money -= 5;
-            foodNeed = Math.max(foodNeed - 6, 0);
-        } else if(state.equals(State.DINNER_HOME)) {
-            // TODO: Decrease food supply at home
-            foodNeed = Math.max(foodNeed - 6, 0);
+        if (status) {
+            // Slowly decrement all needs.
+            foodNeed = Math.min(foodNeed + 1, 10);
+            shelterNeed = Math.min(shelterNeed + 1, 10);
+            funNeed = Math.min(funNeed + 1, 10);
+
+            if (state.equals(State.SLEEP)) {
+                shelterNeed = Math.max(shelterNeed - 2, 0);
+            } else if (state.equals(State.BREAKFAST_HOME)) {
+                // TODO: Decrease food supply home
+                foodNeed = Math.max(foodNeed - 6, 0);
+            } else if (state.equals(State.BREAKFAST_OUT)) {
+                money -= 10;
+                foodNeed = Math.max(foodNeed - 6, 0);
+                funNeed = Math.max(funNeed - 7, 0);
+            } else if (state.equals(State.WORK)) {
+                // TODO: If person is unemployed, look for job
+                money += workplace.getPayRate();
+            } else if (state.equals(State.DINNER_OUT)) {
+                money -= 10;
+                foodNeed = Math.max(foodNeed - 6,  0);
+                funNeed = Math.max(funNeed - 7, 0);
+            } else if (state.equals(State.SHOP)) {
+                // TODO: Increase food supply at home instead
+                money -= 5;
+                foodNeed = Math.max(foodNeed - 6, 0);
+            } else if(state.equals(State.DINNER_HOME)) {
+                // TODO: Decrease food supply at home
+                foodNeed = Math.max(foodNeed - 6, 0);
+            }
+
+            // TODO: Uncomment next line when StateMachine works
+            this.state = StateMachine.getNextState(this,time);
         }
-        
-        // TODO: Uncomment next line when StateMachine works
-        this.state = StateMachine.getNextState(this,time);
-        return false;
+
+        return status;
     }
 
-    /* TO DO: Calculate the overall need of the person, weighting dire needs more */
+    /* Calculate the overall need of the person, weighting dire needs more */
     private int healthScore() {
-        return 0;
+        int overallScore = 0;
+        double foodMultiplier, funMultiplier, shelterMultiplier;
+
+
+        foodMultiplier = setMultiplier(foodNeed);
+        funMultiplier = setMultiplier(funNeed);
+        shelterMultiplier = setMultiplier(shelterNeed);
+
+        /* Scale the result properly */
+        return (int) ((foodNeed * foodMultiplier + funNeed * funMultiplier + shelterNeed*shelterMultiplier)
+                / ((foodMultiplier + funMultiplier + shelterMultiplier) * 30));
     }
 
-    /* TO DO: check if person dies */
+    /* Helper method which scales basic need scores appropriately */
+    private double setMultiplier(int need) {
+        double multiplier = 1;
+        if (need > 7) {
+            multiplier = 2;
+        } else if (need < 3) {
+            multiplier = 0.5;
+        }
+        return multiplier;
+    }
+
     private boolean checkHealth() {
+        /* First, sum up and average the health over the past five days */
+        int overallHealth = 0;
+        for (Integer healthPerDay: healthStatus) {
+            overallHealth += healthPerDay;
+        }
+        overallHealth /= healthStatus.size();
+
+        /* If the person consistently has an average of 25 or more, they die.  The method returns true */
+        int cutoff = 25;
+        if (overallHealth > cutoff) {
+            return true;
+        }
+
+        /* The person can also die of old age.  Their chance is linearly related to their age.  At 200, they die for sure. */
+        Random rand = new Random();
+        if (rand.nextInt(200) < age) {
+            return true;
+        }
         return false;
     }
 
