@@ -30,14 +30,15 @@ public class Person {
 
     private Business workplace;
     private Residence residence;
+    private Position position;
 
     /* Creates a random person by calling the constructor below */
 
-    public static Person createRandomPerson(Residence residence, Business[] workplace) {
+    public static Person createRandomPerson(Residence residence, Business[] workplace, Position pos) {
         Random random = new Random();
 
         /* Instantiate the person */
-        Person p = new Person(residence, workplace);
+        Person p = new Person(residence, workplace, pos);
 
         /* Generate a random amount of money */
         p.money = (int) (300 * random.nextDouble());
@@ -47,7 +48,7 @@ public class Person {
 
     /* The constructor of the Person class; takes in residence and workplac */
 
-    public Person(Residence residence, Business[] workplaces) {
+    public Person(Residence residence, Business[] workplaces, Position pos) {
         personality = new Personality();
         hasChild = false;
         childAge = 0;
@@ -56,6 +57,7 @@ public class Person {
         state = State.SLEEP;
         this.stateTimeLock = StateMachine.getLockTime(State.SLEEP);//A person starts free
         this.residence = residence;
+        position = pos;
 
         /* find place of work by iterating through all workplaces.
         Ultimately chooses based on amount of money and type of work */
