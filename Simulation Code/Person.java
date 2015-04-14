@@ -98,9 +98,20 @@ public class Person {
     // Update the person's needs and/or state
     public boolean update(int time) {
 
-        /* Increase age */
+        /* Increase age by one day.  Handle babies*/
         if (time == 0) {
             age++;
+            if (babyMakingTime()) {
+                hasChild = true;
+                childAge = 1;
+            }
+
+            if (hasChild && childAge >= 18) {
+                //generate new person in the map
+                hasChild = false;
+            } else {
+                childAge++;
+            }
         }
 
         if (healthStatus.size() < 100) {
@@ -197,6 +208,15 @@ public class Person {
         /* The person can also die of old age.  Their chance is linearly related to their age.  At 200, they die for sure. */
         Random rand = new Random();
         if (rand.nextInt(200) < age) {
+            return true;
+        }
+        return false;
+    }
+
+    /* Decides if the person wants to make a baby */
+    public boolean babyMakingTime() {
+        Random rand = new Random();
+        if (!hasChild && personality.getContentment() > 8 && rand.nextDouble() > .7) {
             return true;
         }
         return false;
