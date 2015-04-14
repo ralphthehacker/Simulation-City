@@ -1,3 +1,5 @@
+import java.util.ArrayList;
+
 /**
  * This class represents the overall map
  * 
@@ -10,13 +12,13 @@ public class Map {
 	private Residence[] residences;
 	private Business[] businesses;
 	private MapConstituent[] layout;
-	private Person[] population;
+	private ArrayList<Person> population;
 
 	/*TO DO: generate different aspects of the map randomely */
 	public Map() {
 		residences = new Residence[STARTING_POPULATION];
 		businesses = new Business[STARTING_POPULATION/10];
-		population = new Person[STARTING_POPULATION];
+		population = new ArrayList<Person>(STARTING_POPULATION);
 		
 		/*Creates list of random residences */
 		for (int i = 0; i < residences.length; i++) {
@@ -29,8 +31,8 @@ public class Map {
 		}
 
 		/* Creates the individual population */
-		for (int i = 0; i < population.length; i++) {
-			population[i] = Person.createRandomPerson(residences[i], businesses);
+		for (int i = 0; i < population.size(); i++) {
+			population.add(i,Person.createRandomPerson(residences[i], businesses));
 		}
 	}
 
@@ -42,10 +44,17 @@ public class Map {
 				b.update();
 			}
 		}
-		
+
+        // status variable to indicate if a person dies
+        boolean status;
 		// Every hour, update persons
 		for (Person p : population) {
-			p.update(time);
+			status = p.update(time);
+
+            //if the person dies, update return true
+            if (status) {
+                population.remove(p);
+            }
 		}
 	}
 	
@@ -56,15 +65,15 @@ public class Map {
 	 */
 	public void printPeopleStats(int nPeople) {
 		if (nPeople == -1) {
-			nPeople = population.length;
-		} else if (nPeople > population.length) {
+			nPeople = population.size();
+		} else if (nPeople > population.size()) {
 			throw new RuntimeException("ERROR: Population size is " +
-					population.length + " < " + nPeople);
+					population.size() + " < " + nPeople);
 		}
 		
 		for (int i = 0; i < nPeople; i++) {
 			System.out.println("Person " + i);
-			System.out.println(population[i]);
+			System.out.println(population.get(i));
 			System.out.println();
 		}
 	}
