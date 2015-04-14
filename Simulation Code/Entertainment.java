@@ -1,18 +1,20 @@
+import java.util.ArrayList;
 import java.util.Random;
 
 /**
- * This class represents an entertainment establishment 
- * A grocery store has three attributes: occupancy, type, and price 
- * 
+ * This class represents an entertainment establishment
  * @author Lawrence Moore
  *
  */
 public class Entertainment extends MapConstituent {
 
-	private int occupancy, price;
+	private int maxGoods, price, quality, numCustomersOfDay;
 	private EntertainmentType type;
+    private final static int INITIAL_GOODS = 10;
 
-	/* Constructor in which the attributes are randomely generated */
+    private ArrayList<Double> occupancyHistory = new ArrayList<Double>();
+
+	/* Constructor in which the attributes are randomly generated */
 	public Entertainment(Position pos, Map map) {
 		Random rand = new Random();
 		/* Initialize age to zero and the position to the one passed in */
@@ -22,27 +24,111 @@ public class Entertainment extends MapConstituent {
 		/* Generate a random entertainment type from the options in the enum */
 		type = EntertainmentType.values()[rand.nextInt(EntertainmentType.values().length)];  //just some enum foolery
 
-		/* price is on a scale from 1 to 10 */
-		price = rand.nextInt(10) + 1;
+		/* price is on a scale from 1 to 100 */
+		price = rand.nextInt(100) + 1;
+
+        /* Quality is inversely related to the price */
+        quality = 100 - price;
 
 		/* An establishment initially has room for 100 people */
-		occupancy = 100;
+		maxGoods = INITIAL_GOODS;
+        numCustomersOfDay = 0;
 	}
 
-	/*TO DO: model how groceries expand/contract over time based on conceptual model */
+	/* Called every 24 hours, dictates how the restaurant grows or detracts in the past */
 	public boolean update() {
+        if (occupancyHistory.size() >= 30) {
+            decideFuture();
+            //reset the occupancy history
+            occupancyHistory = new ArrayList<Double>();
+        } else {
+            occupancyHistory.add(numCustomersOfDay/(double)maxGoods);
+        }
+
+        numCustomersOfDay = 0;
 		return false;
 	}
-	public void expand() {}
-	public void contract() {}
+
+    /* Decides whether to expand or contract or do neither*/
+    private void decideFuture() {
+        /* Represents the average popularity by averaging the number of customers on any given day vs the number of goods */
+        double averagePopularity;
+        double growthThreshold = .8;
+        double contractThreshold = .4;
+
+        averagePopularity = 0;
+        for (Double ratio: occupancyHistory) {
+            averagePopularity += ratio;
+        }
+        averagePopularity /= occupancyHistory.size();
+
+        if (averagePopularity > growthThreshold) {
+            expand();
+        } else if (averagePopularity < contractThreshold) {
+            contract();
+        }
+        return;
+    }
+
+	private void expand() {
+        double maxGoodsMultiplyer = 1.1;
+        maxGoods *= maxGoodsMultiplyer;
+
+        /* Increase the quality according to some random chance */
+        Random rand = new Random();
+        if (rand.nextDouble() > .8) {
+            quality++;
+        }
+
+    }
+	private void contract() {
+        double maxGoodsMultiplyer = 1.1;
+        maxGoods /= maxGoodsMultiplyer;
+
+        /* Decrease the quality according to some random chance */
+        Random rand = new Random();
+        if (rand.nextDouble() > .8) {
+            quality--;
+        }
+    }
 
 	public void calculateBasicNeedsScore() {
-		/* entertainment doesn't provide shelter */
-		shelterScore = 0;
+        /* If we change the scale */
+        int scalingFactor = 1;
+        int qualityMultiplyer = quality / 50;
 
 		/* the food score and fun depends on the type */
-		
-		//TO DO: come up with a decent scheme to assign values
+		if (type == EntertainmentType.restaurant) {
+            foodScore = (8 * scalingFactor * qualityMultiplyer);
+            funScore = (3 * scalingFactor * qualityMultiplyer);
+            shelterScore = 0;
+        } else if (type == EntertainmentType.movie) {
+            foodScore = (5 * scalingFactor * qualityMultiplyer);
+            funScore = (6 * scalingFactor * qualityMultiplyer);
+            shelterScore = 0;
+        } else if (type == EntertainmentType.games) {
+            foodScore = 0;
+            funScore = (10 * scalingFactor * qualityMultiplyer);
+            shelterScore = 0;
+        } else if (type == EntertainmentType.adult) {
+            foodScore = 0;
+            funScore = (8 * scalingFactor * qualityMultiplyer);
+            shelterScore = (3 * scalingFactor * qualityMultiplyer);
+        } else {
+            System.out.println("Problem with entertainment type");
+        }
 	}
+
+    /* Takes into account when people visit */
+    public void visit() {
+        numCustomersOfDay++;
+    }
+
+
+    /* Returns the basic needs score of each entertaniment establishment */
+    public int[] getBasicNeedsScores() {
+        int[] needsArr = {foodScore, funScore, shelterScore};
+        return needsArr;
+    }
 
 }
