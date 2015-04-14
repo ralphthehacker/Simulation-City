@@ -1,4 +1,6 @@
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Random;
 
 /**
  * This class represents the overall map
@@ -7,27 +9,31 @@ import java.util.ArrayList;
  *
  */
 public class Map {
-	/* A map contains a 2-D array (in row major column, like a GBA game for simplicty) of all the map consituents */
+	/* A map contains a 2-D array of all the map consituents */
 	public static final int STARTING_POPULATION = 100;
+    public static final int SIZE_OF_GRID = STARTING_POPULATION * 5;
 	private Residence[] residences;
 	private Business[] businesses;
 	private MapConstituent[] layout;
 	private ArrayList<Person> population;
+
+    /* A hashmap of the positions inhabied.  True if the position is inhabited; false otherwise */
+    HashMap<Position, Boolean> positionsInhabited = new HashMap<Position, Boolean>();
 
 	/*TO DO: generate different aspects of the map randomely */
 	public Map() {
 		residences = new Residence[STARTING_POPULATION];
 		businesses = new Business[STARTING_POPULATION/10];
 		population = new ArrayList<Person>(STARTING_POPULATION);
-		
+
 		/*Creates list of random residences */
 		for (int i = 0; i < residences.length; i++) {
-			residences[i] = new Residence(new Position(0, 0));
+			residences[i] = new Residence(generateRandomPosition());
 		}
 
 		/* Creates list of random businesses */
 		for (int i = 0; i < businesses.length; i++) {
-			businesses[i] = new Business(new Position(0, 0));
+			businesses[i] = new Business(generateRandomPosition());
 		}
 
 		/* Creates the individual population */
@@ -35,6 +41,19 @@ public class Map {
 			population.add(i,Person.createRandomPerson(residences[i], businesses));
 		}
 	}
+
+    private Position generateRandomPosition() {
+        /* To generate keep track of random positions generated */
+        Random rand = new Random();
+        Position randomPosition = new Position(rand.nextInt(SIZE_OF_GRID), rand.nextInt(SIZE_OF_GRID));
+
+        /* while the position is already taken, generate new positions */
+        while (positionsInhabited.keySet().contains(randomPosition) && positionsInhabited.get(randomPosition)) {
+            randomPosition = new Position(rand.nextInt(SIZE_OF_GRID), rand.nextInt(SIZE_OF_GRID));
+        }
+
+        return randomPosition;
+    }
 
 	/* Update the map with time */
 	public void update(int time) {
