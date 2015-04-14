@@ -76,6 +76,11 @@ public class Map {
             }
 		}
 	}
+
+    /* Allows a person to add children to the map */
+    public void addPerson(Person person) {
+        // TO DO: Finished method
+    }
 	
 	/**
 	 * 
