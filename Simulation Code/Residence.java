@@ -51,4 +51,8 @@ public class Residence extends MapConstituent {
 		/* the shelter is proportional to the quality and price of the home */
 		shelterScore = quality * worth ;
 	}
+
+    public Position getPosition() {
+        return pos;
+    }
 }
