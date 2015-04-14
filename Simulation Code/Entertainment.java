@@ -124,6 +124,10 @@ public class Entertainment extends MapConstituent {
         numCustomersOfDay++;
     }
 
+    public boolean canVisit() {
+        return numCustomersOfDay < maxGoods;
+    }
+
 
     /* Returns the basic needs score of each entertaniment establishment */
     public int[] getBasicNeedsScores() {
