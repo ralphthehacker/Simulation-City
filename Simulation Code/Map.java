@@ -17,7 +17,7 @@ public class Map {
 	private MapConstituent[] layout;
 	private ArrayList<Person> population;
 
-    /* A hashmap of the positions inhabied.  True if the position is inhabited; false otherwise */
+    /* A hashmap of the positions inhabited.  True if the position is inhabited; false otherwise */
     HashMap<Position, Boolean> positionsInhabited = new HashMap<Position, Boolean>();
 
 	/*TO DO: generate different aspects of the map randomely */
