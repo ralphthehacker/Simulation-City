@@ -1,3 +1,5 @@
+import sun.font.TrueTypeFont;
+
 /**
  * This class represents the simulation class, aka the main class
  * @author lsmoore
@@ -11,7 +13,7 @@ public class Simulation {
 	public static void main(String[] args) {
 		int totalTimesteps = 100, time = 0;
 		// Number of people the simulation should print stats for
-		int nPeopleStats = 0;
+		int nPeopleStats = 2;
 		// The interval used to print the statistics.
 		int statsInterval = HOURLY;
 
@@ -45,9 +47,9 @@ public class Simulation {
 			if (time%statsInterval == 0) {
 				System.out.println("Time = " + time);
 				System.out.println("---------");
-				if (nPeopleStats != 0) {
-					map.printPeopleStats(nPeopleStats);
-				}
+                if (nPeopleStats != 0) {
+                    map.printPeopleStats(nPeopleStats);
+                }
 			}
 			
 			// Increment time. If time is midnight, set time to 0

@@ -17,6 +17,7 @@ public class Person {
     /* These needs are on a 1 to 10 scale, with 10 being the most dire need */
     private int foodNeed, shelterNeed, funNeed;
     private int money;
+    private int stateTimeLock; // This variable represents the number of clock cycles that a certain agent is locked to after entering it.
 
     /* People start out 18 */
     private int age = 18;
@@ -51,6 +52,7 @@ public class Person {
         childAge = 0;
         money = 100;
         state = State.SLEEP;
+        this.stateTimeLock = StateMachine.getLockTime(State.SLEEP);//A person starts free
         this.residence = residence;
 
         /* find place of work by iterating through all workplaces.
@@ -201,7 +203,18 @@ public class Person {
     public boolean hasWork() {
         return workplace != null;
     }
-    
+
+    public int getStateTimeLock() {
+        return stateTimeLock;
+    }
+
+    public void setStateTimeLock(int stateTimeLock) {
+        this.stateTimeLock = stateTimeLock;
+    }
+    public Boolean isUnlocked()
+    {
+        return (this.getStateTimeLock() == 0);
+    }
     @Override
     public String toString() {
     	return new StringBuilder()

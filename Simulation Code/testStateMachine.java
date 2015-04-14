@@ -11,13 +11,15 @@ public class testStateMachine {
 
         {
 
-            System.out.println("Initial state");
-            System.out.println(p.getState());
+
             System.out.println("Initial Time");
             System.out.println(i);
+            System.out.println("Initial state");
+            System.out.println(p.getState());
             p.update(i);
             System.out.println("Final state");
             System.out.println(p.getState());
+            System.out.println("");
 
         }
 

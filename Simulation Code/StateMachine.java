@@ -12,19 +12,27 @@ import java.util.Map;
 
 public class StateMachine {
     public static int time;
+    public static HashMap<Person,Boolean> timeLock;
 
     public static State getNextState(Person person, int time) {
         //Getting current time
         StateMachine.time = time;
 
-        //Current person's state
-		State currentState = person.getState();
-
-        // Determines the probabilities of the next states
-        HashMap<State,Double> possibleStates = determinePossibleStates(currentState,person);
-        State nextState = getBestState(possibleStates);// Picks a state based on the probability distribution
-        return nextState;
-
+        if(person.isUnlocked()) //If the person is available, compute the next state. Else, iterate and update a person's
+        //lock parameters
+        {
+            //Current person's state
+            State currentState = person.getState();
+            // Determines the probabilities of the next states
+            HashMap<State, Double> possibleStates = determinePossibleStates(currentState, person);
+            State nextState = getBestState(possibleStates);// Picks a state based on the probability distribution
+            person.setStateTimeLock(StateMachine.getLockTime(nextState));// And updates the timeLock
+            return nextState;
+        }   else
+        {
+            person.setStateTimeLock(person.getStateTimeLock()-1);//Decrement the lock by one
+            return person.getState();//And return the current state
+        }
 
     }
 
@@ -59,7 +67,6 @@ public class StateMachine {
         if(state == State.SLEEP)
         {
             //The initial probabilities don't really matter since they will be changed in the Transition function
-            stateDictionary.put(State.SLEEP,1.0); // The current state also need to be added in i.e. One can sleep straight for 6 hours
             stateDictionary.put(State.BREAKFAST_HOME,1.0);
             stateDictionary.put(State.BREAKFAST_OUT,1.0);
 
@@ -74,7 +81,6 @@ public class StateMachine {
 
         } else if(state == State.WORK){
 
-            stateDictionary.put(State.WORK,1.0);
             stateDictionary.put(State.DINNER_OUT,1.0);
             stateDictionary.put(State.SHOP,1.0);
             stateDictionary.put(State.DINNER_HOME,1.0);
@@ -82,6 +88,8 @@ public class StateMachine {
         } else if(state == State.DINNER_OUT){
 
             stateDictionary.put(State.SLEEP,1.0);
+            stateDictionary.put(State.SHOP,1.0);
+
 
         } else if(state == State.SHOP){
 
@@ -92,6 +100,8 @@ public class StateMachine {
 
         } else if(state == State.DINNER_HOME){
             stateDictionary.put(State.SLEEP,1.0);
+            stateDictionary.put(State.SHOP,1.0);
+
         }
         //It is guaranteed that the dictionary will have at least one transition
 
@@ -384,6 +394,24 @@ public class StateMachine {
         int randomSample = new Random().nextInt(bins.size()); //Random selection
         return bins.get(randomSample); //Returns the selected state
     }
+    public static int getLockTime(State state) {
+        if(state == State.SLEEP)//Sleep at least 6 hours
+        {
+            //The initial probabilities don't really matter since they will be changed in the Transition function
+            return 7;
+
+
+        }  else if(state == State.WORK){//Work at least 7 hours
+            return 6;
+
+        }  else// Any other agent only locks you for one hour
+
+            return 1;
+
+
+
+    }
+
 
 
     class impossibleProbabilityException extends Exception
