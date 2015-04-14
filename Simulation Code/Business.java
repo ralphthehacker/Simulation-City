@@ -215,7 +215,7 @@ public class Business extends MapConstituent {
 		}
 
 		int averageScoreToGrow = 8;
-		int averageScoretoContract = 5;
+		int averageScoreToContract = 5;
 
 		/*As a reminder, the growth history represents the actions taken in the last five months
 		+1 means it expanded.  -1 means it contracted.  0 means it did nothing */
@@ -225,7 +225,7 @@ public class Business extends MapConstituent {
 		if ( (netProductivity/ 30) >= averageScoreToGrow) {
 			expand();
 			growthHistory.addFirst(+1);
-		} else if ( (netProductivity/ 30) < averageScoretoContract) {
+		} else if ( (netProductivity/ 30) < averageScoreToContract) {
 			contract();
 			growthHistory.addFirst(-1);
 		} else {
