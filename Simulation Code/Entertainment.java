@@ -124,6 +124,7 @@ public class Entertainment extends MapConstituent {
         numCustomersOfDay++;
     }
 
+    /* Tells the state machine if a person can visit */
     public boolean canVisit() {
         return numCustomersOfDay < maxGoods;
     }
