@@ -26,6 +26,7 @@ public class Person {
     private boolean hasChild;
     private int childAge;
     private State state;
+    private int amountOfFood;
 
     private Business workplace;
     private Residence residence;
@@ -51,6 +52,7 @@ public class Person {
         hasChild = false;
         childAge = 0;
         money = 100;
+        amountOfFood = 3;
         state = State.SLEEP;
         this.stateTimeLock = StateMachine.getLockTime(State.SLEEP);//A person starts free
         this.residence = residence;
