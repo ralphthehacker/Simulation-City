@@ -32,17 +32,18 @@ public class Person {
     private Business workplace;
     private Residence residence;
     private Position position;
+    private Map map;
 
     /* Keeps track of the last five days (100 total hours) of a person's 3 basic needs*/
     private ArrayList<Integer> healthStatus = new ArrayList<Integer>(100);
 
     /* Creates a random person by calling the constructor below */
 
-    public static Person createRandomPerson(Residence residence, Business[] workplace) {
+    public static Person createRandomPerson(Residence residence, Business[] workplace, Map map) {
         Random random = new Random();
 
         /* Instantiate the person */
-        Person p = new Person(residence, workplace);
+        Person p = new Person(residence, workplace, map);
 
         /* Generate a random amount of money */
         p.money = (int) (300 * random.nextDouble());
@@ -52,7 +53,7 @@ public class Person {
 
     /* The constructor of the Person class; takes in residence and workplac */
 
-    public Person(Residence residence, Business[] workplaces) {
+    public Person(Residence residence, Business[] workplaces, Map map) {
         personality = new Personality();
         hasChild = false;
         childAge = 0;
@@ -62,6 +63,7 @@ public class Person {
         this.stateTimeLock = StateMachine.getLockTime(State.SLEEP);//A person starts free
         this.residence = residence;
         position = residence.getPosition();
+        this.map = map;
 
         /* find place of work by iterating through all workplaces.
         Ultimately chooses based on amount of money and type of work */
@@ -107,7 +109,7 @@ public class Person {
             }
 
             if (hasChild && childAge >= 18) {
-                //generate new person in the map
+                map.addPerson();
                 hasChild = false;
             } else {
                 childAge++;

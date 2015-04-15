@@ -38,7 +38,7 @@ public class Map {
 
 		/* Creates the individual population */
 		for (int i = 0; i < population.size(); i++) {
-			population.add(i,Person.createRandomPerson(residences[i], businesses));
+			population.add(i,Person.createRandomPerson(residences[i], businesses, this));
 		}
 	}
 
@@ -78,8 +78,9 @@ public class Map {
 	}
 
     /* Allows a person to add children to the map */
-    public void addPerson(Person person) {
-        // TO DO: Finished method
+    public void addPerson() {
+        /* Incomplete, in that it always adds just the first house to the person.  update when residences is done */
+        population.add(Person.createRandomPerson(residences[1],businesses, this));
     }
 	
 	/**
