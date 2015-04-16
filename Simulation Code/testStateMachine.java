@@ -6,7 +6,7 @@ public class testStateMachine {
     {
         Business[] businesses = {new Business(new Position(1, 1))};
         Residence res = new Residence(new Position(2, 2));
-        Person p = Person.createRandomPerson(res, businesses);
+        //Person p = Person.createRandomPerson(res, businesses);
         for(int i = 1; i<24;i++)
 
         {
@@ -15,10 +15,10 @@ public class testStateMachine {
             System.out.println("Initial Time");
             System.out.println(i);
             System.out.println("Initial state");
-            System.out.println(p.getState());
-            p.update(i);
+            //System.out.println(p.getState());
+            //p.update(i);
             System.out.println("Final state");
-            System.out.println(p.getState());
+            //System.out.println(p.getState());
             System.out.println("");
 
         }
