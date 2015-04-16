@@ -57,16 +57,18 @@ public class Map {
 
 	/* Update the map with time */
 	public void update(int time) {
-		updateBusinesses(time);
+		// At the beginning of every day, update businesses
+		if (time == 0) {
+			updateBusinesses();
+		}
+		
+		// Every hour, update the population
 		updatePeople(time);
 	}
 	
-	private void updateBusinesses(int time) {
-		// At the beginning of every day, update businesses
-		if (time == 0) {
-			for (Business b : businesses) {
-				b.update();
-			}
+	private void updateBusinesses() {
+		for (Business b : businesses) {
+			b.update();
 		}
 	}
 	
