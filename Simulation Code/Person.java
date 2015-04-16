@@ -100,6 +100,8 @@ public class Person {
 
 
     // Update the person's needs and/or state
+    // Returns Person.DEAD if person dies. Otherwise,
+    // returns Person.ALIVE
     public boolean update(int time) {
 
         /* Increase age by one day.  Handle babies*/
@@ -128,45 +130,40 @@ public class Person {
             healthStatus.add(0, healthScore());
         }
 
-        /* Status is true if the person is alive, false if dead */
-        boolean status = checkHealth();
+        // Slowly decrement all needs.
+        foodNeed = Math.min(foodNeed + 1, 10);
+        shelterNeed = Math.min(shelterNeed + 1, 10);
+        funNeed = Math.min(funNeed + 1, 10);
 
-        if (status) {
-            // Slowly decrement all needs.
-            foodNeed = Math.min(foodNeed + 1, 10);
-            shelterNeed = Math.min(shelterNeed + 1, 10);
-            funNeed = Math.min(funNeed + 1, 10);
-
-            if (state.equals(State.SLEEP)) {
-                shelterNeed = Math.max(shelterNeed - 2, 0);
-            } else if (state.equals(State.BREAKFAST_HOME)) {
-                // TODO: Decrease food supply home
-                foodNeed = Math.max(foodNeed - 6, 0);
-            } else if (state.equals(State.BREAKFAST_OUT)) {
-                money -= 10;
-                foodNeed = Math.max(foodNeed - 6, 0);
-                funNeed = Math.max(funNeed - 7, 0);
-            } else if (state.equals(State.WORK)) {
-                // TODO: If person is unemployed, look for job
-                money += workplace.getPayRate();
-            } else if (state.equals(State.DINNER_OUT)) {
-                money -= 10;
-                foodNeed = Math.max(foodNeed - 6,  0);
-                funNeed = Math.max(funNeed - 7, 0);
-            } else if (state.equals(State.SHOP)) {
-                // TODO: Increase food supply at home instead
-                money -= 5;
-                foodNeed = Math.max(foodNeed - 6, 0);
-            } else if(state.equals(State.DINNER_HOME)) {
-                // TODO: Decrease food supply at home
-                foodNeed = Math.max(foodNeed - 6, 0);
-            }
-
-            // TODO: Uncomment next line when StateMachine works
-            this.state = StateMachine.getNextState(this,time);
+        if (state.equals(State.SLEEP)) {
+            shelterNeed = Math.max(shelterNeed - 2, 0);
+        } else if (state.equals(State.BREAKFAST_HOME)) {
+            // TODO: Decrease food supply home
+            foodNeed = Math.max(foodNeed - 6, 0);
+        } else if (state.equals(State.BREAKFAST_OUT)) {
+            money -= 10;
+            foodNeed = Math.max(foodNeed - 6, 0);
+            funNeed = Math.max(funNeed - 7, 0);
+        } else if (state.equals(State.WORK)) {
+            // TODO: If person is unemployed, look for job
+            money += workplace.getPayRate();
+        } else if (state.equals(State.DINNER_OUT)) {
+            money -= 10;
+            foodNeed = Math.max(foodNeed - 6,  0);
+            funNeed = Math.max(funNeed - 7, 0);
+        } else if (state.equals(State.SHOP)) {
+            // TODO: Increase food supply at home instead
+            money -= 5;
+            foodNeed = Math.max(foodNeed - 6, 0);
+        } else if(state.equals(State.DINNER_HOME)) {
+            // TODO: Decrease food supply at home
+            foodNeed = Math.max(foodNeed - 6, 0);
         }
 
-        return status;
+        // TODO: Uncomment next line when StateMachine works
+        this.state = StateMachine.getNextState(this,time);
+
+        return checkHealth();
     }
 
     /* Calculate the overall need of the person, weighting dire needs more */
