@@ -26,7 +26,7 @@ public class Business extends MapConstituent {
 	/* Keeps track of the last five company decision by the company 
 	If the company has declined five times in a row, it goes out of business. 
 	+1 will be used to denote expansion.  0 denotes no action.  -1 denotes contraction*/
-	private ArrayDeque<Integer> growthHistory = new ArrayDeque<Integer>();
+	private ArrayList<Integer> growthHistory = new ArrayList<Integer>();
 
 	/* List of current employees */
 	private ArrayList<Person> employeeList = new ArrayList<Person>();
@@ -57,8 +57,8 @@ public class Business extends MapConstituent {
 		workQuality = rand.nextInt(10) + 1;
 
 		/* pay is based on work quality and type of job. 
-		   Pay ranges from 20 to 270 thousand.  5 is just an adjustement factor*/
-		pay = workQuality * rand.nextInt(5) * type.ordinal() + MIN_PAY;
+		   Pay ranges from 20 to 270 thousand.  5 is just an adjustment factor*/
+		pay = workQuality * (rand.nextInt(5) + 1) * (type.ordinal() + 1) + MIN_PAY;
 
 		/* Start with a max of 100 employees */
 		maxNumEmployees = 100;
@@ -81,11 +81,13 @@ public class Business extends MapConstituent {
 		/* Calculate employee score */
 		double applicantScore = calculateEmployeeScore(person);
 
-		/* Calculate threshold score to hire.  On a scale of .2 to 10 */
-		double threshold = workQuality * (pay / MAX_PAY);
+		/* Calculate threshold score to hire.  On a scale of .1 to 10 */
+        double payFactor = pay / (double) MIN_PAY;
+        payFactor = payFactor > 10 ? 10: payFactor;
+		double threshold = ((double) workQuality + payFactor) / 2; //divide by 2 scales since the max value is 20
 
 
-		/* Check if applicant is elligible to work here */
+		/* Check if applicant is eligible to work here */
 		if (applicantScore < threshold || employeeList.size() >= maxNumEmployees) {
 			return false;
 		}
@@ -113,17 +115,17 @@ public class Business extends MapConstituent {
 			wellBeing += needs[i]; 
 		}
 
-		/* Scale the score */
-		wellBeing /= 30;
+		/* Scale the score (maximum overall well-being is 3, since each need would 1).  */
+		wellBeing = (30 - wellBeing)/ 27;
 
-		/* Calculates enthusiasm multiplyer: .5 if not prefered area of work, 1 otherwise */
+		/* Calculates enthusiasm multiplier: .5 if not preferred area of work, 1 otherwise */
 		double enthusiasm = preferredWork == type ? 1 : 0.5; 
 
 		/* Calculate applicant score. On a scale of 0 to 10. 
-		The divide by 100 scales the value appropiately*/
-		double employeeScore = (skill * ambition * contentment * enthusiasm * wellBeing) / (100);
+		The divide by 2 scales the value appropriately, since the max is 20 */
+		double employeeScore = (((double) skill + ambition) * enthusiasm * wellBeing) / (2);
 
-		return employeeScore;
+		return employeeScore > 10? 10: employeeScore;
 	}
 
 	/* Hires a person 
@@ -174,7 +176,7 @@ public class Business extends MapConstituent {
 		if (employeeList.size() > 0) {
 			return score / employeeList.size();
 		}
-		return 0;
+		return score;
 
 	}
 
@@ -188,16 +190,16 @@ public class Business extends MapConstituent {
 		double productivityOfTheDay = calculateProductivity();
 
 		/* If we already have a full month of growth history */
-		if (productHistory.size() == 30) 
+		if (productHistory.size() == 30) {
 			/* Decide on what to do: grow, contract, or do nothing. 
 			DecideFuture returns false if the company shuts down; true otherwise*/
-			companyStatus = decideFuture();
+            companyStatus = decideFuture();
 
 			/* Now we reset the list */
-			while(productHistory.size() != 0 ) {
-				productHistory.remove(0);
-			}
-
+            while (productHistory.size() != 0) {
+                productHistory.remove(0);
+            }
+        }
 		/* Add today's productivity score to the tally */
 		productHistory.add(productivityOfTheDay);
 		return companyStatus;
@@ -220,39 +222,38 @@ public class Business extends MapConstituent {
 		/*As a reminder, the growth history represents the actions taken in the last five months
 		+1 means it expanded.  -1 means it contracted.  0 means it did nothing */
 
-		growthHistory.removeLast();
-		/* See if the company can expand (divide by 30 since there are 30 days of productivity) */
-		if ( (netProductivity/ 30) >= averageScoreToGrow) {
+		/* See if the company can expand*/
+		if ( (netProductivity/ productHistory.size()) >= averageScoreToGrow) {
 			expand();
-			growthHistory.addFirst(+1);
-		} else if ( (netProductivity/ 30) < averageScoreToContract) {
+			growthHistory.add(0, +1);
+		} else if ( (netProductivity/ productHistory.size()) < averageScoreToContract) {
 			contract();
-			growthHistory.addFirst(-1);
+			growthHistory.add(0, -1);
 		} else {
-			growthHistory.addFirst(0);
+			growthHistory.add(0, 0);
 		}
 
 		/* Gauge the overall trend of company by looking at the growthHistory.
 		If the company has contracted all five previous months, it must shut down */
-		int[] lastFiveMonths = new int[5];
 
-		//First we unroll the queue
-		for (int i = 0; i < 5; i++) {
-			lastFiveMonths[i] = growthHistory.removeLast();
-		}
+        if (growthHistory.size() >= 5) {
 
-		/* Check if all were contractions (sorry for the ugly code) */
-		if ((lastFiveMonths[1] + lastFiveMonths[2] + lastFiveMonths[3] + lastFiveMonths[4] + lastFiveMonths[5]) == -5) {
-			shutdownCompany();
-			return false;
-		} else {
-			/* Restore growth history */
-			for (int i = 0; i < 5; i++) {
-				growthHistory.addFirst(lastFiveMonths[i]);
-			}
-			return true;
-		}
+            int[] lastFiveMonths = new int[5];
 
+            //First we find the overall trend of the last five months
+            int trend = 0;
+            for (int i = 0; i < 5; i++) {
+                trend += growthHistory.get(i);
+            }
+
+            /* Check if all were contractions (sorry for the ugly code) */
+            if (trend == -5) {
+                shutdownCompany();
+                return false;
+            }
+            growthHistory.remove(growthHistory.size() - 1);
+        }
+        return true;
 	}
 
 	/* When a business expands, it increases its networth, hires more people, increases pay */
@@ -320,6 +321,8 @@ public class Business extends MapConstituent {
 	public int getPayRate() {
 		return pay;
 	}
+
+    public int getQuality() { return workQuality; }
 
 	public WorkType getWorkType() {
 		return type;
