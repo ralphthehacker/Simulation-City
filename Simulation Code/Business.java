@@ -238,8 +238,6 @@ public class Business extends MapConstituent {
 
         if (growthHistory.size() >= 5) {
 
-            int[] lastFiveMonths = new int[5];
-
             //First we find the overall trend of the last five months
             int trend = 0;
             for (int i = 0; i < 5; i++) {
