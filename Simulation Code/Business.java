@@ -57,7 +57,9 @@ public class Business extends MapConstituent {
 		workQuality = rand.nextInt(10) + 1;
 
 		/* pay is based on work quality and type of job. 
-		   Pay ranges from 20 to 270 thousand.  5 is just an adjustment factor*/
+		   Pay ranges from 20 to 270 thousand.  5 is just an adjustment factor
+		   Pay multiplying factor is determined at the WorkType enum and it's used to determine salaries*/
+
 		pay = workQuality * (rand.nextInt(5) + 1) * (type.ordinal() + 1) + MIN_PAY;
 
 		/* Start with a max of 100 employees */
@@ -75,7 +77,11 @@ public class Business extends MapConstituent {
 		foodScore = 0;
 	}
 
-	/* Checks if the company wants to hire the person based on skills and personality */
+	/* Checks if the company wants to hire the person based on skills and personality
+	* //TODO: Why? A company also needs to hire people else it will go out of business if it doesn't have employees
+	* //TODO: Also allow businesses to offer jobs and make people able to seek those same jobs. A simple state transition
+	* //TODO: and a very simple heuristic should do the deal, else people are simply bounded by their initial conditions
+	* */
 	public boolean willHire(Person person) {
 		
 		/* Calculate employee score */
@@ -139,6 +145,7 @@ public class Business extends MapConstituent {
 		return false;
 	}
 
+    //TODO: Why? There's a worse defender in the seahawks defense but that is not necessarily a reason to
 	/* Fires the worst employee */
 	private void fire() {
 		/* Set up variables to parse array of employees for the worst performing individual */
@@ -159,7 +166,7 @@ public class Business extends MapConstituent {
 
 		if (minPerson != null) {
 			employeeList.remove(minPerson);
-			minPerson.getFired();
+			minPerson.setWorkplace(null);
 		}
 	}
 
@@ -314,7 +321,11 @@ public class Business extends MapConstituent {
 		}
 	}
 
-
+    public void handleDeath(Person p)
+    {
+        if(null == p){throw new ExceptionInInitializerError();}
+        employeeList.remove(p);//Remove the employee from the company
+    }
 	/* Getters */
 	public int getPayRate() {
 		return pay;

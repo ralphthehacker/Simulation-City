@@ -1,3 +1,4 @@
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Random;
@@ -91,33 +92,53 @@ public class Map {
 		// Every hour, update the population
 		updatePeople(time);
 	}
-	
+
+	//TODO: Businesses shouldn't be static! Allow them to hire people and fire based on revenue
 	private void updateBusinesses() {
 		for (Business b : businesses) {
 			b.update();
 		}
 	}
-	
+
+
 	private void updatePeople(int time) {
 
 		ArrayList<Person> deadPeople = new ArrayList<Person>();
-		deadPeople.clear();
+		deadPeople.clear();//????
 
 		// Every hour, update persons
+        //TODO: Cover edge cases: Remove people who died from their jobs and possessions
         for (int i = 0; i < population.size(); i++) {
         	boolean status = population.get(i).update(time);
 
             if (status == Person.DEAD) {
                 deadPeople.add(population.get(i));
+
             }
         }
         
         // Remove the dead people from the population
-        for (int i = 0; i < deadPeople.size(); i++) {
-        	population.remove(deadPeople.get(i));
-        }
+        handleDeath(deadPeople);
 	}
 
+
+    //*
+    // This method is used to handle all death scenarios.It removes a person from her job and home
+    // If a person has a child, the child takes over the house but only starts "living" when she reaches legal age
+    // *
+    public void handleDeath(ArrayList<Person> casualties)
+    {
+        for(Person person :casualties)
+        {
+            person.getWorkplace().handleDeath(person);//Remove person from her formal job
+            person.getResidence().handleDeath();// Remove person from her former house
+            population.remove(person);//Remove a people from life
+
+        }
+
+    }
+
+    public void orphanage(){}
     /* Allows a person to add children to the map */
     public void addPerson() {
         /* Incomplete, in that it always adds just the first house to the person.  update when residences is done */
@@ -155,4 +176,28 @@ public class Map {
 					" died!");
 		}
 	}
+
+    public Residence[] getResidences() {
+        return residences;
+    }
+
+    public void setResidences(Residence[] residences) {
+        this.residences = residences;
+    }
+
+    public Business[] getBusinesses() {
+        return businesses;
+    }
+
+    public void setBusinesses(Business[] businesses) {
+        this.businesses = businesses;
+    }
+
+    public ArrayList<Person> getPopulation() {
+        return population;
+    }
+
+    public void setPopulation(ArrayList<Person> population) {
+        this.population = population;
+    }
 }

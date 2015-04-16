@@ -5,5 +5,5 @@
  */
 
 public enum WorkType {
-	research, manufacturing, sales, tech, finance
+	sales, manufacturing, research,finance, tech
 }

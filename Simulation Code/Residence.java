@@ -13,7 +13,7 @@ public class Residence extends MapConstituent {
 	Something not to forget is how this influences the contentment of a person*/
 	private final int INTEREST = 8;
 	private int morgageLeft, worth, quality;
-
+    private Person owner; //TODO: Implement feature
 
 	/* Constructor in which the attributes are randomely generated */
 	public Residence (Position pos) {
@@ -51,6 +51,31 @@ public class Residence extends MapConstituent {
 		/* the shelter is proportional to the quality and price of the home */
 		shelterScore = quality * worth ;
 	}
+
+    // If a person has a child, make the child inherit the possessions
+    public void handleDeath()
+    {
+        if (owner.hasChild())
+        {
+            owner = new Person(owner.getResidence(),owner.getMap().getBusinesses(),owner.getMap());
+            // TODO: How to handle the children? Check other bugs before figuring this out
+        }  else
+        {
+            owner = null;// Else, the house is empty and is available for other agents to buy
+        }
+    }
+
+    public Person getOwner() {
+        return owner;
+    }
+
+    public void setOwner(Person owner) {
+        this.owner = owner;
+    }
+    public boolean isOwned()
+    {
+        return (null != this.getOwner());
+    }
 
     public Position getPosition() {
         return pos;

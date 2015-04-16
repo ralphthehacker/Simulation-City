@@ -64,7 +64,8 @@ public class Person {
         amountOfFood = 3;
         state = State.SLEEP;
         this.stateTimeLock = StateMachine.getLockTime(State.SLEEP);//A person starts free
-        this.residence = residence;
+        this.residence = residence;//Setting a person to own a house
+        this.residence.setOwner(this);//TODO:Make this more readable later
         position = residence.getPosition();
         this.map = map;
 
@@ -79,7 +80,7 @@ public class Person {
         Business bestWork = null;
         double bestCompanyScore = 0;
         double companyScore = 0;
-        
+        //TODO:Edge Case what if businesses don't want to hire anyone even if they need personnel?
         while (i < workplaces.length) {
             Business work = workplaces[i];
 
@@ -100,7 +101,7 @@ public class Person {
         if (bestWork != null) {
             bestWork.hire(this);
             this.workplace = bestWork;
-        }
+        } //TODO: Edge case = Unemployed guy
     }
 
 
@@ -279,10 +280,6 @@ public class Person {
         funNeed = needs[2];
     }
 
-    public void getFired() {
-        workplace = null;
-    }
-
     /* Getters and setters */
 
     public Personality getPersonality() {
@@ -312,7 +309,7 @@ public class Person {
         this.state = state;
     }
 
-    public boolean isHasChild() {
+    public boolean hasChild() {
         return hasChild;
     }
 
@@ -343,6 +340,31 @@ public class Person {
     {
         return (this.getStateTimeLock() == 0);
     }
+
+    public Business getWorkplace() {
+        return workplace;
+    }
+
+    public void setWorkplace(Business workplace) {
+        this.workplace = workplace;
+    }
+
+    public Residence getResidence() {
+        return residence;
+    }
+
+    public void setResidence(Residence residence) {
+        this.residence = residence;
+    }
+
+    public Map getMap() {
+        return map;
+    }
+
+    public void setMap(Map map) {
+        this.map = map;
+    }
+
     @Override
     public String toString() {
         return new StringBuilder()
