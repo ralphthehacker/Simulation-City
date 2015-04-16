@@ -95,25 +95,25 @@ public class Entertainment extends MapConstituent {
 	public void calculateBasicNeedsScore() {
         /* If we change the scale */
         int scalingFactor = 1;
-        int qualityMultiplyer = quality / 50;
+        double qualityMultiplyer = quality / 50.0;
 
 		/* the food score and fun depends on the type */
 		if (type == EntertainmentType.restaurant) {
-            foodScore = (8 * scalingFactor * qualityMultiplyer);
-            funScore = (3 * scalingFactor * qualityMultiplyer);
+            foodScore = (int) (8 * scalingFactor * qualityMultiplyer);
+            funScore = (int) (3 * scalingFactor * qualityMultiplyer);
             shelterScore = 0;
         } else if (type == EntertainmentType.movie) {
-            foodScore = (5 * scalingFactor * qualityMultiplyer);
-            funScore = (6 * scalingFactor * qualityMultiplyer);
+            foodScore = (int) (5 * scalingFactor * qualityMultiplyer);
+            funScore = (int) (6 * scalingFactor * qualityMultiplyer);
             shelterScore = 0;
         } else if (type == EntertainmentType.games) {
             foodScore = 0;
-            funScore = (10 * scalingFactor * qualityMultiplyer);
+            funScore = (int) (10 * scalingFactor * qualityMultiplyer);
             shelterScore = 0;
         } else if (type == EntertainmentType.adult) {
             foodScore = 0;
-            funScore = (8 * scalingFactor * qualityMultiplyer);
-            shelterScore = (3 * scalingFactor * qualityMultiplyer);
+            funScore = (int) (8 * scalingFactor * qualityMultiplyer);
+            shelterScore = (int) (3 * scalingFactor * qualityMultiplyer);
         } else {
             System.out.println("Problem with entertainment type");
         }
