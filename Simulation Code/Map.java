@@ -64,6 +64,8 @@ public class Map {
         for (int i = 0; i < numPopulation; i++) {
             population.add(i,Person.createRandomPerson(residences[i], businesses, this));
         }
+        System.out.println("All businesses");
+        System.out.println(businesses);
     }
 
     private Position generateRandomPosition() {

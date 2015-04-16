@@ -110,20 +110,7 @@ public class Person {
     public boolean update(int time) {
 
         /* Increase age by one day.  Handle babies*/
-        if (time == 0) {
-            age++;
-            if (babyMakingTime()) {
-                hasChild = true;
-                childAge = 1;
-            }
-
-            if (hasChild && childAge >= 18) {
-                map.addPerson();
-                hasChild = false;
-            } else if (hasChild) {
-                childAge++;
-            }
-        }
+        handleReproduction(time);
 
         if (healthStatus.size() < HEALTH_DAYS_TO_TRACK) {
             //Add the basic needs status to the Beginning of the list
@@ -142,18 +129,22 @@ public class Person {
 
         if (state.equals(State.SLEEP)) {
             shelterNeed = Math.max(shelterNeed - 2, 0);
+
         } else if (state.equals(State.BREAKFAST_HOME)) {
             // TODO: Decrease food supply home
             foodNeed = Math.max(foodNeed - 6, 0);
+
         } else if (state.equals(State.BREAKFAST_OUT)) {
             money -= 10;
             foodNeed = Math.max(foodNeed - 6, 0);
             funNeed = Math.max(funNeed - 7, 0);
+
         } else if (state.equals(State.WORK)) {
             // TODO: If person is unemployed, look for job
             if (workplace != null) {
                 money += workplace.getPayRate();
             }
+
         } else if (state.equals(State.DINNER_OUT)) {
             money -= 10;
             foodNeed = Math.max(foodNeed - 6,  0);
@@ -167,10 +158,33 @@ public class Person {
             foodNeed = Math.max(foodNeed - 6, 0);
         }
 
-        // TODO: Uncomment next line when StateMachine works
+        //Pass current person to the state machine to determine the next state
         this.state = StateMachine.getNextState(this,time);
 
         return checkHealth();
+    }
+
+
+    //*
+    // Takes in a time and creates new people. Function also responsilbe for aging children
+    // *
+    public void handleReproduction(int time)
+    {
+        if (time == 0) {
+            age++;
+            if (babyMakingTime()) {
+                hasChild = true;
+                childAge = 1;
+            }
+
+            if (hasChild && childAge >= 18) {
+                map.addPerson();
+                hasChild = false;
+            } else if (hasChild) {
+                childAge++;
+            }
+        }
+
     }
 
     /* Calculate the overall need of the person, weighting dire needs more */
@@ -202,6 +216,9 @@ public class Person {
         return multiplier;
     }
 
+    //*
+    // This method keeps track of the health of the people on the grid
+    // *
     private boolean checkHealth() {
         /* First, sum up and average the health over the past five days */
         if (healthStatus.size() >= HEALTH_DAYS_TO_TRACK) {

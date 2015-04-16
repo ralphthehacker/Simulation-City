@@ -27,17 +27,28 @@ public class Simulation {
 		//		stats be printed
 		// --reportDeath reports death if set to true
 		// --reportBirth reports birth if set to true
+
 		for (int i = 0; i < args.length; i += 2) {
-			if (args[i].equals("--steps")) {
+			if (args[i].equals("--steps"))
+            {
 				totalTimesteps = Integer.parseInt(args[i+1]);
-			} else if (args[i].equals("--startingtime")) {
+
+			} else if (args[i].equals("--startingtime"))
+            {
 				time = Integer.parseInt(args[i+1]);
-			} else if (args[i].equals("--personstats")) {
+
+			} else if (args[i].equals("--personstats"))
+            {
 				nPeopleStats = Integer.parseInt(args[i+1]);
-			} else if (args[i].equals("--statsinterval")) {
+
+			} else if (args[i].equals("--statsinterval"))
+            {
 				statsInterval = Integer.parseInt(args[i+1]);
-			} else if (args[i].equals("--reportDeath")) {
+
+			} else if (args[i].equals("--reportDeath"))
+            {
 				reportDeath = args[i+1].equals("true");
+
 			} else if (args[i].equals("--reportBirth")) {
 				reportBirth = args[i+1].equals("true");
 			}
@@ -48,7 +59,7 @@ public class Simulation {
 		// Run the simulation
 		for (int i = 0; i < totalTimesteps; i++) {
 			// Update the simulation
-			map.update(time);
+			map.update(time%24);
 			nPeopleStats = map.getNumberOfPeople();
 
 			// Print the statistics
@@ -65,7 +76,7 @@ public class Simulation {
 			
 			// Print death toll, if any
 			// TODO: Print death toll only on time%statsInterval
-			if (reportDeath) {
+			if (reportDeath && time%statsInterval == 0) {
 				map.printDeathToll();
 			}
 			
