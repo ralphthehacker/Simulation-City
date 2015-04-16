@@ -15,6 +15,7 @@ import java.util.Random;
 public class Person {
 
     public static final int ADULT_AGE = 18;
+    public static final int HEALTH_DAYS_TO_TRACK = 24;
     public static final boolean DEAD = true;
     public static final boolean ALIVE = false;
     /* These needs are on a 1 to 10 scale, with 10 being the most dire need */
@@ -67,6 +68,10 @@ public class Person {
         position = residence.getPosition();
         this.map = map;
 
+        foodNeed = 1;
+        shelterNeed = 1;
+        funNeed = 1;
+
         /* find place of work by iterating through all workplaces.
         Ultimately chooses based on amount of money and type of work */
         int i = 0;
@@ -80,7 +85,8 @@ public class Person {
 
             /* check if the work will hire the person */
             if (work.willHire(this)) {
-                companyScore = work.getPayRate() * (personality.getPreferredWork() == work.getWorkType() ? 1 : 0.5);
+                //edit this
+                companyScore = work.getQuality() * work.getPayRate() * (personality.getPreferredWork() == work.getWorkType() ? 1 : 0.5);
 
                 /* See if this is the best workplace found so far */
                 if (companyScore > bestCompanyScore) {
@@ -88,13 +94,12 @@ public class Person {
                     bestWork = work;
                 }
             }
-
-            /* Assuming a workplace that will hire the person is found, hire them */
-            if (bestWork != null) {
-                bestWork.hire(this);
-                this.workplace = bestWork;
-            }
             i++;
+        }
+         /* Assuming a workplace that will hire the person is found, hire them */
+        if (bestWork != null) {
+            bestWork.hire(this);
+            this.workplace = bestWork;
         }
     }
 
@@ -115,17 +120,17 @@ public class Person {
             if (hasChild && childAge >= 18) {
                 map.addPerson();
                 hasChild = false;
-            } else {
+            } else if (hasChild) {
                 childAge++;
             }
         }
 
-        if (healthStatus.size() < 100) {
+        if (healthStatus.size() < HEALTH_DAYS_TO_TRACK) {
             //Add the basic needs status to the Beginning of the list
             healthStatus.add(0, healthScore());
         } else {
             //get rid of the oldest score
-            healthStatus.remove(99);
+            healthStatus.remove(HEALTH_DAYS_TO_TRACK - 1);
             //Add newest to the front
             healthStatus.add(0, healthScore());
         }
@@ -146,7 +151,9 @@ public class Person {
             funNeed = Math.max(funNeed - 7, 0);
         } else if (state.equals(State.WORK)) {
             // TODO: If person is unemployed, look for job
-            money += workplace.getPayRate();
+            if (workplace != null) {
+                money += workplace.getPayRate();
+            }
         } else if (state.equals(State.DINNER_OUT)) {
             money -= 10;
             foodNeed = Math.max(foodNeed - 6,  0);
@@ -168,17 +175,20 @@ public class Person {
 
     /* Calculate the overall need of the person, weighting dire needs more */
     private int healthScore() {
-        int overallScore = 0;
+        double overallScore = 0;
         double foodMultiplier, funMultiplier, shelterMultiplier;
 
-
+        /* Calculate Multipliers based on necessity */
         foodMultiplier = setMultiplier(foodNeed);
         funMultiplier = setMultiplier(funNeed);
         shelterMultiplier = setMultiplier(shelterNeed);
 
-        /* Scale the result properly */
-        return (int) ((foodNeed * foodMultiplier + funNeed * funMultiplier + shelterNeed*shelterMultiplier)
-                / ((foodMultiplier + funMultiplier + shelterMultiplier) * 30));
+        /* Calculate the overall score, weighted by how bad their needs */
+        overallScore = ((foodNeed * foodMultiplier + funNeed * funMultiplier + shelterNeed*shelterMultiplier));
+        overallScore /= (foodMultiplier + funMultiplier + shelterMultiplier);
+
+        /* the score is on a scale of 1 to 10, where a lower score means a healthier person*/
+        return (int) overallScore;
     }
 
     /* Helper method which scales basic need scores appropriately */
@@ -194,22 +204,24 @@ public class Person {
 
     private boolean checkHealth() {
         /* First, sum up and average the health over the past five days */
-        int overallHealth = 0;
-        for (Integer healthPerDay: healthStatus) {
-            overallHealth += healthPerDay;
-        }
-        overallHealth /= healthStatus.size();
+        if (healthStatus.size() >= HEALTH_DAYS_TO_TRACK) {
+            int overallHealth = 0;
+            for (Integer healthPerDay : healthStatus) {
+                overallHealth += healthPerDay;
+            }
+            overallHealth /= healthStatus.size();
 
-        /* If the person consistently has an average of 25 or more, they die.  The method returns true */
-        int cutoff = 25;
-        if (overallHealth > cutoff) {
-            return DEAD;
-        }
+            /* If the person consistently has an average of 25 or more, they die.  The method returns true */
+            int cutoff = 25;
+            if (overallHealth > cutoff) {
+                return DEAD;
+            }
 
-        /* The person can also die of old age.  Their chance is linearly related to their age.  At 200, they die for sure. */
-        Random rand = new Random();
-        if (rand.nextInt(200) < age) {
-            return DEAD;
+            /* The person can also die of old age.  Their chance is linearly related to their age. 10000 is just a factor to use */
+            Random rand = new Random();
+            if (rand.nextInt(10000) < age) {
+                return DEAD;
+            }
         }
         return ALIVE;
     }
@@ -316,12 +328,12 @@ public class Person {
     }
     @Override
     public String toString() {
-    	return new StringBuilder()
-    		.append("State: " + state + "\n")
-    		.append("Money: " + money + "\n")
-    		.append("Food Need: " + foodNeed + "\n")
-    		.append("Shelter Need: " + shelterNeed + "\n")
-    		.append("Fun Need: " + funNeed)
-    		.toString();
+        return new StringBuilder()
+            .append("State: " + state + "\n")
+            .append("Money: " + money + "\n")
+            .append("Food Need: " + foodNeed + "\n")
+            .append("Shelter Need: " + shelterNeed + "\n")
+            .append("Fun Need: " + funNeed)
+            .toString();
     }
 }
