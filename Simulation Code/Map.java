@@ -17,7 +17,7 @@ public class Map {
 	private MapConstituent[] layout;
 	private ArrayList<Person> population;
 	// People who died in the current timestep. Updated on update().
-	ArrayList<Person> deadPeople = new ArrayList<>();
+	ArrayList<Person> deadPeople = new ArrayList<Person>();
 
     /* A hashmap of the positions inhabited.  True if the position is inhabited; false otherwise */
     HashMap<Position, Boolean> positionsInhabited = new HashMap<Position, Boolean>();
@@ -44,6 +44,27 @@ public class Map {
 			population.add(i,Person.createRandomPerson(residences[i], businesses, this));
 		}
 	}
+
+    public Map(int numPopulation) {
+        residences = new Residence[numPopulation];
+        businesses = new Business[numPopulation/10];
+        population = new ArrayList<Person>(numPopulation);
+
+		/*Creates list of random residences */
+        for (int i = 0; i < numPopulation; i++) {
+            residences[i] = new Residence(generateRandomPosition());
+        }
+
+		/* Creates list of random businesses */
+        for (int i = 0; i < numPopulation/10; i++) {
+            businesses[i] = new Business(generateRandomPosition());
+        }
+
+		/* Creates the individual population */
+        for (int i = 0; i < numPopulation; i++) {
+            population.add(i,Person.createRandomPerson(residences[i], businesses, this));
+        }
+    }
 
     private Position generateRandomPosition() {
         /* To generate keep track of random positions generated */
@@ -76,8 +97,10 @@ public class Map {
 	}
 	
 	private void updatePeople(int time) {
+
+		ArrayList<Person> deadPeople = new ArrayList<Person>();
 		deadPeople.clear();
-		
+
 		// Every hour, update persons
         for (int i = 0; i < population.size(); i++) {
         	boolean status = population.get(i).update(time);
@@ -97,6 +120,10 @@ public class Map {
     public void addPerson() {
         /* Incomplete, in that it always adds just the first house to the person.  update when residences is done */
         population.add(Person.createRandomPerson(residences[1],businesses, this));
+    }
+
+    public int getNumberOfPeople() {
+        return population.size();
     }
 	
 	/**
