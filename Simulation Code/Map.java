@@ -57,23 +57,34 @@ public class Map {
 
 	/* Update the map with time */
 	public void update(int time) {
+		updateBusinesses(time);
+		updatePeople(time);
+	}
+	
+	private void updateBusinesses(int time) {
 		// At the beginning of every day, update businesses
 		if (time == 0) {
 			for (Business b : businesses) {
 				b.update();
 			}
 		}
-
-        // status variable to indicate if a person dies
-        boolean status;
+	}
+	
+	private void updatePeople(int time) {
+		ArrayList<Person> deadPeople = new ArrayList<>();
+        
 		// Every hour, update persons
         for (int i = 0; i < population.size(); i++) {
-        	status = population.get(i).update(time);
+        	boolean status = population.get(i).update(time);
 
-            //if the person dies, update return true
-            if (status) {
-                population.remove(i);
+            if (status == Person.DEAD) {
+                deadPeople.add(population.get(i));
             }
+        }
+        
+        // Remove the dead people from the population
+        for (int i = 0; i < deadPeople.size(); i++) {
+        	population.remove(deadPeople.get(i));
         }
 	}
 

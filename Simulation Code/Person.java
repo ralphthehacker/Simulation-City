@@ -14,7 +14,9 @@ import java.util.Random;
 
 public class Person {
 
-    public static int ADULT_AGE = 18;
+    public static final int ADULT_AGE = 18;
+    public static final boolean DEAD = true;
+    public static final boolean ALIVE = false;
     /* These needs are on a 1 to 10 scale, with 10 being the most dire need */
     private int foodNeed, shelterNeed, funNeed;
     private int money;
@@ -204,15 +206,15 @@ public class Person {
         /* If the person consistently has an average of 25 or more, they die.  The method returns true */
         int cutoff = 25;
         if (overallHealth > cutoff) {
-            return true;
+            return DEAD;
         }
 
         /* The person can also die of old age.  Their chance is linearly related to their age.  At 200, they die for sure. */
         Random rand = new Random();
         if (rand.nextInt(200) < age) {
-            return true;
+            return DEAD;
         }
-        return false;
+        return ALIVE;
     }
 
     /* Decides if the person wants to make a baby */
