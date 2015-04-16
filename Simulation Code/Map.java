@@ -16,6 +16,8 @@ public class Map {
 	private Business[] businesses;
 	private MapConstituent[] layout;
 	private ArrayList<Person> population;
+	// People who died in the current timestep. Updated on update().
+	ArrayList<Person> deadPeople = new ArrayList<>();
 
     /* A hashmap of the positions inhabited.  True if the position is inhabited; false otherwise */
     HashMap<Position, Boolean> positionsInhabited = new HashMap<Position, Boolean>();
@@ -25,6 +27,7 @@ public class Map {
 		residences = new Residence[STARTING_POPULATION];
 		businesses = new Business[STARTING_POPULATION/10];
 		population = new ArrayList<Person>(STARTING_POPULATION);
+		deadPeople = new ArrayList<Person>();
 
 		/*Creates list of random residences */
 		for (int i = 0; i < STARTING_POPULATION; i++) {
@@ -73,8 +76,8 @@ public class Map {
 	}
 	
 	private void updatePeople(int time) {
-		ArrayList<Person> deadPeople = new ArrayList<>();
-        
+		deadPeople.clear();
+		
 		// Every hour, update persons
         for (int i = 0; i < population.size(); i++) {
         	boolean status = population.get(i).update(time);
@@ -113,6 +116,14 @@ public class Map {
 			System.out.println("Person " + i);
 			System.out.println(population.get(i));
 			System.out.println();
+		}
+	}
+	
+	public void printDeathToll() {
+		if (deadPeople.size() > 0) {
+			System.out.println(deadPeople.size() +
+					(deadPeople.size() == 1 ? " person" : " people") +
+					" died!");
 		}
 	}
 }
