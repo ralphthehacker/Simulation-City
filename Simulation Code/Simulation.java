@@ -43,10 +43,14 @@ public class Simulation {
 			}
 		}
 
-		Map map = new Map();
+		Map map = new Map(nPeopleStats);
 
 		// Run the simulation
 		for (int i = 0; i < totalTimesteps; i++) {
+			// Update the simulation
+			map.update(time);
+			nPeopleStats = map.getNumberOfPeople();
+
 			// Print the statistics
 			if (time%statsInterval == 0) {
 				System.out.println("Time = " + time);
