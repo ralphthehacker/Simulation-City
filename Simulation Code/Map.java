@@ -27,17 +27,17 @@ public class Map {
 		population = new ArrayList<Person>(STARTING_POPULATION);
 
 		/*Creates list of random residences */
-		for (int i = 0; i < residences.length; i++) {
+		for (int i = 0; i < STARTING_POPULATION; i++) {
 			residences[i] = new Residence(generateRandomPosition());
 		}
 
 		/* Creates list of random businesses */
-		for (int i = 0; i < businesses.length; i++) {
+		for (int i = 0; i < STARTING_POPULATION/10; i++) {
 			businesses[i] = new Business(generateRandomPosition());
 		}
 
 		/* Creates the individual population */
-		for (int i = 0; i < population.size(); i++) {
+		for (int i = 0; i < STARTING_POPULATION; i++) {
 			population.add(i,Person.createRandomPerson(residences[i], businesses, this));
 		}
 	}
@@ -67,14 +67,14 @@ public class Map {
         // status variable to indicate if a person dies
         boolean status;
 		// Every hour, update persons
-		for (Person p : population) {
-			status = p.update(time);
+        for (int i = 0; i < population.size(); i++) {
+        	status = population.get(i).update(time);
 
             //if the person dies, update return true
             if (status) {
-                population.remove(p);
+                population.remove(i);
             }
-		}
+        }
 	}
 
     /* Allows a person to add children to the map */
