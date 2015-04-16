@@ -11,7 +11,7 @@ public class Simulation {
 	public static void main(String[] args) {
 		int totalTimesteps = 100, time = 0;
 		// Number of people the simulation should print stats for
-		int nPeopleStats = -1;
+		int nPeopleStats = 2;
 		// The interval used to print the statistics.
 		int statsInterval = HOURLY;
 		// Whether to report death or birth during updates
