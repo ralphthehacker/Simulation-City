@@ -26,7 +26,7 @@ public class StateMachine {
             // Determines the probabilities of the next states
             HashMap<State, Double> possibleStates = determinePossibleStates(currentState, person);
             State nextState = getBestState(possibleStates);// Picks a state based on the probability distribution
-            person.setStateTimeLock(StateMachine.getLockTime(nextState));// And updates the timeLock
+            person.setStateTimeLock(StateMachine.getLockTime(nextState,person));// And updates the timeLock
             return nextState;
         }   else
         {
@@ -394,15 +394,15 @@ public class StateMachine {
         int randomSample = new Random().nextInt(bins.size()); //Random selection
         return bins.get(randomSample); //Returns the selected state
     }
-    public static int getLockTime(State state) {
+    public static int getLockTime(State state, Person person) {
         if(state == State.SLEEP)//Sleep at least 6 hours
         {
             //The initial probabilities don't really matter since they will be changed in the Transition function
             return 7;
 
 
-        }  else if(state == State.WORK){//Work at least 7 hours
-            return 6;
+        }  else if(state == State.WORK){//Work for the necessary amount of time
+            return person.getWorkHours();
 
         }  else// Any other agent only locks you for one hour
 

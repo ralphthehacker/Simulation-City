@@ -13,7 +13,7 @@ public class Business extends MapConstituent {
 	/* In addition to the variables of MapConstituent, we have several additional attributes that describe a business.
 	Note that work quality is on a 1-10 scale, and pay and networth are in the thousands
 	Something not to forget is how this influences the contentment of a person*/
-	private int workQuality, pay, netWorth;
+	private int workQuality, pay, netWorth,minimumWorkingHours;
 
 	/* maximum number of employees the company can currently have */
 	private int maxNumEmployees;
@@ -67,6 +67,8 @@ public class Business extends MapConstituent {
 
 		/* Initialize networth. It should always be equal to total pay to employees times 5 */
 		netWorth = (pay * maxNumEmployees * 5);
+
+        minimumWorkingHours = Math.round((workQuality/10) + 7);
 	}
 
 	/* Calculates what the basic needs scores are for a business */

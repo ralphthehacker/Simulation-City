@@ -15,6 +15,7 @@ public class Map {
     public static final int SIZE_OF_GRID = STARTING_POPULATION * 5;
 	private Residence[] residences;
 	private Business[] businesses;
+    private GlassdoorDotCom glassdoor;
 	private MapConstituent[] layout;
 	private ArrayList<Person> population;
 	// People who died in the current timestep. Updated on update().
@@ -29,6 +30,7 @@ public class Map {
 		businesses = new Business[STARTING_POPULATION/10];
 		population = new ArrayList<Person>(STARTING_POPULATION);
 		deadPeople = new ArrayList<Person>();
+        glassdoor = new GlassdoorDotCom(this);
 
 		/*Creates list of random residences */
 		for (int i = 0; i < STARTING_POPULATION; i++) {
@@ -50,6 +52,8 @@ public class Map {
         residences = new Residence[numPopulation];
         businesses = new Business[numPopulation/10];
         population = new ArrayList<Person>(numPopulation);
+        glassdoor = new GlassdoorDotCom(this);
+
 
 		/*Creates list of random residences */
         for (int i = 0; i < numPopulation; i++) {
@@ -130,7 +134,9 @@ public class Map {
     {
         for(Person person :casualties)
         {
-            person.getWorkplace().handleDeath(person);//Remove person from her formal job
+            if (null!=person.getWorkplace()) {
+                person.getWorkplace().handleDeath(person);//Remove person from her former job
+            }
             person.getResidence().handleDeath();// Remove person from her former house
             population.remove(person);//Remove a people from life
 

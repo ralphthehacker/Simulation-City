@@ -21,6 +21,7 @@ public class Person {
     /* These needs are on a 1 to 10 scale, with 10 being the most dire need */
     private int foodNeed, shelterNeed, funNeed;
     private int money;
+    private int work_hours;//TODO: add this up into the contentment equation
     private int stateTimeLock; // This variable represents the number of clock cycles that a certain agent is locked to after entering it.
 
     /* People start out 18 */
@@ -31,6 +32,7 @@ public class Person {
     private int childAge;
     private State state;
     private int amountOfFood;
+
 
     private Business workplace;
     private Residence residence;
@@ -63,7 +65,7 @@ public class Person {
         money = 100;
         amountOfFood = 3;
         state = State.SLEEP;
-        this.stateTimeLock = StateMachine.getLockTime(State.SLEEP);//A person starts free
+        this.stateTimeLock = StateMachine.getLockTime(State.SLEEP,this);//A person starts free
         this.residence = residence;//Setting a person to own a house
         this.residence.setOwner(this);//TODO:Make this more readable later
         position = residence.getPosition();
@@ -363,6 +365,25 @@ public class Person {
 
     public void setMap(Map map) {
         this.map = map;
+    }
+
+    public int getWorkHours() {
+        return work_hours;
+    }
+
+    public void setWorkHours(int work_hours) {
+        this.work_hours = work_hours;
+    }
+
+    public boolean isEmployed()
+    {
+        return (this.getWorkplace() == null);
+    }
+
+    public boolean isLookingForJobs()
+    {
+        //TODO:Do magic metric in here. Also cover unemployed case over here as well
+        return true;
     }
 
     @Override
