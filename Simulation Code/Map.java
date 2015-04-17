@@ -26,7 +26,7 @@ public class Map {
 
 	/*TO DO: generate different aspects of the map randomely */
 	public Map() {
-        Map(DEFAULT_STARTING_POPULATION);
+        this(DEFAULT_STARTING_POPULATION);
 	}
 
     public Map(int numPopulation) {
