@@ -11,8 +11,8 @@ import java.util.Random;
  */
 public class Map {
 	/* A map contains a 2-D array of all the map consituents */
-	public static final int STARTING_POPULATION = 100;
-    public static final int SIZE_OF_GRID = STARTING_POPULATION * 5;
+	public static final int DEFAULT_STARTING_POPULATION = 100;
+    public static final int SIZE_OF_GRID = DEFAULT_STARTING_POPULATION * 5;
 	private Residence[] residences;
 	private Business[] businesses;
     private GlassdoorDotCom glassdoor;
@@ -26,26 +26,7 @@ public class Map {
 
 	/*TO DO: generate different aspects of the map randomely */
 	public Map() {
-		residences = new Residence[STARTING_POPULATION];
-		businesses = new Business[STARTING_POPULATION/10];
-		population = new ArrayList<Person>(STARTING_POPULATION);
-		deadPeople = new ArrayList<Person>();
-        glassdoor = new GlassdoorDotCom(this);
-
-		/*Creates list of random residences */
-		for (int i = 0; i < STARTING_POPULATION; i++) {
-			residences[i] = new Residence(generateRandomPosition());
-		}
-
-		/* Creates list of random businesses */
-		for (int i = 0; i < STARTING_POPULATION/10; i++) {
-			businesses[i] = new Business(generateRandomPosition());
-		}
-
-		/* Creates the individual population */
-		for (int i = 0; i < STARTING_POPULATION; i++) {
-			population.add(i,Person.createRandomPerson(residences[i], businesses, this));
-		}
+        Map(DEFAULT_STARTING_POPULATION);
 	}
 
     public Map(int numPopulation) {
