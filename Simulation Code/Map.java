@@ -174,4 +174,12 @@ public class Map {
     public void setPopulation(ArrayList<Person> population) {
         this.population = population;
     }
+
+    public GlassdoorDotCom getGlassdoor() {
+        return glassdoor;
+    }
+
+    public void setGlassdoor(GlassdoorDotCom glassdoor) {
+        this.glassdoor = glassdoor;
+    }
 }

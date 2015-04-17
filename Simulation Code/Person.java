@@ -110,11 +110,107 @@ public class Person {
     // Update the person's needs and/or state
     // Returns Person.DEAD if person dies. Otherwise,
     // returns Person.ALIVE
+    //TODO: I don't really like to use this method to check death.I will write some proper method later
     public boolean update(int time) {
 
         /* Increase age by one day.  Handle babies*/
         handleReproduction(time);
 
+        // Handle the long time heath of this person
+        handleHealthChanges();
+
+
+        // Slowly decrement all needs.
+        foodNeed = Math.min(foodNeed + 1, 10);
+        shelterNeed = Math.min(shelterNeed + 1, 10);
+        funNeed = Math.min(funNeed + 1, 10);
+
+        //TODO: Uncomment this to make individuals look for jobs and encapsulate it onto handleStateUpdate() when it works
+//        if(this.isLookingForJobs())
+//            if (!this.getState().equals(State.SLEEP))
+//            {
+//                //If a person is unemployed or unhappy with her job, she can look for a new job
+//                if(this.isLookingForJobs())
+//                {
+//                    this.lookForJobs();
+//                }
+//            }
+
+        //Determines a person's current state and updates her attributes depending on the state
+        handleStateUpdates();
+
+        //Pass current person to the state machine to determine the next state
+        this.state = StateMachine.getNextState(this,time);
+
+        return checkHealth();
+    }
+
+    // Makes a person browse prospective jobs on glassdoor
+    public void lookForJobs()
+    {
+        this.getMap().getGlassdoor().getAJob(this);
+    }
+
+    //Updates a person's attributes based on her state
+    public void handleStateUpdates()
+    {
+
+
+
+        if (state.equals(State.SLEEP))
+        {
+            shelterNeed = Math.max(shelterNeed - 2, 0);
+
+        }
+
+        else if (state.equals(State.BREAKFAST_HOME))
+        {
+            // TODO: Decrease food supply home
+            foodNeed = Math.max(foodNeed - 6, 0);
+
+        }
+
+        else if (state.equals(State.BREAKFAST_OUT))
+        {
+            money -= 10;
+            foodNeed = Math.max(foodNeed - 6, 0);
+            funNeed = Math.max(funNeed - 7, 0);
+
+        }
+
+        else if (state.equals(State.WORK))
+        {
+            if (this.isEmployed()) {
+                money += workplace.getPayRate();
+            }
+        }
+        else if (state.equals(State.DINNER_OUT))
+        {
+            money -= 10;
+            foodNeed = Math.max(foodNeed - 6,  0);
+            funNeed = Math.max(funNeed - 7, 0);
+
+        }
+        else if (state.equals(State.SHOP))
+        {
+            // TODO: Increase food supply at home instead
+            money -= 5;
+            foodNeed = Math.max(foodNeed - 6, 0);
+
+        }
+        else if(state.equals(State.DINNER_HOME))
+
+        {
+            // TODO: Decrease food supply at home
+            foodNeed = Math.max(foodNeed - 6, 0);
+        }
+
+
+    }
+
+
+    public void handleHealthChanges()
+    {
         if (healthStatus.size() < HEALTH_DAYS_TO_TRACK) {
             //Add the basic needs status to the Beginning of the list
             healthStatus.add(0, healthScore());
@@ -124,47 +220,6 @@ public class Person {
             //Add newest to the front
             healthStatus.add(0, healthScore());
         }
-
-        // Slowly decrement all needs.
-        foodNeed = Math.min(foodNeed + 1, 10);
-        shelterNeed = Math.min(shelterNeed + 1, 10);
-        funNeed = Math.min(funNeed + 1, 10);
-
-        if (state.equals(State.SLEEP)) {
-            shelterNeed = Math.max(shelterNeed - 2, 0);
-
-        } else if (state.equals(State.BREAKFAST_HOME)) {
-            // TODO: Decrease food supply home
-            foodNeed = Math.max(foodNeed - 6, 0);
-
-        } else if (state.equals(State.BREAKFAST_OUT)) {
-            money -= 10;
-            foodNeed = Math.max(foodNeed - 6, 0);
-            funNeed = Math.max(funNeed - 7, 0);
-
-        } else if (state.equals(State.WORK)) {
-            // TODO: If person is unemployed, look for job
-            if (workplace != null) {
-                money += workplace.getPayRate();
-            }
-
-        } else if (state.equals(State.DINNER_OUT)) {
-            money -= 10;
-            foodNeed = Math.max(foodNeed - 6,  0);
-            funNeed = Math.max(funNeed - 7, 0);
-        } else if (state.equals(State.SHOP)) {
-            // TODO: Increase food supply at home instead
-            money -= 5;
-            foodNeed = Math.max(foodNeed - 6, 0);
-        } else if(state.equals(State.DINNER_HOME)) {
-            // TODO: Decrease food supply at home
-            foodNeed = Math.max(foodNeed - 6, 0);
-        }
-
-        //Pass current person to the state machine to determine the next state
-        this.state = StateMachine.getNextState(this,time);
-
-        return checkHealth();
     }
 
 
@@ -264,7 +319,7 @@ public class Person {
         int skill = personality.getSkill();
         int contentment = personality.getContentment();
         //TODO: DETERMINE HOW PERSONALITY PARAMETERS RELATE TO THE MONEY IMPORTANCE. ERASE THIS WHEN DONE
-        return 1;
+        return (ambition);
     }
 
     /* Returns an array with a person's needs. */
@@ -382,10 +437,26 @@ public class Person {
 
     public boolean isLookingForJobs()
     {
-        //TODO:Do magic metric in here. Also cover unemployed case over here as well
-        return true;
+
+        //If a person is unemployed then she's looking for jobs
+        if(!isEmployed())
+        {
+            return true;
+        }
+        else // Else, she'll only seek jobs if she isn't content
+        {
+            if(this.getPersonality().getContentment() > 5)
+            {
+                return false;
+            }
+            else
+            {
+                return true;
+            }
+        }
     }
 
+    //TODO: Put this on the update method
     private void updateContentment() {
         double jobFactor;
         double homeFactor;
@@ -416,6 +487,11 @@ public class Person {
 
     }
 
+    // A person is looking for a job if she is unemployed or not content with her current situation
+    private boolean isLookingForAJob()
+    {
+        return (!this.isEmployed()) || this.getPersonality().getContentment() <= 5;
+    }
     private double getPayScale(int pay) {
         double scale;
         /* Pay is anywhere from 20 (thousand) onward */

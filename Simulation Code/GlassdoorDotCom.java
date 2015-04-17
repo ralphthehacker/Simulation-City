@@ -23,6 +23,34 @@ public class GlassdoorDotCom
 
     }
 
+
+
+    //Todo: Update list of prospective candidates and make businesses employ their strategies
+    public ArrayList<Person> scout(Business corporation, int number_of_people)// This method will be called from map.update
+    {
+        ArrayList<Person> my_list = new ArrayList<Person>();
+        return null;
+
+
+    }
+
+
+    //TODO: Finish
+    public Business getAJob(Person p)
+    {
+        Business bestBusiness = determineBestFittingJob(Person p);
+        return null;
+    }
+
+    //TODO: Finish
+    private Business determineBestFittingJob()
+    {
+        //First get all the business who could hire this person
+        // Edge cases
+        return null;
+    }
+
+
     //Determine people who are interested in new jobs
     private  void determineProspectiveCandidates()
     {
@@ -31,19 +59,13 @@ public class GlassdoorDotCom
         {
             if (! dude.getState().equals(State.SLEEP))//A person can look for jobs as long as she ain't sleeping
             {
-                if (dude.isLookingForJobs()) //This metric counts if a person is unemployed or if she wants out
+                if (dude.getPersonality().getContentment() <= 6) //This metric counts if a person is unemployed or if she wants out
                 {
                     prospectiveCandidates.add(dude);// Add this to the prospective candidates list
                 }
             }
 
         }
-    }
-
-    //Todo: Update list of prospective candidates and make businesses employ their strategies
-    private void update()
-    {
-
     }
 
 

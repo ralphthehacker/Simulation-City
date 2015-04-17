@@ -68,7 +68,7 @@ public class Business extends MapConstituent {
 		/* Initialize networth. It should always be equal to total pay to employees times 5 */
 		netWorth = (pay * maxNumEmployees * 5);
 
-        minimumWorkingHours = Math.round((workQuality/10) + 7);
+        minimumWorkingHours = Math.round((workQuality / 10) + 7);
 	}
 
 	/* Calculates what the basic needs scores are for a business */
@@ -214,6 +214,14 @@ public class Business extends MapConstituent {
 		return companyStatus;
 	}
 
+
+    public void headHunt(GlassdoorDotCom g, int number_of_employees)
+
+
+    {
+        g.scout(this,number_of_employees);
+    }
+
 	/*Decides the what action to take: expand, contract, or do nothing.
 	If the company contracts for five straight months, it shuts down. 
 	In this case, the function return false.  
@@ -322,6 +330,7 @@ public class Business extends MapConstituent {
 			fire();
 		}
 	}
+
 
     public void handleDeath(Person p)
     {
