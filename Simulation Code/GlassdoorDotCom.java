@@ -38,12 +38,12 @@ public class GlassdoorDotCom
     //TODO: Finish
     public Business getAJob(Person p)
     {
-        Business bestBusiness = determineBestFittingJob(Person p);
+        Business bestBusiness = determineBestFittingJob(p);
         return null;
     }
 
     //TODO: Finish
-    private Business determineBestFittingJob()
+    private Business determineBestFittingJob(Person p)
     {
         //First get all the business who could hire this person
         // Edge cases
