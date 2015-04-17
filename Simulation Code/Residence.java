@@ -69,6 +69,10 @@ public class Residence extends MapConstituent {
         return owner;
     }
 
+    public int getQuality() {
+        return quality;
+    }
+
     public void setOwner(Person owner) {
         this.owner = owner;
     }

@@ -386,6 +386,63 @@ public class Person {
         return true;
     }
 
+    private void updateContentment() {
+        double jobFactor;
+        double homeFactor;
+
+        double payFactor = getPayScale(workplace.getPayRate());
+        /* work quality is on a 1 to 10 scale. The pay factor is on a 1 to 10 scale */
+        jobFactor = (workplace.getQuality() + payFactor) * (personality.getPreferredWork() == workplace.getWorkType() ? 1 : 0.5);
+
+        /* Scale job factor properly (it ranges from 2 to 20) */
+        jobFactor = jobFactor/2;
+        if (jobFactor < 1)
+                jobFactor = 1;
+
+        /* Get the quality of the home */
+        homeFactor = residence.getQuality();
+
+        /* Combine the two (ranges from 1 to 100 */
+        double overallFactor = jobFactor * homeFactor;
+
+        /* Now consider ambition by dividing the combined score by the ambition */
+        overallFactor /= personality.getAmbition();
+
+        /* Make sure it doesn't exceed 10 */
+        if (overallFactor > 10)
+            overallFactor = 10;
+
+        personality.setContentment((int) overallFactor);
+
+    }
+
+    private double getPayScale(int pay) {
+        double scale;
+        /* Pay is anywhere from 20 (thousand) onward */
+        if (pay <= 30) {
+            scale = 1 + ((pay - 10.0) / 10);
+        } else if (pay <= 50) {
+            scale = 2 + ((pay - 30.0)/20);
+        } else if (pay <= 70) {
+            scale = 3 + ((pay - 50.0)/20);
+        } else if (pay <= 100) {
+            scale = 4 + ((pay - 70.0)/30);
+        } else if (pay <= 150) {
+            scale = 5 + ((pay - 100.0)/50);
+        } else if (pay <= 200) {
+            scale = 6 + ((pay - 150.0) / 50);
+        } else if (pay <= 275) {
+            scale = 7 + ((pay - 200.0) / 75);
+        } else if (pay <= 350) {
+            scale = 8 + ((pay - 275.0) / 75);
+        } else if (pay <= 500) {
+            scale = 9 + ((pay - 350.0) / 150);
+        } else {
+            scale = 10;
+        }
+        return scale;
+    }
+
     @Override
     public String toString() {
         return new StringBuilder()
