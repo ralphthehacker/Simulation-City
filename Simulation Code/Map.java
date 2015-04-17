@@ -136,20 +136,9 @@ public class Map {
         return population.size();
     }
 	
-	/**
-	 * 
-	 * @param nPeople The number of people to print the stats for. Use -1 to
-	 * print the statuses of the entire population.
-	 */
-	public void printPeopleStats(int nPeople) {
-		if (nPeople == -1) {
-			nPeople = population.size();
-		} else if (nPeople > population.size()) {
-			throw new RuntimeException("ERROR: Population size is " +
-					population.size() + " < " + nPeople);
-		}
-		
-		for (int i = 0; i < nPeople; i++) {
+	// Print the stats of the entire population
+	public void printPeopleStats() {
+		for (int i = 0; i < population.size(); i++) {
 			System.out.println("Person " + i);
 			System.out.println(population.get(i));
 			System.out.println();
