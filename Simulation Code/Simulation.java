@@ -10,8 +10,8 @@ public class Simulation {
 
 	public static void main(String[] args) {
 		int totalTimesteps = 100, time = 0;
-		// Number of people the simulation should print stats for
-		int nPeopleStats = 6;
+		// Number of people in the simulation
+		int nPeople = 6;
 		// The interval used to print the statistics.
 		int statsInterval = HOURLY;
 		// Whether to report death or birth during updates
@@ -21,8 +21,7 @@ public class Simulation {
 		// Parse command-line arguments
 		// --steps timesteps to run
 		// --startingtime starting time
-		// --personstats number of people to print stats for.
-		//		-1 for entire population
+		// --people number of people
 		// --statsinterval every how many timesteps should the
 		//		stats be printed
 		// --reportDeath reports death if set to true
@@ -37,9 +36,9 @@ public class Simulation {
             {
 				time = Integer.parseInt(args[i+1]);
 
-			} else if (args[i].equals("--personstats"))
+			} else if (args[i].equals("--people"))
             {
-				nPeopleStats = Integer.parseInt(args[i+1]);
+				nPeople = Integer.parseInt(args[i+1]);
 
 			} else if (args[i].equals("--statsinterval"))
             {
@@ -54,14 +53,10 @@ public class Simulation {
 			}
 		}
 
-		Map map = new Map(nPeopleStats);
+		Map map = new Map(nPeople);
 
 		// Run the simulation
 		for (int i = 0; i < totalTimesteps; i++) {
-			// Update the simulation
-			map.update(time%24);
-			nPeopleStats = map.getNumberOfPeople();
-
 			// Print the statistics
 			if (time%statsInterval == 0) {
 				System.out.println("Time = " + time);
@@ -74,7 +69,7 @@ public class Simulation {
 			
 			// Print death toll, if any
 			// TODO: Print death toll only on time%statsInterval
-			if (reportDeath && time%statsInterval == 0) {
+			if (reportDeath) {
 				map.printDeathToll();
 			}
 			

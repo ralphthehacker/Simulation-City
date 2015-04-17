@@ -87,9 +87,7 @@ public class Map {
 
 
 	private void updatePeople(int time) {
-
-		ArrayList<Person> deadPeople = new ArrayList<Person>();
-		deadPeople.clear();//????
+		deadPeople.clear();
 
 		// Every hour, update persons
         //TODO: Cover edge cases: Remove people who died from their jobs and possessions
