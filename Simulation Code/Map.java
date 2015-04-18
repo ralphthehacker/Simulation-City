@@ -223,7 +223,7 @@ public class Map {
         //Why an array why just why aaaaaack
         for (int i = 0 ; i < this.businesses.length ; i++ )
         {
-            //System.out.println(businesses[i].getRosterAndCompanyStats());
+            System.out.println(businesses[i].getRosterAndCompanyStats());
         }
     }
 }

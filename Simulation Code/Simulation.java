@@ -13,7 +13,7 @@ public class Simulation {
 	public static void main(String[] args) throws IOException {
 		int totalTimesteps = 100, time = 0;
 		// Number of people in the simulation
-		int nPeople = 2;
+		int nPeople = 7;
 		// The interval used to print the statistics.
 		int statsInterval = HOURLY;
 		// Whether to report death or birth during updates
