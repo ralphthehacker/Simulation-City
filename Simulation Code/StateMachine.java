@@ -25,6 +25,10 @@ public class StateMachine {
             State currentState = person.getState();
             // Determines the probabilities of the next states
             HashMap<State, Double> possibleStates = determinePossibleStates(currentState, person);
+            if (possibleStates.size() == 0)
+            {
+                int a =0;
+            };
             State nextState = getBestState(possibleStates);// Picks a state based on the probability distribution
             person.setStateTimeLock(StateMachine.getLockTime(nextState,person));// And updates the timeLock
             return nextState;
@@ -155,17 +159,21 @@ public class StateMachine {
         attributeVector.add(person.getNeeds()[2]); //A4
         attributeVector.add(person.getPersonality().getAmbition()); //A5
 
+        ///TODO: Erase this after debugging
+
         Set<Map.Entry<State,Double>> frontier = stateDictionary.entrySet(); // The frontier of all <State,Probability> pairs
 
         //For every (State,Probability) pair in the frontier of all possible states
         for(Map.Entry<State,Double> pair : frontier) {
-
+//            System.out.println("Current state being weighed is " + pair.getKey());
             // Getting the current pair's state and probability
             State state = pair.getKey();
 
 
             //Now we pass the vector and determine the transition
             Double newProbability = calculateProbabilityWithAttributes(state,attributeVector);
+
+
 
             //And add it to the probability distribuition
             newStateDictionary.put(state,newProbability);
@@ -181,8 +189,13 @@ public class StateMachine {
 //        System.out.println("The distribution is");
 //        System.out.println(newStateDictionary);
 
+        if(newStateDictionary.size() == 0)
+        {
+            int a = 0;
+        }
 //        System.out.println("After");
 //        System.out.println(newStateDictionary);
+
         return newStateDictionary;
     }
 
@@ -196,9 +209,20 @@ public class StateMachine {
         //Get the importance coefficients for the current state
         ArrayList<Double> coefficients = getCoefficientsForState(state);
 
+//        LinearAlgebraModule.printVector(coefficients,"Coefficients");
+
         //Get the final weighed probability
 
         Double probabilityValue = LinearAlgebraModule.dotProductProbability(attributes,coefficients);
+
+        if (probabilityValue < 0)
+        {
+            probabilityValue = Math.pow((1/probabilityValue),2);
+        } else
+        {
+            probabilityValue = (Math.pow(probabilityValue,2));
+        }
+
 
         // And return this probability
         return probabilityValue;
@@ -327,6 +351,9 @@ public class StateMachine {
     {
         //Preprocessing: Checking if any attribute is negative;
 
+        int removals = 0;
+//        System.out.println("New weighing");
+//        System.out.println(map);
         ArrayList<State> negativeVals = new ArrayList<State>();
         for(State key : map.keySet())
         {
@@ -334,6 +361,7 @@ public class StateMachine {
             //If the probability is negative, remove that state from the map. It is irrelevant
             if(map.get(test) < 0.0)
             {
+                removals++;
 
                 negativeVals.add(key);//Adding the key to the set of negative valued keys
                 // Just removing directly results in a concurrency error
@@ -343,6 +371,7 @@ public class StateMachine {
         {
             map.remove(key);
         }
+
 
 
 
@@ -360,11 +389,20 @@ public class StateMachine {
         }
 
         //Weighing those values
-        LinearAlgebraModule.normalizeVector(vals);
+        ArrayList<Double> newvals = LinearAlgebraModule.normalizeVector(vals);
         for(int i = 0; i < vals.size() ; i++)
         {
-            newMap.put(states.get(i), vals.get(i));
+            newMap.put(states.get(i), newvals.get(i));
         }
+
+        if(newMap.size()==0)
+        {
+            String s;
+        }
+//        System.out.println(newMap);
+//        System.out.println("------------------------------------------------");
+
+
         return newMap;
     }
 

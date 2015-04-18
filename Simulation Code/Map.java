@@ -1,3 +1,4 @@
+import java.io.IOException;
 import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -24,16 +25,22 @@ public class Map {
     /* A hashmap of the positions inhabited.  True if the position is inhabited; false otherwise */
     HashMap<Position, Boolean> positionsInhabited = new HashMap<Position, Boolean>();
 
-	/*TO DO: generate different aspects of the map randomely */
-	public Map() {
+    HashMap<Person, Boolean> peopleInMap = new HashMap<Person, Boolean>();
+
+
+    /*TO DO: generate different aspects of the map randomely */
+	public Map() throws IOException {
         this(DEFAULT_STARTING_POPULATION);
 	}
 
-    public Map(int numPopulation) {
+    public Map(int numPopulation) throws IOException {
         residences = new Residence[numPopulation];
-        businesses = new Business[numPopulation/10];
+        businesses = new Business[numPopulation];
         population = new ArrayList<Person>(numPopulation);
-        glassdoor = new GlassdoorDotCom(this);
+
+
+        //TODO: WTF's with that final boolean? Make people have a field called dead or alive
+
 
 
 		/*Creates list of random residences */
@@ -42,14 +49,25 @@ public class Map {
         }
 
 		/* Creates list of random businesses */
-        for (int i = 0; i < numPopulation/10; i++) {
+        for (int i = 0; i < businesses.length; i++) {
             businesses[i] = new Business(generateRandomPosition());
         }
 
+        //Now instantiate the GlassDoor
+        glassdoor = new GlassdoorDotCom(this);
+
+        //TODO: Coupling error with glassdoor
 		/* Creates the individual population */
         for (int i = 0; i < numPopulation; i++) {
             population.add(i,Person.createRandomPerson(residences[i], businesses, this));
         }
+
+        //Putting people in an iterable map for printing
+        for(Person person : this.population)
+        {
+            this.peopleInMap.put(person,true);
+        }
+
         System.out.println("All businesses");
         System.out.println(businesses);
     }
@@ -68,7 +86,7 @@ public class Map {
     }
 
 	/* Update the map with time */
-	public void update(int time) {
+	public void update(int time) throws IOException {
 		// At the beginning of every day, update businesses
 		if (time == 0) {
 			updateBusinesses();
@@ -76,6 +94,9 @@ public class Map {
 		
 		// Every hour, update the population
 		updatePeople(time);
+        //And the glassdoor
+        updateGlassDoor();
+
 	}
 
 	//TODO: Businesses shouldn't be static! Allow them to hire people and fire based on revenue
@@ -86,7 +107,7 @@ public class Map {
 	}
 
 
-	private void updatePeople(int time) {
+	private void updatePeople(int time) throws IOException {
 		deadPeople.clear();
 
 		// Every hour, update persons
@@ -109,8 +130,7 @@ public class Map {
     // This method is used to handle all death scenarios.It removes a person from her job and home
     // If a person has a child, the child takes over the house but only starts "living" when she reaches legal age
     // *
-    public void handleDeath(ArrayList<Person> casualties)
-    {
+    public void handleDeath(ArrayList<Person> casualties) throws IOException {
         for(Person person :casualties)
         {
             if (null!=person.getWorkplace()) {
@@ -125,7 +145,7 @@ public class Map {
 
     public void orphanage(){}
     /* Allows a person to add children to the map */
-    public void addPerson() {
+    public void addPerson() throws IOException {
         /* Incomplete, in that it always adds just the first house to the person.  update when residences is done */
         population.add(Person.createRandomPerson(residences[1],businesses, this));
     }
@@ -133,11 +153,13 @@ public class Map {
     public int getNumberOfPeople() {
         return population.size();
     }
-	
+
+
 	// Print the stats of the entire population
 	public void printPeopleStats() {
+
+        System.out.println("POPULATION STATUS:");
 		for (int i = 0; i < population.size(); i++) {
-			System.out.println("Person " + i);
 			System.out.println(population.get(i));
 			System.out.println();
 		}
@@ -181,5 +203,27 @@ public class Map {
 
     public void setGlassdoor(GlassdoorDotCom glassdoor) {
         this.glassdoor = glassdoor;
+    }
+
+    public void updateGlassDoor()
+    {
+        this.glassdoor = new GlassdoorDotCom(this);
+    }
+
+    public void visualizeWorld()
+    {
+        //Print the businesses and their status
+
+        //Print people and their states
+        for(java.util.Map.Entry<Person,Boolean> p : this.peopleInMap.entrySet())
+        {
+            System.out.println(p.getKey().toString());
+            System.out.println();
+        }
+        //Why an array why just why aaaaaack
+        for (int i = 0 ; i < this.businesses.length ; i++ )
+        {
+            //System.out.println(businesses[i].getRosterAndCompanyStats());
+        }
     }
 }

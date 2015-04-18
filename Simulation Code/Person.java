@@ -1,3 +1,4 @@
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Random;
 
@@ -24,6 +25,8 @@ public class Person {
     private int work_hours;//TODO: add this up into the contentment equation
     private int stateTimeLock; // This variable represents the number of clock cycles that a certain agent is locked to after entering it.
 
+    private RandomNameGenerator rg;
+    private String name;
     /* People start out 18 */
     private int age = 18;
 
@@ -44,7 +47,7 @@ public class Person {
 
     /* Creates a random person by calling the constructor below */
 
-    public static Person createRandomPerson(Residence residence, Business[] workplace, Map map) {
+    public static Person createRandomPerson(Residence residence, Business[] workplace, Map map) throws IOException {
         Random random = new Random();
 
         /* Instantiate the person */
@@ -58,7 +61,7 @@ public class Person {
 
     /* The constructor of the Person class; takes in residence and workplac */
 
-    public Person(Residence residence, Business[] workplaces, Map map) {
+    public Person(Residence residence, Business[] workplaces, Map map) throws IOException {
         personality = new Personality();
         hasChild = false;
         childAge = 0;
@@ -70,6 +73,10 @@ public class Person {
         this.residence.setOwner(this);//TODO:Make this more readable later
         position = residence.getPosition();
         this.map = map;
+        rg = new RandomNameGenerator("/Users/ralphblanes/Documents/PROJECTS/City_Sim/final_proj/cx-4230-final-project/Simulation Code/syllables");
+
+        //Creates a person's name
+        this.name = this.rg.compose(new Random().nextInt(2)+2);
 
         foodNeed = 1;
         shelterNeed = 1;
@@ -77,33 +84,12 @@ public class Person {
 
         /* find place of work by iterating through all workplaces.
         Ultimately chooses based on amount of money and type of work */
-        int i = 0;
-
-        Business bestWork = null;
-        double bestCompanyScore = 0;
-        double companyScore = 0;
-        //TODO:Edge Case what if businesses don't want to hire anyone even if they need personnel?
-        while (i < workplaces.length) {
-            Business work = workplaces[i];
-
-            /* check if the work will hire the person */
-            if (work.willHire(this)) {
-                //edit this
-                companyScore = work.getQuality() * work.getPayRate() * (personality.getPreferredWork() == work.getWorkType() ? 1 : 0.5);
-
-                /* See if this is the best workplace found so far */
-                if (companyScore > bestCompanyScore) {
-                    bestCompanyScore = companyScore;
-                    bestWork = work;
-                }
-            }
-            i++;
+        this.setWorkplace(this.getMap().getGlassdoor().getAJob(this));// Makes this person look for a job among the available jobs
+        if(workplace != null)
+        {
+            this.setWorkHours(this.getWorkplace().getMinimumWorkingHours());
         }
-         /* Assuming a workplace that will hire the person is found, hire them */
-        if (bestWork != null) {
-            bestWork.hire(this);
-            this.workplace = bestWork;
-        } //TODO: Edge case = Unemployed guy
+        //TODO: Edge case = Perpetually Unemployed guy
     }
 
 
@@ -111,7 +97,7 @@ public class Person {
     // Returns Person.DEAD if person dies. Otherwise,
     // returns Person.ALIVE
     //TODO: I don't really like to use this method to check death.I will write some proper method later
-    public boolean update(int time) {
+    public boolean update(int time) throws IOException {
 
         /* Increase age by one day.  Handle babies*/
         handleReproduction(time);
@@ -126,18 +112,21 @@ public class Person {
         funNeed = Math.min(funNeed + 1, 10);
 
         //TODO: Uncomment this to make individuals look for jobs and encapsulate it onto handleStateUpdate() when it works
-//        if(this.isLookingForJobs())
-//            if (!this.getState().equals(State.SLEEP))
-//            {
-//                //If a person is unemployed or unhappy with her job, she can look for a new job
-//                if(this.isLookingForJobs())
-//                {
-//                    this.lookForJobs();
-//                }
-//            }
+        //TODO: This is bugging, handle duplicates
+        if(this.isLookingForJobs())
+            if (!this.getState().equals(State.SLEEP))
+            {
+                //If a person is unemployed or unhappy with her job, she can look for a new job
+                if(this.isLookingForJobs())
+                {
+                    this.lookForJobs();
+                }
+            }
 
         //Determines a person's current state and updates her attributes depending on the state
         handleStateUpdates();
+
+        this.updateContentment();
 
         //Pass current person to the state machine to determine the next state
         this.state = StateMachine.getNextState(this,time);
@@ -148,7 +137,15 @@ public class Person {
     // Makes a person browse prospective jobs on glassdoor
     public void lookForJobs()
     {
-        this.getMap().getGlassdoor().getAJob(this);
+        Business newJob = this.getMap().getGlassdoor().getAJob(this);
+
+        //If this person got a better job, quit the past job
+        if(newJob != this.getWorkplace() && newJob != null && this.getWorkplace() != null)
+        {
+            this.getWorkplace().leaveCompany(this);
+            System.out.println(this.getName() + " has left his job");
+        }
+        this.setWorkplace(newJob);
     }
 
     //Updates a person's attributes based on her state
@@ -181,6 +178,7 @@ public class Person {
         else if (state.equals(State.WORK))
         {
             if (this.isEmployed()) {
+                System.out.print(this.name + " got paid");
                 money += workplace.getPayRate();
             }
         }
@@ -226,8 +224,7 @@ public class Person {
     //*
     // Takes in a time and creates new people. Function also responsilbe for aging children
     // *
-    public void handleReproduction(int time)
-    {
+    public void handleReproduction(int time) throws IOException {
         if (time == 0) {
             age++;
             if (babyMakingTime()) {
@@ -337,103 +334,6 @@ public class Person {
         funNeed = needs[2];
     }
 
-    /* Getters and setters */
-
-    public Personality getPersonality() {
-        //** Pretty much self explanatory *//
-        return this.personality;
-    }
-
-
-
-    public void setPersonality(Personality personality) {
-        this.personality = personality;
-    }
-
-    public int getMoney() {
-        return money;
-    }
-
-    public void setMoney(int money) {
-        this.money = money;
-    }
-
-    public State getState() {
-        return state;
-    }
-
-    public void setState(State state) {
-        this.state = state;
-    }
-
-    public boolean hasChild() {
-        return hasChild;
-    }
-
-    public void setHasChild(boolean hasChild) {
-        this.hasChild = hasChild;
-    }
-
-    public int getChildAge() {
-        return childAge;
-    }
-
-    public void setChildAge(int childAge) {
-        this.childAge = childAge;
-    }
-
-    public boolean hasWork() {
-        return workplace != null;
-    }
-
-    public int getStateTimeLock() {
-        return stateTimeLock;
-    }
-
-    public void setStateTimeLock(int stateTimeLock) {
-        this.stateTimeLock = stateTimeLock;
-    }
-    public Boolean isUnlocked()
-    {
-        return (this.getStateTimeLock() == 0);
-    }
-
-    public Business getWorkplace() {
-        return workplace;
-    }
-
-    public void setWorkplace(Business workplace) {
-        this.workplace = workplace;
-    }
-
-    public Residence getResidence() {
-        return residence;
-    }
-
-    public void setResidence(Residence residence) {
-        this.residence = residence;
-    }
-
-    public Map getMap() {
-        return map;
-    }
-
-    public void setMap(Map map) {
-        this.map = map;
-    }
-
-    public int getWorkHours() {
-        return work_hours;
-    }
-
-    public void setWorkHours(int work_hours) {
-        this.work_hours = work_hours;
-    }
-
-    public boolean isEmployed()
-    {
-        return (this.getWorkplace() == null);
-    }
 
     public boolean isLookingForJobs()
     {
@@ -460,10 +360,16 @@ public class Person {
     private void updateContentment() {
         double jobFactor;
         double homeFactor;
-
-        double payFactor = getPayScale(workplace.getPayRate());
+        double payFactor = 0;
+        if (!isEmployed())
+        {
+            jobFactor = 0;
+        } else {
+            payFactor = getPayScale(workplace.getPayRate());
+            jobFactor = (workplace.getQuality() + payFactor) * (personality.getPreferredWork() == workplace.getWorkType() ? 1 : 0.5);
+        }
         /* work quality is on a 1 to 10 scale. The pay factor is on a 1 to 10 scale */
-        jobFactor = (workplace.getQuality() + payFactor) * (personality.getPreferredWork() == workplace.getWorkType() ? 1 : 0.5);
+
 
         /* Scale job factor properly (it ranges from 2 to 20) */
         jobFactor = jobFactor/2;
@@ -522,11 +428,124 @@ public class Person {
     @Override
     public String toString() {
         return new StringBuilder()
-            .append("State: " + state + "\n")
-            .append("Money: " + money + "\n")
-            .append("Food Need: " + foodNeed + "\n")
-            .append("Shelter Need: " + shelterNeed + "\n")
-            .append("Fun Need: " + funNeed)
-            .toString();
+                .append("Name: " + name + "\n")
+                .append("State: " + state + "\n")
+                .append("Money: " + money + "\n")
+                .append("Food Need: " + foodNeed + "\n")
+                .append("Shelter Need: " + shelterNeed + "\n")
+                .append("Fun Need: " + funNeed + "\n")
+                .append("Working at: " + workplace + "\n")
+                .append(": " + funNeed + "\n")
+                .append("Fun Need: " + funNeed + "\n")
+                .append("Fun Need: " + funNeed + "\n")
+
+                .toString();
+    }
+
+     /* Getters and setters */
+
+    public Personality getPersonality() {
+        //** Pretty much self explanatory *//
+        return this.personality;
+    }
+
+
+
+    public void setPersonality(Personality personality) {
+        this.personality = personality;
+    }
+
+    public int getMoney() {
+        return money;
+    }
+
+    public void setMoney(int money) {
+        this.money = money;
+    }
+
+    public State getState() {
+        return state;
+    }
+
+    public void setState(State state) {
+        this.state = state;
+    }
+
+    public boolean hasChild() {
+        return hasChild;
+    }
+
+    public void setHasChild(boolean hasChild) {
+        this.hasChild = hasChild;
+    }
+
+    public int getChildAge() {
+        return childAge;
+    }
+
+    public void setChildAge(int childAge) {
+        this.childAge = childAge;
+    }
+
+    public boolean hasWork() {
+        return workplace != null;
+    }
+
+    public int getStateTimeLock() {
+        return stateTimeLock;
+    }
+
+    public void setStateTimeLock(int stateTimeLock) {
+        this.stateTimeLock = stateTimeLock;
+    }
+
+    public Boolean isUnlocked()
+    {
+        return (this.getStateTimeLock() == 0);
+    }
+
+    public Business getWorkplace() {
+        return workplace;
+    }
+
+    public void setWorkplace(Business workplace) {
+        this.workplace = workplace;
+    }
+
+    public Residence getResidence() {
+        return residence;
+    }
+
+    public void setResidence(Residence residence) {
+        this.residence = residence;
+    }
+
+    public Map getMap() {
+        return map;
+    }
+
+    public void setMap(Map map) {
+        this.map = map;
+    }
+
+    public int getWorkHours() {
+        return work_hours;
+    }
+
+    public void setWorkHours(int work_hours) {
+        this.work_hours = work_hours;
+    }
+
+    public boolean isEmployed()
+    {
+        return (this.getWorkplace() != null);
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 }

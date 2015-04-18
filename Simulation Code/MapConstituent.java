@@ -16,4 +16,8 @@ public abstract class MapConstituent {
 	/* These are the methods that elements of the will have */
 	public abstract boolean update();
 	public abstract void calculateBasicNeedsScore();
+
+    public Position getPos() {
+        return pos;
+    }
 }

@@ -92,10 +92,10 @@ public class Business extends MapConstituent {
 		/* Calculate threshold score to hire.  On a scale of .1 to 10 */
         double payFactor = pay / (double) MIN_PAY;
         payFactor = payFactor > 10 ? 10: payFactor;
-		double threshold = ((double) workQuality + payFactor) / 2; //divide by 2 scales since the max value is 20
+		double threshold = (((double) workQuality + payFactor) / 2)*(0.1*calculateProductivity()); //divide by 2 scales since the max value is 20
 
 
-		/* Check if applicant is eligible to work here */
+		/* Check if applicant is eligible to work here TODO: Make pickyness dependant on situation*/
 		if (applicantScore < threshold || employeeList.size() >= maxNumEmployees) {
 			return false;
 		}
@@ -114,7 +114,7 @@ public class Business extends MapConstituent {
 		int contentment = personality.getContentment();
 		WorkType preferredWork = personality.getPreferredWork();
 
-		/* Get basic needs scores */
+		/* Get basic needs scores //TODO: This shouldn't matter, otherwise getting a job is time dependant*/
 		int[] needs = person.getNeeds();
 
 		/* Gauge how much in need the person is */
@@ -185,6 +185,7 @@ public class Business extends MapConstituent {
 		if (employeeList.size() > 0) {
 			return score / employeeList.size();
 		}
+
 		return score;
 
 	}
@@ -337,7 +338,115 @@ public class Business extends MapConstituent {
         if(null == p){throw new ExceptionInInitializerError();}
         employeeList.remove(p);//Remove the employee from the company
     }
-	/* Getters */
+
+    public Boolean locateEmployee(Person p)
+    {
+        for(Person dude : this.employeeList)
+        {
+            if(dude.equals(p))
+            {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    //*
+    // Prints a company's statistics
+    // *
+    public String printStats()
+    {
+        StringBuilder sb = new StringBuilder();
+
+                sb.append("Productivity: " + this.calculateProductivity() + "\n")
+                .append("Company type: " + this.getWorkType() + "\n")
+                .append("Location : " + super.getPos() + "\n")
+                .append("Net Worth: " +
+                        this.getNetWorth() + "\n")
+                .append("Working hours: " + this.getMinimumWorkingHours() + "\n")
+                .append("Quality: " + this.getWorkQuality() + "\n")
+                .append("History: " + this.getProductHistory() + "\n").append("Number of Employees "
+                        + this.getEmployeeList().size() + "\n");
+        int a = 0;
+        return sb.toString();
+
+    }
+
+
+    //*
+    // Prints a person's company statistics
+    // *
+    public String getEmployeeNameAndStats(Person p)
+    {
+        if(locateEmployee(p) == true)
+        {
+            return new StringBuilder()
+                    .append("Name: " + p.getName() + "\n")
+                    .append("Employee Score: " + this.calculateEmployeeScore(p) + "\n")
+                    .append("Salary: " + this.getPayRate() + "\n").toString();
+        }
+        else return null;
+    }
+
+    //TODO: Finish those
+    public String getRosterAndCompanyStats()
+    {
+
+        StringBuilder sb = new StringBuilder();
+        sb.append(this + " 's Stats:" + "\n" )
+                .append("---------------------------------------------------------------------------------" + "\n")
+        .append(this.printStats());
+
+
+        sb.append("\n");
+        sb.append("*********************************************************************************************" + "\n");
+        sb.append(this + " 's Roster:" + "\n")
+                .append("---------------------------------------------------------------------------------" + "\n");
+        //For all employees
+        for(Person employee : this.employeeList)
+        {
+
+            sb.append(this.getEmployeeNameAndStats(employee));
+
+        }
+        return sb.toString();
+    }
+
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Business)) return false;
+
+        Business business = (Business) o;
+
+        if (MAX_PAY != business.MAX_PAY) return false;
+        if (MIN_PAY != business.MIN_PAY) return false;
+        if (maxNumEmployees != business.maxNumEmployees) return false;
+        if (minimumWorkingHours != business.minimumWorkingHours) return false;
+        if (netWorth != business.netWorth) return false;
+        if (pay != business.pay) return false;
+        if (workQuality != business.workQuality) return false;
+        if (type != business.type) return false;
+
+        return true;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = workQuality;
+        result = 31 * result + pay;
+        result = 31 * result + netWorth;
+        result = 31 * result + minimumWorkingHours;
+        result = 31 * result + maxNumEmployees;
+        result = 31 * result + type.hashCode();
+        result = 31 * result + MIN_PAY;
+        result = 31 * result + MAX_PAY;
+        return result;
+    }
+
+
+    /* Getters */
 	public int getPayRate() {
 		return pay;
 	}
@@ -347,4 +456,84 @@ public class Business extends MapConstituent {
 	public WorkType getWorkType() {
 		return type;
 	}
+
+    public int getMinimumWorkingHours() {
+        return minimumWorkingHours;
+    }
+
+    public void setMinimumWorkingHours(int minimumWorkingHours) {
+        this.minimumWorkingHours = minimumWorkingHours;
+    }
+
+    public int getWorkQuality() {
+        return workQuality;
+    }
+
+    public void setWorkQuality(int workQuality) {
+        this.workQuality = workQuality;
+    }
+
+    public int getPay() {
+        return pay;
+    }
+
+    public void setPay(int pay) {
+        this.pay = pay;
+    }
+
+    public int getNetWorth() {
+        return netWorth;
+    }
+
+    public void setNetWorth(int netWorth) {
+        this.netWorth = netWorth;
+    }
+
+    public int getMaxNumEmployees() {
+        return maxNumEmployees;
+    }
+
+    public void setMaxNumEmployees(int maxNumEmployees) {
+        this.maxNumEmployees = maxNumEmployees;
+    }
+
+    public ArrayList<Double> getProductHistory() {
+        return productHistory;
+    }
+
+    public void setProductHistory(ArrayList<Double> productHistory) {
+        this.productHistory = productHistory;
+    }
+
+    public ArrayList<Integer> getGrowthHistory() {
+        return growthHistory;
+    }
+
+    public void setGrowthHistory(ArrayList<Integer> growthHistory) {
+        this.growthHistory = growthHistory;
+    }
+
+    public ArrayList<Person> getEmployeeList() {
+        return employeeList;
+    }
+
+    public void setEmployeeList(ArrayList<Person> employeeList) {
+        this.employeeList = employeeList;
+    }
+
+    public WorkType getType() {
+        return type;
+    }
+
+    public void setType(WorkType type) {
+        this.type = type;
+    }
+
+    public int getMIN_PAY() {
+        return MIN_PAY;
+    }
+
+    public int getMAX_PAY() {
+        return MAX_PAY;
+    }
 }

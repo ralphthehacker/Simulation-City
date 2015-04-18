@@ -1,3 +1,5 @@
+import java.io.IOException;
+
 /**
  * This class represents the simulation class, aka the main class
  * @author lsmoore
@@ -8,10 +10,10 @@ public class Simulation {
 	public static final int HOURLY = 1;
 	public static final int DAILY = 1;
 
-	public static void main(String[] args) {
+	public static void main(String[] args) throws IOException {
 		int totalTimesteps = 100, time = 0;
 		// Number of people in the simulation
-		int nPeople = 6;
+		int nPeople = 2;
 		// The interval used to print the statistics.
 		int statsInterval = HOURLY;
 		// Whether to report death or birth during updates
@@ -59,14 +61,38 @@ public class Simulation {
 		for (int i = 0; i < totalTimesteps; i++) {
 			// Print the statistics
 			if (time%statsInterval == 0) {
-				System.out.println("Time = " + time);
-				System.out.println("---------");
-                map.printPeopleStats();
+
+                //Visualize the world
+
 			}
-			
+
+
 			// Update the simulation
-			map.update(time);
-			
+
+            map.update(time);
+
+            //Visualize
+            System.out.println("Time = " + time);
+            System.out.println("---------");
+            map.visualizeWorld();
+
+            //Test case
+            int count = 0;
+            for(Person p : map.getPopulation()) {
+                for (Business b : map.getBusinesses()) {
+                    if(b.getEmployeeList().contains(p))
+                    {
+                        count++;
+                    }
+
+                }
+                if(count > 1) {
+                    System.out.println(p.getName() + " is working for more than one business");
+                }
+                count = 0;
+            }
+
+
 			// Print death toll, if any
 			// TODO: Print death toll only on time%statsInterval
 			if (reportDeath) {

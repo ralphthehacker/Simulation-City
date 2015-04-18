@@ -18,14 +18,16 @@ public class LinearAlgebraModule {
         ArrayList<Double> newList =  new ArrayList<Double>();
         for (Double d :vector)
         {
-            Double newVal = d / magnitude;
+            Double newVal = 100*d / magnitude;
             if(newVal <= 0.0)
             {
                 newVal = 0.0; // If the weighing results in a negative value than that state will never be selected
             }
             newList.add(LinearAlgebraModule.round(newVal, 4));// Rounding to two decimal places
         }
-        return new ArrayList();
+//        System.out.println("Normalizing");
+//        System.out.println(newList);
+        return newList;
 
     }
 
@@ -64,9 +66,9 @@ public class LinearAlgebraModule {
         Double sum = 0.0;
         for(Double n : vector)
         {
-            sum = Math.abs(n) + sum;
+            sum = n*n + sum;
         }
-        return sum;
+        return Math.sqrt(sum);
 
     }
     public static double round(double value, int places) {
@@ -78,5 +80,8 @@ public class LinearAlgebraModule {
     }
 
 
-
+    public static void printVector(ArrayList attributeVector,String s)
+    {
+        System.out.println(s + " is " + attributeVector);
+    }
 }

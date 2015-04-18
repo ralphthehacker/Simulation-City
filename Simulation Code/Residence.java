@@ -1,3 +1,4 @@
+import java.io.IOException;
 import java.util.Random;
 
 /**
@@ -53,8 +54,7 @@ public class Residence extends MapConstituent {
 	}
 
     // If a person has a child, make the child inherit the possessions
-    public void handleDeath()
-    {
+    public void handleDeath() throws IOException {
         if (owner.hasChild())
         {
             owner = new Person(owner.getResidence(),owner.getMap().getBusinesses(),owner.getMap());
