@@ -15,6 +15,7 @@ public class Residence extends MapConstituent {
 	private final int INTEREST = 8;
 	private int morgageLeft, worth, quality;
     private Person owner; //TODO: Implement feature
+    private int foodSupply;
 
 	/* Constructor in which the attributes are randomely generated */
 	public Residence (Position pos) {
@@ -32,6 +33,8 @@ public class Residence extends MapConstituent {
 
 		/* assume no money is put down */
 		morgageLeft = worth;
+		
+		foodSupply = 0;
 
 		/* Call the calculateBasicNeedsScore() method to establish the rest of the map constituent attributes */
 		calculateBasicNeedsScore();
@@ -84,4 +87,20 @@ public class Residence extends MapConstituent {
     public Position getPosition() {
         return pos;
     }
+
+	public int getFoodSupply() {
+		return foodSupply;
+	}
+	
+	public boolean hasFood() {
+		return foodSupply != 0;
+	}
+	
+	public void addFood(int amount) {
+		foodSupply += amount;
+	}
+	
+	public void useFood(int amount) {
+		foodSupply -= amount;
+	}
 }

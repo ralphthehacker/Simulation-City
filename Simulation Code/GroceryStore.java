@@ -13,7 +13,7 @@ import java.util.Random;
  */
 public class GroceryStore extends MapConstituent {
 
-	private int price, quality, quantity;
+	private int price, quantity;
 
 
 	/* Constructor in which the attributes are randomely generated */
@@ -23,8 +23,7 @@ public class GroceryStore extends MapConstituent {
 		this.pos = pos;
 
 		/* A residence has a price and quality on a scale of 1 to 10 */
-		quality = new Random().nextInt(10) + 1;
-		price = new Random().nextInt(10) + 1;
+		price = new Random().nextInt(5) + 1;
 
 		/* A grocer store initially has enough food for 1000 people */
 		quantity = 1000;
@@ -36,14 +35,13 @@ public class GroceryStore extends MapConstituent {
 	}
 	public void expand() {}
 	public void contract() {}
-
+	
+	/* Calculates what the basic needs scores are for a business */
 	public void calculateBasicNeedsScore() {
-		/* Food sotres don't provide fun or shelter */
+		/* Businesses don't provide shelter, fun, or food (they do pay you though) */
 		shelterScore = 0;
+		funScore = 0;
 		foodScore = 0;
-
-		/* the food score is proportional to the quality and price of the home */
-		shelterScore = quality * price ;
 	}
 
 }

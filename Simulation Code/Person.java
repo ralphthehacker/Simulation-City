@@ -162,8 +162,10 @@ public class Person {
 
         else if (state.equals(State.BREAKFAST_HOME))
         {
-            // TODO: Decrease food supply home
-            foodNeed = Math.max(foodNeed - 6, 0);
+            if (residence.hasFood()) {
+            	residence.addFood(1);
+            	foodNeed = Math.max(foodNeed - 6, 0);
+            }
 
         }
 
@@ -191,16 +193,16 @@ public class Person {
         }
         else if (state.equals(State.SHOP))
         {
-            // TODO: Increase food supply at home instead
+            // TODO: Use real GroceryStore to reduce money and add food supply
             money -= 5;
-            foodNeed = Math.max(foodNeed - 6, 0);
-
+            residence.addFood(1);
         }
         else if(state.equals(State.DINNER_HOME))
-
         {
-            // TODO: Decrease food supply at home
-            foodNeed = Math.max(foodNeed - 6, 0);
+            if (residence.hasFood()) {
+            	residence.useFood(1);
+            	foodNeed = Math.max(foodNeed - 6, 0);
+            }
         }
 
 

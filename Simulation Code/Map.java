@@ -25,8 +25,6 @@ public class Map {
     /* A hashmap of the positions inhabited.  True if the position is inhabited; false otherwise */
     HashMap<Position, Boolean> positionsInhabited = new HashMap<Position, Boolean>();
 
-    HashMap<Person, Boolean> peopleInMap = new HashMap<Person, Boolean>();
-
 
     /*TO DO: generate different aspects of the map randomely */
 	public Map() throws IOException {
@@ -60,12 +58,6 @@ public class Map {
 		/* Creates the individual population */
         for (int i = 0; i < numPopulation; i++) {
             population.add(i,Person.createRandomPerson(residences[i], businesses, this));
-        }
-
-        //Putting people in an iterable map for printing
-        for(Person person : this.population)
-        {
-            this.peopleInMap.put(person,true);
         }
 
         System.out.println("All businesses");
@@ -215,10 +207,9 @@ public class Map {
         //Print the businesses and their status
 
         //Print people and their states
-        for(java.util.Map.Entry<Person,Boolean> p : this.peopleInMap.entrySet())
+        for(Person p : population)
         {
-            System.out.println(p.getKey().toString());
-            System.out.println();
+            System.out.println(p);
         }
         //Why an array why just why aaaaaack
         for (int i = 0 ; i < this.businesses.length ; i++ )
