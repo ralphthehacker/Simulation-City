@@ -22,8 +22,13 @@ For this week, we planned to have a fully running simulation. We finished the bu
 
 - Visualization: Start with a simple print-like walkthrough. People moving from position X to position Y, doing Z. Also print the attributes: how much money and current parameters.
 
+Checkpoint 3
+------------
+The model is now almost fully functional.  Significant work has been done in the Person, Business, StateTransition, and Simulation class.  
+The work was mainly tuning the parameters while creating and connecting methods to support normal human behavior.
+In particular, the state machine now provides a reasonable representation of how people would act based on their needs and time of day.  
+The visualization of the simulation (though still terminal based) is now also more robust, with several print statements added to show the flow of human activity.  
+A new class called GlassdoorDotCom was added to replicate the process of finding a job for the citizens.  
+Businesses can also hire and fire based on the performance of their employees. 
+Shops and residences have been added and will shortly be fully connected.  
 
-
-LARRY: Entertainment and Asexual reproduction
-SALZY: Groceries and residence. 
-RAZZY : State machines. Hooking stuff up together. Making people choose what to do
