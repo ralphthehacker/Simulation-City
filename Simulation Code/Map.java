@@ -19,7 +19,8 @@ public class Map {
 	private Residence[] residences;
 	private Business[] businesses;
     private GlassdoorDotCom glassdoor;
-	private MapConstituent[] layout;
+	private ArrayList<? super MapConstituent> utilities;
+    private ArrayList<GroceryStore> groceries;
 	private ArrayList<Person> population;
 	// People who died in the current timestep. Updated on update().
 	ArrayList<Person> deadPeople = new ArrayList<Person>();
@@ -34,10 +35,11 @@ public class Map {
 	}
 
     public Map(int numPopulation) throws IOException {
+        //Creates houses, business, people and groceries/entertainment services
         residences = new Residence[numPopulation];
         businesses = new Business[numPopulation];
         population = new ArrayList<Person>(numPopulation);
-
+        createGroceriesAndEntertainment(numPopulation);
 
         //TODO: WTF's with that final boolean? Make people have a field called dead or alive
 
@@ -65,6 +67,8 @@ public class Map {
         System.out.println("All businesses");
         System.out.println(businesses);
     }
+
+
 
     private Position generateRandomPosition() {
         /* To generate keep track of random positions generated */
@@ -237,4 +241,38 @@ public class Map {
             System.out.println(businesses[i].getRosterAndCompanyStats());
         }
     }
+
+
+    //*
+    // Generates random utilities in the Map. A utility can be a Grocery Store and any other form of entertainment
+    // @Parameter : howMuch, the number of people living in a map
+    // *
+    private void createGroceriesAndEntertainment(int howMuch)
+    {
+
+        // For now let's create as many grocery stores and entertainment places as there are people
+        int number_of_places = howMuch;
+
+        // Generate random grocery stores and businesses
+        for(int i = 0; i < howMuch ; i++)
+        {
+            //Adds a new grocery store at a random position
+            this.groceries.add(new GroceryStore(this.generateRandomPosition(),this));
+
+
+            //TODO: Uncomment and test this after testing groceries
+            //Adds a new entertainment place
+            //this.utilities.add(new Entertainment(this.generateRandomPosition(), this));
+
+        }
+    return;
+
+    }
+
+
+
+
+
+
+
 }

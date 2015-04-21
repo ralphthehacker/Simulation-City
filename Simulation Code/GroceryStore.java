@@ -44,4 +44,23 @@ public class GroceryStore extends MapConstituent {
 		foodScore = 0;
 	}
 
+
+    public String printStats()
+    {
+        StringBuilder sb = new StringBuilder();
+
+        sb.append("Position : " + super.pos) + "\n")
+                .append("Company type: " + this.getWorkType() + "\n")
+                .append("Location : " + super.getPos() + "\n")
+                .append("Net Worth: " +
+                        this.getNetWorth() + "\n")
+                .append("Working hours: " + this.getMinimumWorkingHours() + "\n")
+                .append("Quality: " + this.getWorkQuality() + "\n")
+                .append("History: " + this.getProductHistory() + "\n").append("Number of Employees "
+                + this.getEmployeeList().size() + "\n");
+        int a = 0;
+        return sb.toString();
+
+    }
+
 }

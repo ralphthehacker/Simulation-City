@@ -35,4 +35,10 @@ public class Position {
 			return x == p.x && y == p.y;
 		}
 	}
+
+    public String toString()
+    {
+        return ("( " + this.getX() +" , "  + this.getY() + ")");
+
+    }
 }
