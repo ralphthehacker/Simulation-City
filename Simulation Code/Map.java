@@ -1,3 +1,5 @@
+import org.omg.PortableInterceptor.SYSTEM_EXCEPTION;
+
 import java.io.IOException;
 import java.lang.reflect.Array;
 import java.util.ArrayList;
@@ -107,7 +109,8 @@ public class Map {
         for (int i = 0; i < population.size(); i++) {
         	boolean status = population.get(i).update(time);
 
-            if (status == Person.DEAD) {
+            if (status == Person.DEAD) //If  a person is dead, add it to the list of casualties
+            {
                 deadPeople.add(population.get(i));
 
             }
@@ -132,10 +135,11 @@ public class Map {
             population.remove(person);//Remove a people from life
 
         }
+        printWhoDied();
+        printDeathToll();
 
     }
 
-    public void orphanage(){}
     /* Allows a person to add children to the map */
     public void addPerson() throws IOException {
         /* Incomplete, in that it always adds just the first house to the person.  update when residences is done */
@@ -156,7 +160,20 @@ public class Map {
 			System.out.println();
 		}
 	}
-	
+
+    //Todo add time later
+	public void printWhoDied()
+    {
+        if (deadPeople.size() > 0)
+        {
+            for(Person dude: deadPeople)
+            {
+                System.out.println(dude.getName() + " has died");
+
+            }
+        }
+
+    }
 	public void printDeathToll() {
 		if (deadPeople.size() > 0) {
 			System.out.println(deadPeople.size() +
@@ -205,7 +222,10 @@ public class Map {
     public void visualizeWorld()
     {
         //Print the businesses and their status
-
+        for(Business b : businesses)
+        {
+  //          b.printStats();
+        }
         //Print people and their states
         for(Person p : population)
         {
