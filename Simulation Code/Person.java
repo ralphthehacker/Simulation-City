@@ -1,3 +1,6 @@
+import com.sun.tools.corba.se.idl.ExceptionEntry;
+import sun.font.TrueTypeFont;
+
 import java.io.IOException;
 import java.net.URL;
 import java.nio.file.Path;
@@ -166,9 +169,22 @@ public class Person {
 
         else if (state.equals(State.BREAKFAST_HOME))
         {
-            if (residence.hasFood()) {
-            	residence.addFood(1);
+            //If a house has food, eat it
+            if (residence.hasFood())
+            {
+            	residence.useFood(1);
             	foodNeed = Math.max(foodNeed - 6, 0);
+            }  else //Else, buy more
+            {
+                //Buy more groceries
+                handleGroceryShopping();
+                //Eat if you had money to buy them
+                if(residence.hasFood())
+                {
+                    residence.useFood(1);
+                    foodNeed = Math.max(foodNeed - 6, 0);
+                }
+
             }
 
         }
@@ -207,12 +223,73 @@ public class Person {
             if (residence.hasFood()) {
             	residence.useFood(1);
             	foodNeed = Math.max(foodNeed - 6, 0);
+            }else
+            {
+                //Buy more groceries
+                handleGroceryShopping();
+                //Eat if you had money to buy them
+                if(residence.hasFood())
+                {
+                residence.useFood(1);
+                foodNeed = Math.max(foodNeed - 6, 0);
+                }
             }
         }
 
 
     }
 
+
+    //*
+    // Determines the best possible grocery store for this person. It takes into account the cost and
+    // quality. It also picks the first grocery store that fulfills all requirements
+    // */
+    public void handleGroceryShopping()
+    {
+        //Get all groceries
+        ArrayList<GroceryStore> stores = this.getMap().getGroceries();
+
+
+        //Initializing attributes to determine best store
+        GroceryStore bestStore = null;
+        int bestPrice = 20000;
+
+        //Determine how many groceries a person needs to buy
+        int amountNecessary = 10 - this.getResidence().getFoodSupply();
+
+        for(GroceryStore store : stores)
+        {
+            //If the grocery store has enough food
+            if(store.getQuantity() >= amountNecessary && store.getPrice() < bestPrice)
+            {
+                bestPrice = store.getPrice();
+                bestStore = store;
+            }
+        }
+
+        //Check if a store was selected
+        if(bestStore == null){throw new ExceptionInInitializerError("No stores are available");}
+
+        //Check if a person has money to buy groceries
+        if(amountNecessary*bestPrice <= this.getMoney())
+        {
+            bestStore.handleBuyer(this,amountNecessary);
+        } else
+        {
+            //If a person can't even buy one item, don't purchase anything. She needs to make more money to eat
+            if(bestPrice > this.getMoney())
+            {
+                return;
+
+            }   else //Buy as many items as you can.
+            {
+                bestStore.handleBuyer(this, (this.getMoney()/bestPrice));
+            }
+        }
+
+
+
+    }
 
     public void handleHealthChanges()
     {

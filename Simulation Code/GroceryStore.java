@@ -1,5 +1,6 @@
 import java.util.Random;
 
+
 /**
  * This class represents a grocery store
  * A grocery store has a quality and price component, as well as the quantity of the produce.  
@@ -11,6 +12,13 @@ import java.util.Random;
  * @author Lawrence Moore
  *
  */
+
+//TODO: Food refills, customer history,etc.
+
+
+
+
+
 public class GroceryStore extends MapConstituent {
 
 	private int price, quantity;
@@ -23,8 +31,7 @@ public class GroceryStore extends MapConstituent {
 		this.pos = pos;
 
 		/* A residence has a price and quality on a scale of 1 to 10 */
-		price = new Random().nextInt(5) + 1;
-
+		price = new Random().nextInt(9) + 1;
 		/* A grocer store initially has enough food for 1000 people */
 		quantity = 1000;
 	}
@@ -35,6 +42,8 @@ public class GroceryStore extends MapConstituent {
 	}
 	public void expand() {}
 	public void contract() {}
+
+
 	
 	/* Calculates what the basic needs scores are for a business */
 	public void calculateBasicNeedsScore() {
@@ -49,18 +58,70 @@ public class GroceryStore extends MapConstituent {
     {
         StringBuilder sb = new StringBuilder();
 
-        sb.append("Position : " + super.pos) + "\n")
-                .append("Company type: " + this.getWorkType() + "\n")
-                .append("Location : " + super.getPos() + "\n")
-                .append("Net Worth: " +
-                        this.getNetWorth() + "\n")
-                .append("Working hours: " + this.getMinimumWorkingHours() + "\n")
-                .append("Quality: " + this.getWorkQuality() + "\n")
-                .append("History: " + this.getProductHistory() + "\n").append("Number of Employees "
-                + this.getEmployeeList().size() + "\n");
+        sb.append("Position : " + this.pos + "\n")
+        .append("Amount of Food : " + this.getQuantity() + "\n")
+                .append("Food Price : " + this.getPrice() + "\n");
         int a = 0;
         return sb.toString();
 
     }
 
+    public void handleBuyer(Person person, int amount_necessary)
+    {
+        if (null != person) {throw new IllegalArgumentException("Null buyer");}
+
+        //Get a person's house
+        Residence house = person.getResidence();
+
+        //Charge a person
+        person.setMoney(person.getMoney() - amount_necessary * this.getPrice());
+
+        //Refill the house
+        house.addFood(amount_necessary);
+
+        //Update store's stock
+        this.setQuantity(this.getQuantity()-amount_necessary);
+
+        //Done
+        return;
+
+
+    }
+
+    public int getQuantity() {
+        return quantity;
+    }
+
+    public void setQuantity(int quantity) {
+        this.quantity = quantity;
+    }
+
+    public int getPrice() {
+        return price;
+    }
+
+    public void setPrice(int price) {
+        this.price = price;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof GroceryStore)) return false;
+
+        GroceryStore that = (GroceryStore) o;
+
+        if (price != that.price) return false;
+        if (quantity != that.quantity) return false;
+        if(this.pos.equals(that.getPos())) {return false;}
+
+        return true;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = price;
+        result = 31 * result + quantity;
+        return result;
+    }
 }

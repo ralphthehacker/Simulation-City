@@ -186,38 +186,6 @@ public class Map {
 		}
 	}
 
-    public Residence[] getResidences() {
-        return residences;
-    }
-
-    public void setResidences(Residence[] residences) {
-        this.residences = residences;
-    }
-
-    public Business[] getBusinesses() {
-        return businesses;
-    }
-
-    public void setBusinesses(Business[] businesses) {
-        this.businesses = businesses;
-    }
-
-    public ArrayList<Person> getPopulation() {
-        return population;
-    }
-
-    public void setPopulation(ArrayList<Person> population) {
-        this.population = population;
-    }
-
-    public GlassdoorDotCom getGlassdoor() {
-        return glassdoor;
-    }
-
-    public void setGlassdoor(GlassdoorDotCom glassdoor) {
-        this.glassdoor = glassdoor;
-    }
-
     public void updateGlassDoor()
     {
         this.glassdoor = new GlassdoorDotCom(this);
@@ -227,8 +195,9 @@ public class Map {
     {
         //Print the businesses and their status
         for(Business b : businesses)
+        //TODO: Uncomment here to see stuff
         {
-  //          b.printStats();
+            //          b.printStats();
         }
         //Print people and their states
         for(Person p : population)
@@ -265,14 +234,81 @@ public class Map {
             //this.utilities.add(new Entertainment(this.generateRandomPosition(), this));
 
         }
-    return;
+        return;
 
     }
 
 
+    public Residence[] getResidences() {
+        return residences;
+    }
+
+    public void setResidences(Residence[] residences) {
+        this.residences = residences;
+    }
+
+    public Business[] getBusinesses() {
+        return businesses;
+    }
+
+    public void setBusinesses(Business[] businesses) {
+        this.businesses = businesses;
+    }
+
+    public ArrayList<Person> getPopulation() {
+        return population;
+    }
+
+    public void setPopulation(ArrayList<Person> population) {
+        this.population = population;
+    }
+
+    public GlassdoorDotCom getGlassdoor() {
+        return glassdoor;
+    }
+
+    public void setGlassdoor(GlassdoorDotCom glassdoor) {
+        this.glassdoor = glassdoor;
+    }
 
 
+    public static int getDefaultStartingPopulation() {
+        return DEFAULT_STARTING_POPULATION;
+    }
 
+    public static int getSizeOfGrid() {
+        return SIZE_OF_GRID;
+    }
 
+    public ArrayList<? super MapConstituent> getUtilities() {
+        return utilities;
+    }
 
+    public void setUtilities(ArrayList<? super MapConstituent> utilities) {
+        this.utilities = utilities;
+    }
+
+    public ArrayList<GroceryStore> getGroceries() {
+        return groceries;
+    }
+
+    public void setGroceries(ArrayList<GroceryStore> groceries) {
+        this.groceries = groceries;
+    }
+
+    public ArrayList<Person> getDeadPeople() {
+        return deadPeople;
+    }
+
+    public void setDeadPeople(ArrayList<Person> deadPeople) {
+        this.deadPeople = deadPeople;
+    }
+
+    public HashMap<Position, Boolean> getPositionsInhabited() {
+        return positionsInhabited;
+    }
+
+    public void setPositionsInhabited(HashMap<Position, Boolean> positionsInhabited) {
+        this.positionsInhabited = positionsInhabited;
+    }
 }
