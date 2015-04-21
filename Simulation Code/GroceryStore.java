@@ -68,7 +68,7 @@ public class GroceryStore extends MapConstituent {
 
     public void handleBuyer(Person person, int amount_necessary)
     {
-        if (null != person) {throw new IllegalArgumentException("Null buyer");}
+        if (null == person) {throw new IllegalArgumentException("Null buyer");}
 
         //Get a person's house
         Residence house = person.getResidence();
@@ -81,6 +81,8 @@ public class GroceryStore extends MapConstituent {
 
         //Update store's stock
         this.setQuantity(this.getQuantity()-amount_necessary);
+
+        System.out.println(person.getName() + " just bought " + amount_necessary +  " groceries");
 
         //Done
         return;

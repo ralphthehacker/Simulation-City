@@ -193,21 +193,15 @@ public class Map {
 
     public void visualizeWorld()
     {
-        //Print the businesses and their status
-        for(Business b : businesses)
-        //TODO: Uncomment here to see stuff
-        {
-            //          b.printStats();
-        }
-        //Print people and their states
+
         for(Person p : population)
         {
-            System.out.println(p);
+            System.out.println(p.getName() + " is " + p.getState() + " and has " + p.getMoney() + " dollars");
         }
         //Why an array why just why aaaaaack
         for (int i = 0 ; i < this.businesses.length ; i++ )
         {
-            System.out.println(businesses[i].getRosterAndCompanyStats());
+            //businesses[i].printStats();
         }
     }
 
@@ -219,6 +213,8 @@ public class Map {
     private void createGroceriesAndEntertainment(int howMuch)
     {
 
+        this.groceries = new ArrayList<GroceryStore>();
+        this.utilities = new ArrayList<MapConstituent>();
         // For now let's create as many grocery stores and entertainment places as there are people
         int number_of_places = howMuch;
 
