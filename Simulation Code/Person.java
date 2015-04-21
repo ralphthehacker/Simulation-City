@@ -1,4 +1,6 @@
 import java.io.IOException;
+import java.net.URL;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Random;
 
@@ -73,6 +75,8 @@ public class Person {
         this.residence.setOwner(this);//TODO:Make this more readable later
         position = residence.getPosition();
         this.map = map;
+        //TODO: SWITCH THIS TO SYLLABLES WHEN PUSHING
+        //rg = new RandomNameGenerator("/Users/ralphblanes/Documents/PROJECTS/City_Sim/final_proj/cx-4230-final-project/Simulation Code/syllables");
         rg = new RandomNameGenerator("syllables");
 
         //Creates a person's name
@@ -113,15 +117,7 @@ public class Person {
 
         //TODO: Uncomment this to make individuals look for jobs and encapsulate it onto handleStateUpdate() when it works
         //TODO: This is bugging, handle duplicates
-        if(this.isLookingForJobs())
-            if (!this.getState().equals(State.SLEEP))
-            {
-                //If a person is unemployed or unhappy with her job, she can look for a new job
-                if(this.isLookingForJobs())
-                {
-                    this.lookForJobs();
-                }
-            }
+
 
         //Determines a person's current state and updates her attributes depending on the state
         handleStateUpdates();
@@ -151,7 +147,15 @@ public class Person {
     //Updates a person's attributes based on her state
     public void handleStateUpdates()
     {
-
+        if(this.isLookingForJobs())
+            if (!this.getState().equals(State.SLEEP))
+            {
+                //If a person is unemployed or unhappy with her job, she can look for a new job
+                if(this.isLookingForJobs())
+                {
+                    this.lookForJobs();
+                }
+            }
 
 
         if (state.equals(State.SLEEP))
