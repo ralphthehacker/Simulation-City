@@ -200,7 +200,7 @@ public class Person {
         else if (state.equals(State.WORK))
         {
             if (this.isEmployed()) {
-                System.out.print(this.name + " got paid");
+                System.out.println(this.name + " got paid");
                 money += workplace.getPayRate();
             }
         }
@@ -544,6 +544,7 @@ public class Person {
     }
 
     public void setMoney(int money) {
+        if((this.getMoney() - money) < 0){throw new IllegalStateException("Negative money operation");}
         this.money = money;
     }
 
