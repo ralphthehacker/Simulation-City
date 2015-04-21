@@ -196,6 +196,7 @@ public class Map {
 
         for(Person p : population)
         {
+            //System.out.println(p) for full info
             System.out.println(p.getName() + " is " + p.getState() + " and has " + p.getMoney() + " dollars");
         }
         //Why an array why just why aaaaaack

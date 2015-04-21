@@ -79,8 +79,8 @@ public class Person {
         position = residence.getPosition();
         this.map = map;
         //TODO: SWITCH THIS TO SYLLABLES WHEN PUSHING
-        rg = new RandomNameGenerator("/Users/ralphblanes/Documents/PROJECTS/City_Sim/final_proj/cx-4230-final-project/Simulation Code/syllables");
-        //rg = new RandomNameGenerator("syllables");
+        //rg = new RandomNameGenerator("/Users/ralphblanes/Documents/PROJECTS/City_Sim/final_proj/cx-4230-final-project/Simulation Code/syllables");
+        rg = new RandomNameGenerator("syllables");
 
         //Creates a person's name
         this.name = this.rg.compose(new Random().nextInt(2)+2);
