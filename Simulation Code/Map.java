@@ -19,7 +19,7 @@ public class Map {
 	private Residence[] residences;
 	private Business[] businesses;
     private GlassdoorDotCom glassdoor;
-	private ArrayList<? super MapConstituent> utilities;
+	private ArrayList<Entertainment> entertainmentPlaces;
     private ArrayList<GroceryStore> groceries;
 	private ArrayList<Person> population;
 	// People who died in the current timestep. Updated on update().
@@ -215,7 +215,7 @@ public class Map {
     {
 
         this.groceries = new ArrayList<GroceryStore>();
-        this.utilities = new ArrayList<MapConstituent>();
+        this.entertainmentPlaces = new ArrayList<Entertainment>();
         // For now let's create as many grocery stores and entertainment places as there are people
         int number_of_places = howMuch;
 
@@ -226,9 +226,9 @@ public class Map {
             this.groceries.add(new GroceryStore(this.generateRandomPosition(),this));
 
 
-            //TODO: Uncomment and test this after testing groceries
+
             //Adds a new entertainment place
-            //this.utilities.add(new Entertainment(this.generateRandomPosition(), this));
+            this.entertainmentPlaces.add(new Entertainment(this.generateRandomPosition(), this));
 
         }
         return;
@@ -277,12 +277,8 @@ public class Map {
         return SIZE_OF_GRID;
     }
 
-    public ArrayList<? super MapConstituent> getUtilities() {
-        return utilities;
-    }
-
-    public void setUtilities(ArrayList<? super MapConstituent> utilities) {
-        this.utilities = utilities;
+    public ArrayList<Entertainment> getEntertainmentPlaces() {
+        return entertainmentPlaces;
     }
 
     public ArrayList<GroceryStore> getGroceries() {
