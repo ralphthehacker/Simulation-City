@@ -1,6 +1,3 @@
-import com.sun.tools.corba.se.idl.ExceptionEntry;
-import sun.font.TrueTypeFont;
-
 import java.io.IOException;
 import java.net.URL;
 import java.nio.file.Path;
@@ -602,10 +599,6 @@ public class Person {
                 .append("Shelter Need: " + shelterNeed + "\n")
                 .append("Fun Need: " + funNeed + "\n")
                 .append("Working at: " + workplace + "\n")
-                .append(": " + funNeed + "\n")
-                .append("Fun Need: " + funNeed + "\n")
-                .append("Fun Need: " + funNeed + "\n")
-
                 .toString();
     }
 
