@@ -215,8 +215,13 @@ public class Person {
         {
             // TODO: Use real GroceryStore to reduce money and add food supply
 
-            money -= 5;
-            residence.addFood(1);
+//            money -= 5;
+//            residence.addFood(1);
+            boolean status = handleEntertainmentShopping();
+            if (!status) {
+                System.out.println("Person " + name + "couldn't find a place to shop");
+            }
+
         }
         else if(state.equals(State.DINNER_HOME))
         {
@@ -286,9 +291,49 @@ public class Person {
                 bestStore.handleBuyer(this, (this.getMoney()/bestPrice));
             }
         }
+    }
 
 
+    // TODO: remember to call update on all the entertainment places once every 24 hours
+    /* Handles shopping.  Returns true if the person finds a place to shop at. */
+    public boolean handleEntertainmentShopping() {
+        ArrayList<Entertainment> funPlaces = this.getMap().getEntertainmentPlaces();
 
+        /* A store is affordable if its cost is one tenth the total money a person has */
+        ArrayList<Entertainment> affordablePlaces = new ArrayList<Entertainment>();
+        for (Entertainment place: funPlaces) {
+            if (place.getPrice() < money / 10) {
+                affordablePlaces.add(place);
+            }
+        }
+
+        /* Pick a place and shop there */
+        if (affordablePlaces.size() > 0) {
+            Random rand = new Random();
+            Entertainment placeToShop = affordablePlaces.get(rand.nextInt(affordablePlaces.size()));
+
+            /* Make sure we can visit the place based on number of people who have already bought stuff there.
+            * Aka, a game store has only 100 games.  If 100 people have already shopped there in the last 24 hours,
+            * they have nothing left */
+            int counter = 0;
+            while (!placeToShop.canVisit() && counter < affordablePlaces.size()) {
+                placeToShop = affordablePlaces.get(counter);
+                counter++;
+            }
+
+            /* Visit the place assuming we can shop there */
+            if (placeToShop.canVisit()) {
+                placeToShop.visit();
+                /* This is the format of the basic needs array: {foodScore, funScore, shelterScore} */
+                int[] basicNeedsScore = placeToShop.getBasicNeedsScores();
+                foodNeed += basicNeedsScore[0];
+                funNeed += basicNeedsScore[1];
+                shelterNeed += basicNeedsScore[2];
+                money -= placeToShop.getPrice();
+                return true;
+            }
+        }
+        return false;
     }
 
     public void handleHealthChanges()
