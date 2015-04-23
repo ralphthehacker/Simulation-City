@@ -161,7 +161,7 @@ public class Person {
         if (state.equals(State.SLEEP))
         {
             shelterNeed = Math.max(shelterNeed - 2, 0);
-
+            funNeed = Math.max(funNeed - 1, 0); // Used to cancel increment in person.update()
         }
 
         else if (state.equals(State.BREAKFAST_HOME))
