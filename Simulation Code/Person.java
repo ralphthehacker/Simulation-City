@@ -349,9 +349,9 @@ public class Person {
             placeToShop.visit();
                 /* This is the format of the basic needs array: {foodScore, funScore, shelterScore} */
             int[] basicNeedsScore = placeToShop.getBasicNeedsScores();
-            foodNeed += basicNeedsScore[0]/2;
-            funNeed += basicNeedsScore[1]/2;
-            shelterNeed += basicNeedsScore[2]/2;
+            foodNeed = Math.max(foodNeed - basicNeedsScore[0]/2, 0);
+            funNeed = Math.max(funNeed - basicNeedsScore[1]/2, 0);
+            shelterNeed = Math.max(shelterNeed - basicNeedsScore[2]/2, 0);
             money -= placeToShop.getPrice();
             keepNeedsOn1to10Scale();
             return true;
