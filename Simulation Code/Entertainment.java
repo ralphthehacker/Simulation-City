@@ -8,9 +8,9 @@ import java.util.Random;
  */
 public class Entertainment extends MapConstituent {
 
-	private int maxGoods, price, quality, numCustomersOfDay;
+	private int maxGoods, quality, price, numCustomersOfDay;
 	private EntertainmentType type;
-    private final static int INITIAL_GOODS = 10;
+    private final static int INITIAL_GOODS = 100;
 
     private ArrayList<Double> occupancyHistory = new ArrayList<Double>();
 
@@ -25,14 +25,15 @@ public class Entertainment extends MapConstituent {
 		type = EntertainmentType.values()[rand.nextInt(EntertainmentType.values().length)];  //just some enum foolery
 
 		/* price is on a scale from 1 to 100 */
-		price = rand.nextInt(100) + 1;
+		quality = rand.nextInt(100) + 1;
 
         /* Quality is inversely related to the price */
-        quality = 100 - price;
+        price = quality;
 
 		/* An establishment initially has room for 100 people */
 		maxGoods = INITIAL_GOODS;
         numCustomersOfDay = 0;
+        calculateBasicNeedsScore();
 	}
 
 	/* Called every 24 hours, dictates how the restaurant grows or detracts in the past */
