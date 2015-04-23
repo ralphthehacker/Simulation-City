@@ -88,6 +88,7 @@ public class Map {
 		// At the beginning of every day, update businesses
 		if (time == 0) {
 			updateBusinesses();
+            updateEntertainmentPlaces();
 		}
 		
 		// Every hour, update the population
@@ -103,6 +104,12 @@ public class Map {
 			b.update();
 		}
 	}
+
+    private void updateEntertainmentPlaces() {
+        for (Entertainment place : entertainmentPlaces) {
+            place.update();
+        }
+    }
 
 
 	private void updatePeople(int time) throws IOException {
