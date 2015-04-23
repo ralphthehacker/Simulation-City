@@ -191,7 +191,7 @@ public class Person {
 
         else if (state.equals(State.BREAKFAST_OUT))
         {
-            boolean status = handleEntertainmentShopping(EntertainmentType.restaurant);
+            boolean status = handleEatingOut(EntertainmentType.restaurant);
             if (!status) {
                 System.out.println("Person " + name + "couldn't find a restaurant to shop");
             }
@@ -210,7 +210,7 @@ public class Person {
 //            money -= 10;
 //            foodNeed = Math.max(foodNeed - 6,  0);
 //            funNeed = Math.max(funNeed - 7, 0);
-            boolean status = handleEntertainmentShopping(EntertainmentType.restaurant);
+            boolean status = handleEatingOut(EntertainmentType.restaurant);
             if (!status) {
                 System.out.println("Person " + name + "couldn't find a restaurant to shop");
             }
@@ -218,13 +218,10 @@ public class Person {
         }
         else if (state.equals(State.SHOP))
         {
-            /* Pick random type of restaurant */
-            Random rand = new Random();
-            EntertainmentType type = EntertainmentType.values()[rand.nextInt(EntertainmentType.values().length)];  //just some enum foolery
             /* see if any shops of that type are available and go there.  If status is true, they found somewhere to go */
-            boolean status = handleEntertainmentShopping(type);
+            boolean status = handleEntertainmentShopping();
             if (!status) {
-                System.out.println("Person " + name + "couldn't find a " + type + " place to shop");
+                System.out.println("Person " + name + "couldn't find a place to shop");
             }
 
         }
@@ -301,44 +298,78 @@ public class Person {
 
     // TODO: remember to call update on all the entertainment places once every 24 hours
     /* Handles shopping.  Returns true if the person finds a place to shop at. */
-    public boolean handleEntertainmentShopping(EntertainmentType type) {
+    private boolean handleEntertainmentShopping() {
         ArrayList<Entertainment> funPlaces = this.getMap().getEntertainmentPlaces();
 
-        /* A store is affordable if its cost is one tenth the total money a person has */
+        /* A store is affordable if its cost is one half the total money a person has */
         ArrayList<Entertainment> affordablePlaces = new ArrayList<Entertainment>();
         for (Entertainment place: funPlaces) {
-            if (place.getEntertainmentType() == type && place.getPrice() < money / 10) {
+            if (place.getPrice() < money / 2) {
                 affordablePlaces.add(place);
             }
         }
 
         /* Pick a place and shop there */
         if (affordablePlaces.size() > 0) {
-            Random rand = new Random();
-            Entertainment placeToShop = affordablePlaces.get(rand.nextInt(affordablePlaces.size()));
+            return pickEntertainmentPlace(affordablePlaces);
+        }
+        return false;
+    }
+
+    private boolean handleEatingOut(EntertainmentType type) {
+        ArrayList<Entertainment> funPlaces = this.getMap().getEntertainmentPlaces();
+
+        /* A store is affordable if its cost is one half the total money a person has */
+        ArrayList<Entertainment> affordablePlaces = new ArrayList<Entertainment>();
+        for (Entertainment place : funPlaces) {
+            if (place.getEntertainmentType() == type && place.getPrice() < money / 2) {
+                affordablePlaces.add(place);
+            }
+        }
+
+         /* Pick a place and shop there */
+        if (affordablePlaces.size() > 0) {
+            return pickEntertainmentPlace(affordablePlaces);
+        }
+        return false;
+    }
+
+    private boolean pickEntertainmentPlace(ArrayList<Entertainment> affordablePlaces) {
+        Random rand = new Random();
+        Entertainment placeToShop = affordablePlaces.get(rand.nextInt(affordablePlaces.size()));
 
             /* Make sure we can visit the place based on number of people who have already bought stuff there.
             * Aka, a game store has only 100 games.  If 100 people have already shopped there in the last 24 hours,
             * they have nothing left */
-            int counter = 0;
-            while (!placeToShop.canVisit() && counter < affordablePlaces.size()) {
-                placeToShop = affordablePlaces.get(counter);
-                counter++;
-            }
+        int counter = 0;
+        while (!placeToShop.canVisit() && counter < affordablePlaces.size()) {
+            placeToShop = affordablePlaces.get(counter);
+            counter++;
+        }
 
             /* Visit the place assuming we can shop there */
-            if (placeToShop.canVisit()) {
-                placeToShop.visit();
+        if (placeToShop.canVisit()) {
+            placeToShop.visit();
                 /* This is the format of the basic needs array: {foodScore, funScore, shelterScore} */
-                int[] basicNeedsScore = placeToShop.getBasicNeedsScores();
-                foodNeed += basicNeedsScore[0];
-                funNeed += basicNeedsScore[1];
-                shelterNeed += basicNeedsScore[2];
-                money -= placeToShop.getPrice();
-                return true;
-            }
+            int[] basicNeedsScore = placeToShop.getBasicNeedsScores();
+            foodNeed += basicNeedsScore[0]/2;
+            funNeed += basicNeedsScore[1]/2;
+            shelterNeed += basicNeedsScore[2]/2;
+            money -= placeToShop.getPrice();
+            keepNeedsOn1to10Scale();
+            return true;
         }
         return false;
+    }
+
+    /* keeps values on a 1 to 10 scale */
+    private void keepNeedsOn1to10Scale() {
+        if (foodNeed > 10)
+            foodNeed = 10;
+        if (funNeed > 10)
+            funNeed = 10;
+        if (shelterNeed > 10)
+            shelterNeed = 10;
     }
 
     public void handleHealthChanges()

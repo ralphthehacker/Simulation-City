@@ -39,7 +39,7 @@ public class Map {
         residences = new Residence[numPopulation];
         businesses = new Business[numPopulation];
         population = new ArrayList<Person>(numPopulation);
-        createGroceriesAndEntertainment(numPopulation);
+        createGroceriesAndEntertainment(numPopulation * 10);
 
         //TODO: WTF's with that final boolean? Make people have a field called dead or alive
 

@@ -10,7 +10,7 @@ public class Entertainment extends MapConstituent {
 
 	private int maxGoods, quality, price, numCustomersOfDay;
 	private EntertainmentType type;
-    private final static int INITIAL_GOODS = 100;
+    private final static int INITIAL_GOODS = 10;
 
     private ArrayList<Double> occupancyHistory = new ArrayList<Double>();
 
