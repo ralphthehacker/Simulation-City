@@ -141,5 +141,6 @@ public class Entertainment extends MapConstituent {
 
     public int getQuality() { return quality; };
 
+    public EntertainmentType getEntertainmentType() { return type; };
 
 }

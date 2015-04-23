@@ -191,9 +191,10 @@ public class Person {
 
         else if (state.equals(State.BREAKFAST_OUT))
         {
-            money -= 10;
-            foodNeed = Math.max(foodNeed - 6, 0);
-            funNeed = Math.max(funNeed - 7, 0);
+            boolean status = handleEntertainmentShopping(EntertainmentType.restaurant);
+            if (!status) {
+                System.out.println("Person " + name + "couldn't find a restaurant to shop");
+            }
 
         }
 
@@ -206,20 +207,24 @@ public class Person {
         }
         else if (state.equals(State.DINNER_OUT))
         {
-            money -= 10;
-            foodNeed = Math.max(foodNeed - 6,  0);
-            funNeed = Math.max(funNeed - 7, 0);
+//            money -= 10;
+//            foodNeed = Math.max(foodNeed - 6,  0);
+//            funNeed = Math.max(funNeed - 7, 0);
+            boolean status = handleEntertainmentShopping(EntertainmentType.restaurant);
+            if (!status) {
+                System.out.println("Person " + name + "couldn't find a restaurant to shop");
+            }
 
         }
         else if (state.equals(State.SHOP))
         {
-            // TODO: Use real GroceryStore to reduce money and add food supply
-
-//            money -= 5;
-//            residence.addFood(1);
-            boolean status = handleEntertainmentShopping();
+            /* Pick random type of restaurant */
+            Random rand = new Random();
+            EntertainmentType type = EntertainmentType.values()[rand.nextInt(EntertainmentType.values().length)];  //just some enum foolery
+            /* see if any shops of that type are available and go there.  If status is true, they found somewhere to go */
+            boolean status = handleEntertainmentShopping(type);
             if (!status) {
-                System.out.println("Person " + name + "couldn't find a place to shop");
+                System.out.println("Person " + name + "couldn't find a " + type + " place to shop");
             }
 
         }
@@ -296,13 +301,13 @@ public class Person {
 
     // TODO: remember to call update on all the entertainment places once every 24 hours
     /* Handles shopping.  Returns true if the person finds a place to shop at. */
-    public boolean handleEntertainmentShopping() {
+    public boolean handleEntertainmentShopping(EntertainmentType type) {
         ArrayList<Entertainment> funPlaces = this.getMap().getEntertainmentPlaces();
 
         /* A store is affordable if its cost is one tenth the total money a person has */
         ArrayList<Entertainment> affordablePlaces = new ArrayList<Entertainment>();
         for (Entertainment place: funPlaces) {
-            if (place.getPrice() < money / 10) {
+            if (place.getEntertainmentType() == type && place.getPrice() < money / 10) {
                 affordablePlaces.add(place);
             }
         }
