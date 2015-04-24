@@ -1,4 +1,4 @@
-import java.io.IOException;
+ import java.io.IOException;
 import java.util.Random;
 
 /**
@@ -18,7 +18,8 @@ public class Residence extends MapConstituent {
     private int foodSupply;
 
 	/* Constructor in which the attributes are randomely generated */
-	public Residence (Position pos) {
+    // Businesses are used to calculate the worth of this residence
+	public Residence (Position pos, Business[] businesses) {
 		/* Initialize age to zero and the position to the one passed in */
 		age = 0;
 		this.pos = pos;
@@ -29,7 +30,8 @@ public class Residence extends MapConstituent {
 		/* Calculate the worth of a house based on the promixity to high quality buildings 
 		and the actual quality of the house. The quality is divided by five so that the house 
 		house gaines value if nicer than five, and loses if less than*/
-		worth = (quality / 5);
+		int locationMultiplier = getLocationFactor(businesses);
+		worth = (locationMultiplier * quality) / 5;
 
 		/* assume no money is put down */
 		morgageLeft = worth;
@@ -46,6 +48,16 @@ public class Residence extends MapConstituent {
 		return false;}
 	public void expand() {}
 	public void contract() {}
+	
+	private int getLocationFactor(Business[] businesses) {
+		int locationSum = 0;
+		for (Business b: businesses) {
+			Position anotherPos = b.getPos();
+			int distance = this.pos.manhattanDistanceFrom(anotherPos);
+			locationSum += b.getNetWorth() / distance;
+		}
+		return locationSum;
+	}
 
 	public void calculateBasicNeedsScore() {
 		/* Residences don't provide fun or food */
@@ -102,5 +114,13 @@ public class Residence extends MapConstituent {
 	
 	public void useFood(int amount) {
 		foodSupply -= amount;
+	}
+	
+	public int getWorth() {
+		return worth;
+	}
+	
+	public int getRent() {
+		return worth/12;
 	}
 }

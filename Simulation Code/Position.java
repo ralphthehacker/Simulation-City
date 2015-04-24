@@ -25,6 +25,10 @@ public class Position {
 	public int getY() {
 		return y;
 	}
+	
+	public int manhattanDistanceFrom(Position pos1) {
+		return Math.abs(x - pos1.x) + Math.abs(y - pos1.y);
+	}
 
 	@Override
 	public boolean equals(Object o) {

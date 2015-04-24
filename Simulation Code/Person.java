@@ -43,6 +43,10 @@ public class Person {
     private Residence residence;
     private Position position;
     private Map map;
+    
+    // This variable is updated every day. If the person cannot afford to pay rent, he is
+    // kicked out.
+    private boolean isKickedOutOfHome;
 
     /* Keeps track of the last five days (100 total hours) of a person's 3 basic needs*/
     private ArrayList<Integer> healthStatus = new ArrayList<Integer>(100);
@@ -57,6 +61,9 @@ public class Person {
 
         /* Generate a random amount of money */
         p.money = (int) (300 * random.nextDouble());
+        
+        // Start the simulation with all people sleeping in their homes
+        p.isKickedOutOfHome = false;
 
         return p;
     }
@@ -160,8 +167,14 @@ public class Person {
 
         if (state.equals(State.SLEEP))
         {
-            shelterNeed = Math.max(shelterNeed - 2, 0);
-            funNeed = Math.max(funNeed - 1, 0); // Used to cancel increment in person.update()
+        	if (isKickedOutOfHome) {
+        		// Sleeping outside is not as comfortable
+        		shelterNeed = Math.max(shelterNeed - 1, 0);
+        		funNeed = Math.max(funNeed - 1, 0);
+        	} else {
+        		shelterNeed = Math.max(shelterNeed - 2, 0);
+                funNeed = Math.max(funNeed - 1, 0); // Used to cancel increment in person.update()
+        	}
         }
 
         else if (state.equals(State.BREAKFAST_HOME))
@@ -599,6 +612,7 @@ public class Person {
                 .append("Shelter Need: " + shelterNeed + "\n")
                 .append("Fun Need: " + funNeed + "\n")
                 .append("Working at: " + workplace + "\n")
+                .append("Rent: $" + residence.getRent() + "\n")
                 .toString();
     }
 
@@ -709,4 +723,13 @@ public class Person {
     public void setName(String name) {
         this.name = name;
     }
+
+	public void payRent() {
+		if (money >= residence.getRent()) {
+			money -= residence.getRent();
+			isKickedOutOfHome = false;
+		} else {
+			isKickedOutOfHome = true;
+		}
+	}
 }

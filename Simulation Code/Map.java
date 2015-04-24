@@ -41,18 +41,14 @@ public class Map {
         population = new ArrayList<Person>(numPopulation);
         createGroceriesAndEntertainment(numPopulation * 10);
 
-        //TODO: WTF's with that final boolean? Make people have a field called dead or alive
-
-
-
-		/*Creates list of random residences */
-        for (int i = 0; i < numPopulation; i++) {
-            residences[i] = new Residence(generateRandomPosition());
-        }
-
 		/* Creates list of random businesses */
         for (int i = 0; i < businesses.length; i++) {
             businesses[i] = new Business(generateRandomPosition());
+        }
+        
+        /*Creates list of random residences */
+        for (int i = 0; i < numPopulation; i++) {
+            residences[i] = new Residence(generateRandomPosition(), businesses);
         }
 
         //Now instantiate the GlassDoor
@@ -85,10 +81,11 @@ public class Map {
 
 	/* Update the map with time */
 	public void update(int time) throws IOException {
-		// At the beginning of every day, update businesses
+		// At the beginning of every day, update businesses, and let people pay rent
 		if (time == 0) {
 			updateBusinesses();
             updateEntertainmentPlaces();
+            payRents();
 		}
 		
 		// Every hour, update the population
@@ -109,6 +106,12 @@ public class Map {
         for (Entertainment place : entertainmentPlaces) {
             place.update();
         }
+    }
+    
+    private void payRents() {
+    	for (Person person : population) {
+    		person.payRent();
+    	}
     }
 
 
@@ -190,6 +193,12 @@ public class Map {
 			System.out.println(deadPeople.size() +
 					(deadPeople.size() == 1 ? " person" : " people") +
 					" died!");
+			
+			// Print people needs to know why they died
+//			for (Person p : deadPeople) {
+//				System.out.println(p);
+//				
+//			}
 		}
 	}
 
@@ -201,11 +210,12 @@ public class Map {
     public void visualizeWorld()
     {
 
-        for(Person p : population)
-        {
-            //System.out.println(p) for full info
-            System.out.println(p.getName() + " is " + p.getState() + " and has " + p.getMoney() + " dollars");
-        }
+//        for(Person p : population)
+//        {
+//            //System.out.println(p) for full info
+//            System.out.println(p.getName() + " is " + p.getState() + " and has " + p.getMoney() + " dollars");
+//        }
+    	printPeopleStats();
         //Why an array why just why aaaaaack
         for (int i = 0 ; i < this.businesses.length ; i++ )
         {
