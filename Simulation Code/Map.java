@@ -149,9 +149,6 @@ public class Map {
             population.remove(person);//Remove a people from life
 
         }
-        printWhoDied();
-        printDeathToll();
-
     }
 
     /* Allows a person to add children to the map */
@@ -190,15 +187,13 @@ public class Map {
     }
 	public void printDeathToll() {
 		if (deadPeople.size() > 0) {
-			System.out.println(deadPeople.size() +
-					(deadPeople.size() == 1 ? " person" : " people") +
-					" died!");
-			
-			// Print people needs to know why they died
-//			for (Person p : deadPeople) {
-//				System.out.println(p);
-//				
-//			}
+			StringBuilder names = new StringBuilder();
+			String delimiter = "";
+			for (Person p : deadPeople) {
+				names.append(delimiter).append(p.getName());
+				delimiter = ", ";
+			}
+			System.out.println(names.toString() + " died!");
 		}
 	}
 
