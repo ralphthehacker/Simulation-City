@@ -419,22 +419,7 @@ public class Person {
 
     /* Calculate the overall need of the person, weighting dire needs more */
     private int healthScore() {
-        double overallScore = 0;
-        /* Overly complicated method to calculate needs.  I commented it out in case we want to reuse it in some way */
-//        double foodMultiplier, funMultiplier, shelterMultiplier;
-//
-//        /* Calculate Multipliers based on necessity */
-//        foodMultiplier = setMultiplier(foodNeed);
-//        funMultiplier = setMultiplier(funNeed);
-//        shelterMultiplier = setMultiplier(shelterNeed);
-//
-//        /* Calculate the overall score, weighted by how bad their needs */
-//        overallScore = ((foodNeed * foodMultiplier + funNeed * funMultiplier + shelterNeed*shelterMultiplier));
-//        overallScore /= (foodMultiplier + funMultiplier + shelterMultiplier);
-//
-//        /* the score is on a scale of 1 to 10, where a lower score means a healthier person*/
-//        return (int) overallScore;
-        return foodNeed;
+        return foodNeed + shelterNeed/3 + funNeed/4;
     }
 
     /* Helper method which scales basic need scores appropriately */
@@ -458,10 +443,11 @@ public class Person {
             for (Integer healthPerDay : healthStatus) {
                 overallHealth += healthPerDay;
             }
+            
             overallHealth /= healthStatus.size();
 
             /* If the person consistently has an average of 8 or more, they die.  The method returns true */
-            int cutoff = 8;
+            int cutoff = 12;
             if (overallHealth >= cutoff) {
                 return DEAD;
             }
