@@ -593,7 +593,7 @@ public class Person {
         return new StringBuilder()
                 .append("Name: " + name + "\n")
                 .append("State: " + state + "\n")
-                .append("Money: " + money + "\n")
+                .append("Money: $" + money + "\n")
                 .append("Food Need: " + foodNeed + "\n")
                 .append("Shelter Need: " + shelterNeed + "\n")
                 .append("Fun Need: " + funNeed + "\n")
