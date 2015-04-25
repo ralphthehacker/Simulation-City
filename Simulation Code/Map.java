@@ -246,6 +246,18 @@ public class Map {
         return;
 
     }
+    
+    public void printAverageMoney() {
+    	double average = 0;
+    	
+    	for (Person p : population) {
+    		average += p.getMoney();
+    	}
+    	
+    	average /= population.size();
+    	
+    	System.out.printf("\nAverage money: $%.2f\n\n", average);
+    }
 
 
     public Residence[] getResidences() {

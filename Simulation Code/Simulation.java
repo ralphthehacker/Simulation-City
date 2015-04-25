@@ -11,9 +11,9 @@ public class Simulation {
 	public static final int DAILY = 1;
 
 	public static void main(String[] args) throws IOException {
-		int totalTimesteps = 100, time = 0;
+		int totalTimesteps = 24*30, time = 0;
 		// Number of people in the simulation
-		int nPeople = 7;
+		int nPeople = 50;
 		// The interval used to print the statistics.
 		int statsInterval = HOURLY;
 		// Whether to report death or birth during updates
@@ -75,6 +75,9 @@ public class Simulation {
             System.out.println("Time = " + time);
             System.out.println("---------");
             map.visualizeWorld();
+            if (time == 0) {
+            	map.printAverageMoney();
+            }
 
             //Test case
             int count = 0;
