@@ -200,7 +200,7 @@ public class Business extends MapConstituent {
 		double productivityOfTheDay = calculateProductivity();
 
 		/* If we already have a full month of growth history */
-		if (productHistory.size() == 30) {
+		if (productHistory.size() == 10) {
 			/* Decide on what to do: grow, contract, or do nothing. 
 			DecideFuture returns false if the company shuts down; true otherwise*/
             companyStatus = decideFuture();
@@ -263,7 +263,7 @@ public class Business extends MapConstituent {
             }
 
             /* Check if all were contractions (sorry for the ugly code) */
-            if (trend == -5) {
+            if (trend <= -3) {
                 shutdownCompany();
                 return false;
             }
