@@ -101,6 +101,10 @@ public class Simulation {
 			if (reportDeath) {
 				map.printDeathToll();
 			}
+
+			if (i == (24*30 - 1)) {
+				map.printBusinessGrowthOverTime();
+			}
 			
 			// Increment time. If time is midnight, set time to 0
 			time = time == 23 ? 0 : time+1;

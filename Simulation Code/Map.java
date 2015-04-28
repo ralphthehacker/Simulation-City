@@ -22,6 +22,7 @@ public class Map {
 	private ArrayList<Entertainment> entertainmentPlaces;
     private ArrayList<GroceryStore> groceries;
 	private ArrayList<Person> population;
+    private ArrayList<Integer> businessesGrowthOverTime;
 	// People who died in the current timestep. Updated on update().
 	ArrayList<Person> deadPeople = new ArrayList<Person>();
 
@@ -40,6 +41,7 @@ public class Map {
         businesses = new Business[numPopulation];
         population = new ArrayList<Person>(numPopulation);
         createGroceriesAndEntertainment(numPopulation * 10);
+        businessesGrowthOverTime = new ArrayList<Integer>();
 
 		/* Creates list of random businesses */
         for (int i = 0; i < businesses.length; i++) {
@@ -86,6 +88,7 @@ public class Map {
 			updateBusinesses();
             updateEntertainmentPlaces();
             payRents();
+            updateBusinessGrowth();
 		}
 		
 		// Every hour, update the population
@@ -145,7 +148,6 @@ public class Map {
             if (null!=person.getWorkplace()) {
                 person.getWorkplace().handleDeath(person);//Remove person from her former job
             }
-            person.getResidence().handleDeath();// Remove person from her former house
             population.remove(person);//Remove a people from life
 
         }
@@ -257,6 +259,18 @@ public class Map {
     	average /= population.size();
     	
     	System.out.printf("\nAverage money: $%.2f\n\n", average);
+    }
+
+    private void updateBusinessGrowth() {
+        int overallSum = 0;
+        for (Business business : businesses) {
+            overallSum += business.getNetWorth();
+        }
+        businessesGrowthOverTime.add(overallSum);
+    }
+
+    public void printBusinessGrowthOverTime() {
+        System.out.println(businessesGrowthOverTime.toString());
     }
 
 
