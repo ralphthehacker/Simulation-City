@@ -70,6 +70,11 @@ public class GroceryStore extends MapConstituent {
     {
         if (null == person) {throw new IllegalArgumentException("Null buyer");}
 
+        if(this.getQuantity() < amount_necessary)
+        {
+            this.setQuantity(1000);//Refills stock
+        }
+        
         //Get a person's house
         Residence house = person.getResidence();
 
