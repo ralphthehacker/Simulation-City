@@ -22,7 +22,7 @@ public class Person {
     public static final boolean DEAD = true;
     public static final boolean ALIVE = false;
     /* These needs are on a 1 to 10 scale, with 10 being the most dire need */
-    private int foodNeed, shelterNeed, funNeed;
+    public int foodNeed, shelterNeed, funNeed;
     private int money;
     private int work_hours;//TODO: add this up into the contentment equation
     private int stateTimeLock; // This variable represents the number of clock cycles that a certain agent is locked to after entering it.
@@ -93,6 +93,11 @@ public class Person {
         shelterNeed = 1;
         funNeed = 1;
 
+
+        if(this.shelterNeed == 10)
+        {
+            int a = 0;
+        }
         /* find place of work by iterating through all workplaces.
         Ultimately chooses based on amount of money and type of work */
         this.setWorkplace(this.getMap().getGlassdoor().getAJob(this));// Makes this person look for a job among the available jobs
@@ -126,6 +131,10 @@ public class Person {
         //TODO: This is bugging, handle duplicates
 
 
+        if(shelterNeed >= 10)
+        {
+           int a = 0;
+        }
         //Determines a person's current state and updates her attributes depending on the state
         handleStateUpdates();
 
@@ -138,42 +147,41 @@ public class Person {
     }
 
     // Makes a person browse prospective jobs on glassdoor
-    public void lookForJobs()
-    {
+    public void lookForJobs() {
         Business newJob = this.getMap().getGlassdoor().getAJob(this);
 
+        if(null !=newJob){
         //If this person got a better job, quit the past job
-        if(newJob != this.getWorkplace() && newJob != null && this.getWorkplace() != null)
-        {
+        if (!(newJob.equals(this.getWorkplace())) && newJob != null && this.getWorkplace() != null) {
             this.getWorkplace().leaveCompany(this);
             System.out.println(this.getName() + " has left his job");
         }
         this.setWorkplace(newJob);
     }
+    }
 
     //Updates a person's attributes based on her state
     public void handleStateUpdates()
     {
-        if(this.isLookingForJobs())
-            if (!this.getState().equals(State.SLEEP))
-            {
+        if(this.isLookingForJobs()) {
+            if (!this.getState().equals(State.SLEEP)) {
                 //If a person is unemployed or unhappy with her job, she can look for a new job
-                if(this.isLookingForJobs())
-                {
+                if (this.isLookingForJobs()) {
                     this.lookForJobs();
                 }
             }
+        }
 
 
         if (state.equals(State.SLEEP))
         {
         	if (isKickedOutOfHome) {
         		// Sleeping outside is not as comfortable
-        		shelterNeed = Math.max(shelterNeed - 1, 0);
-        		funNeed = Math.max(funNeed - 1, 0);
+        		this.shelterNeed = Math.max(this.shelterNeed - 1, 0);
+        		this.funNeed = Math.max(this.funNeed - 1, 0);
         	} else {
-        		shelterNeed = Math.max(shelterNeed - 2, 0);
-                funNeed = Math.max(funNeed - 1, 0); // Used to cancel increment in person.update()
+        		this.shelterNeed = Math.max(this.shelterNeed - 2, 0);
+                this.funNeed = Math.max(this.funNeed - 1, 0); // Used to cancel increment in person.update()
         	}
         }
 
@@ -340,6 +348,7 @@ public class Person {
          /* Pick a place and shop there */
         if (affordablePlaces.size() > 0) {
             return pickEntertainmentPlace(affordablePlaces);
+        } else {System.out.println("This guy couldn't find a place to eat");
         }
         return false;
     }
@@ -362,9 +371,9 @@ public class Person {
             placeToShop.visit();
                 /* This is the format of the basic needs array: {foodScore, funScore, shelterScore} */
             int[] basicNeedsScore = placeToShop.getBasicNeedsScores();
-            foodNeed = Math.max(foodNeed - basicNeedsScore[0]/2, 0);
-            funNeed = Math.max(funNeed - basicNeedsScore[1]/2, 0);
-            shelterNeed = Math.max(shelterNeed - basicNeedsScore[2]/2, 0);
+            foodNeed = Math.max(foodNeed - basicNeedsScore[0], 0);
+            funNeed = Math.max(funNeed - basicNeedsScore[1], 0);
+            shelterNeed = Math.max(shelterNeed - basicNeedsScore[2], 0);
             money -= placeToShop.getPrice();
             keepNeedsOn1to10Scale();
             return true;
@@ -447,14 +456,14 @@ public class Person {
             overallHealth /= healthStatus.size();
 
             /* If the person consistently has an average of 8 or more, they die.  The method returns true */
-            int cutoff = 12;
+            int cutoff = 15;
             if (overallHealth >= cutoff) {
                 return DEAD;
             }
 
             /* The person can also die of old age.  Their chance is linearly related to their age. 10000 is just a factor to use */
             Random rand = new Random();
-            if (rand.nextInt(10000) < age) {
+            if (rand.nextInt(30000) < age) {
                 return DEAD;
             }
         }
@@ -599,6 +608,7 @@ public class Person {
                 .append("Fun Need: " + funNeed + "\n")
                 .append("Working at: " + workplace + "\n")
                 .append("Rent: $" + residence.getRent() + "\n")
+                .append("Residence: " + this.getResidence())
                 .toString();
     }
 
@@ -718,4 +728,6 @@ public class Person {
 			isKickedOutOfHome = true;
 		}
 	}
+
+
 }

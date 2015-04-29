@@ -109,6 +109,6 @@ public class Residence extends MapConstituent {
 	}
 	
 	public int getRent() {
-		return worth/12;
+		return worth/200;
 	}
 }

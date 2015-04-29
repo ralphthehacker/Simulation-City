@@ -51,7 +51,7 @@ public class GlassdoorDotCom
         }
 
         //If a business is interested in this person, make it hire her
-        if (null != bestBusiness && (!bestBusiness.getEmployeeList().contains(p)))
+        if (null != bestBusiness && (!(bestBusiness.getEmployeeList().contains(p))))
         {
             System.out.println(p.getName() + " just got a job at " + bestBusiness);
             offerHire(bestBusiness, p);

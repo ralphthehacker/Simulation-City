@@ -38,7 +38,7 @@ public class Map {
     public Map(int numPopulation) throws IOException {
         //Creates houses, business, people and groceries/entertainment services
         residences = new Residence[numPopulation];
-        businesses = new Business[numPopulation];
+        businesses = new Business[numPopulation/5];
         population = new ArrayList<Person>(numPopulation);
         createGroceriesAndEntertainment(numPopulation * 10);
         businessesGrowthOverTime = new ArrayList<Integer>();
@@ -124,10 +124,15 @@ public class Map {
 		// Every hour, update persons
         //TODO: Cover edge cases: Remove people who died from their jobs and possessions
         for (int i = 0; i < population.size(); i++) {
+            if(population.get(i).shelterNeed >= 10)
+            {
+                int a = 10;
+            }
         	boolean status = population.get(i).update(time);
 
             if (status == Person.DEAD) //If  a person is dead, add it to the list of casualties
             {
+                int a;
                 deadPeople.add(population.get(i));
 
             }
