@@ -8,37 +8,37 @@ import java.util.Random;
 
 /**
  * This class represents the overall map
- * 
+ *
  * @author Lawrence Moore
  *
  */
 public class Map {
-	/* A map contains a 2-D array of all the map consituents */
-	public static final int DEFAULT_STARTING_POPULATION = 100;
+    /* A map contains a 2-D array of all the map consituents */
+    public static final int DEFAULT_STARTING_POPULATION = 100;
     public static final int SIZE_OF_GRID = DEFAULT_STARTING_POPULATION * 5;
-	private Residence[] residences;
-	private Business[] businesses;
+    private Residence[] residences;
+    private Business[] businesses;
     private GlassdoorDotCom glassdoor;
-	private ArrayList<Entertainment> entertainmentPlaces;
+    private ArrayList<Entertainment> entertainmentPlaces;
     private ArrayList<GroceryStore> groceries;
-	private ArrayList<Person> population;
+    private ArrayList<Person> population;
     private ArrayList<Integer> businessesGrowthOverTime;
-	// People who died in the current timestep. Updated on update().
-	ArrayList<Person> deadPeople = new ArrayList<Person>();
+    // People who died in the current timestep. Updated on update().
+    ArrayList<Person> deadPeople = new ArrayList<Person>();
 
     /* A hashmap of the positions inhabited.  True if the position is inhabited; false otherwise */
     HashMap<Position, Boolean> positionsInhabited = new HashMap<Position, Boolean>();
 
 
     /*TO DO: generate different aspects of the map randomely */
-	public Map() throws IOException {
+    public Map() throws IOException {
         this(DEFAULT_STARTING_POPULATION);
-	}
+    }
 
     public Map(int numPopulation) throws IOException {
         //Creates houses, business, people and groceries/entertainment services
         residences = new Residence[numPopulation];
-        businesses = new Business[numPopulation/5];
+        businesses = new Business[numPopulation];
         population = new ArrayList<Person>(numPopulation);
         createGroceriesAndEntertainment(numPopulation * 10);
         businessesGrowthOverTime = new ArrayList<Integer>();
@@ -81,66 +81,61 @@ public class Map {
         return randomPosition;
     }
 
-	/* Update the map with time */
-	public void update(int time) throws IOException {
-		// At the beginning of every day, update businesses, and let people pay rent
-		if (time == 0) {
-			updateBusinesses();
+    /* Update the map with time */
+    public void update(int time) throws IOException {
+        // At the beginning of every day, update businesses, and let people pay rent
+        if (time == 0) {
+            updateBusinesses();
             updateEntertainmentPlaces();
             payRents();
             updateBusinessGrowth();
-		}
-		
-		// Every hour, update the population
-		updatePeople(time);
+        }
+
+        // Every hour, update the population
+        updatePeople(time);
         //And the glassdoor
         updateGlassDoor();
 
-	}
+    }
 
-	//TODO: Businesses shouldn't be static! Allow them to hire people and fire based on revenue
-	private void updateBusinesses() {
-		for (Business b : businesses) {
-			b.update();
-		}
-	}
+    //TODO: Businesses shouldn't be static! Allow them to hire people and fire based on revenue
+    private void updateBusinesses() {
+        for (Business b : businesses) {
+            b.update();
+        }
+    }
 
     private void updateEntertainmentPlaces() {
         for (Entertainment place : entertainmentPlaces) {
             place.update();
         }
     }
-    
+
     private void payRents() {
-    	for (Person person : population) {
-    		person.payRent();
-    	}
+        for (Person person : population) {
+            person.payRent();
+        }
     }
 
 
-	private void updatePeople(int time) throws IOException {
-		deadPeople.clear();
+    private void updatePeople(int time) throws IOException {
+        deadPeople.clear();
 
-		// Every hour, update persons
+        // Every hour, update persons
         //TODO: Cover edge cases: Remove people who died from their jobs and possessions
         for (int i = 0; i < population.size(); i++) {
-            if(population.get(i).shelterNeed >= 10)
-            {
-                int a = 10;
-            }
-        	boolean status = population.get(i).update(time);
+            boolean status = population.get(i).update(time);
 
             if (status == Person.DEAD) //If  a person is dead, add it to the list of casualties
             {
-                int a;
                 deadPeople.add(population.get(i));
 
             }
         }
-        
+
         // Remove the dead people from the population
         handleDeath(deadPeople);
-	}
+    }
 
 
     //*
@@ -169,18 +164,18 @@ public class Map {
     }
 
 
-	// Print the stats of the entire population
-	public void printPeopleStats() {
+    // Print the stats of the entire population
+    public void printPeopleStats() {
 
         System.out.println("POPULATION STATUS:");
-		for (int i = 0; i < population.size(); i++) {
-			System.out.println(population.get(i));
-			System.out.println();
-		}
-	}
+        for (int i = 0; i < population.size(); i++) {
+            System.out.println(population.get(i));
+            System.out.println();
+        }
+    }
 
     //Todo add time later
-	public void printWhoDied()
+    public void printWhoDied()
     {
         if (deadPeople.size() > 0)
         {
@@ -192,17 +187,17 @@ public class Map {
         }
 
     }
-	public void printDeathToll() {
-		if (deadPeople.size() > 0) {
-			StringBuilder names = new StringBuilder();
-			String delimiter = "";
-			for (Person p : deadPeople) {
-				names.append(delimiter).append(p.getName());
-				delimiter = ", ";
-			}
-			System.out.println(names.toString() + " died!");
-		}
-	}
+    public void printDeathToll() {
+        if (deadPeople.size() > 0) {
+            StringBuilder names = new StringBuilder();
+            String delimiter = "";
+            for (Person p : deadPeople) {
+                names.append(delimiter).append(p.getName());
+                delimiter = ", ";
+            }
+            System.out.println(names.toString() + " died!");
+        }
+    }
 
     public void updateGlassDoor()
     {
@@ -217,7 +212,7 @@ public class Map {
 //            //System.out.println(p) for full info
 //            System.out.println(p.getName() + " is " + p.getState() + " and has " + p.getMoney() + " dollars");
 //        }
-    	printPeopleStats();
+        printPeopleStats();
         //Why an array why just why aaaaaack
         for (int i = 0 ; i < this.businesses.length ; i++ )
         {
@@ -253,17 +248,17 @@ public class Map {
         return;
 
     }
-    
+
     public void printAverageMoney() {
-    	double average = 0;
-    	
-    	for (Person p : population) {
-    		average += p.getMoney();
-    	}
-    	
-    	average /= population.size();
-    	
-    	System.out.printf("\nAverage money: $%.2f\n\n", average);
+        double average = 0;
+
+        for (Person p : population) {
+            average += p.getMoney();
+        }
+
+        average /= population.size();
+
+        System.out.printf("\nAverage money: $%.2f\n\n", average);
     }
 
     private void updateBusinessGrowth() {
@@ -272,6 +267,13 @@ public class Map {
             overallSum += business.getNetWorth();
         }
         businessesGrowthOverTime.add(overallSum);
+    }
+
+    public void printAmbitionVsMoney() {
+        for (Person person: population) {
+            System.out.print("( " + person.getPersonality().getAmbition() + ", "+ person.getMoney() + "),  ");
+        }
+        System.out.println();
     }
 
     public void printBusinessGrowthOverTime() {
