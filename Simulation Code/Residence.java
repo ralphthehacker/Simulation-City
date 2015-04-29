@@ -111,4 +111,8 @@ public class Residence extends MapConstituent {
 	public int getRent() {
 		return worth/200;
 	}
+
+    public void removeOwner() {
+        owner = null;
+    }
 }

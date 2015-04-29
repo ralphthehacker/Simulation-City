@@ -179,10 +179,14 @@ public class Person {
         		// Sleeping outside is not as comfortable
         		this.shelterNeed = Math.max(this.shelterNeed - 1, 0);
         		this.funNeed = Math.max(this.funNeed - 1, 0);
+                this.foodNeed = Math.max(this.foodNeed - 1, 0);
+
         	} else {
         		this.shelterNeed = Math.max(this.shelterNeed - 2, 0);
                 this.funNeed = Math.max(this.funNeed - 1, 0); // Used to cancel increment in person.update()
-        	}
+                this.foodNeed = Math.max(this.foodNeed - 1, 0);
+
+            }
         }
 
         else if (state.equals(State.BREAKFAST_HOME))
@@ -414,10 +418,12 @@ public class Person {
             if (babyMakingTime()) {
                 hasChild = true;
                 childAge = 1;
+                System.out.println("Baby is born");
             }
 
-            if (hasChild && childAge >= 18) {
+            if (hasChild && childAge >= 5) {
                 map.addPerson();
+                System.out.println("Baby has come of age");
                 hasChild = false;
             } else if (hasChild) {
                 childAge++;
@@ -456,14 +462,14 @@ public class Person {
             overallHealth /= healthStatus.size();
 
             /* If the person consistently has an average of 8 or more, they die.  The method returns true */
-            int cutoff = 15;
+            int cutoff = 10;
             if (overallHealth >= cutoff) {
                 return DEAD;
             }
 
             /* The person can also die of old age.  Their chance is linearly related to their age. 10000 is just a factor to use */
             Random rand = new Random();
-            if (rand.nextInt(30000) < age) {
+            if (rand.nextInt(300000000) < age) {
                 return DEAD;
             }
         }
@@ -473,7 +479,7 @@ public class Person {
     /* Decides if the person wants to make a baby */
     public boolean babyMakingTime() {
         Random rand = new Random();
-        if (!hasChild && personality.getContentment() > 8 && rand.nextDouble() > .7) {
+        if (!hasChild && personality.getContentment() > 8 && rand.nextDouble() > .2) {
             return true;
         }
         return false;
@@ -729,5 +735,7 @@ public class Person {
 		}
 	}
 
-
+    public int getAge() {
+        return age;
+    }
 }

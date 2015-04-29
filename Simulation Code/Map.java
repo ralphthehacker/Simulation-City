@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Random;
 
+
 /**
  * This class represents the overall map
  *
@@ -15,7 +16,7 @@ import java.util.Random;
 public class Map {
     /* A map contains a 2-D array of all the map consituents */
     public static final int DEFAULT_STARTING_POPULATION = 100;
-    public static final int SIZE_OF_GRID = DEFAULT_STARTING_POPULATION * 5;
+    public static final int SIZE_OF_GRID = DEFAULT_STARTING_POPULATION * 30;
     private Residence[] residences;
     private Business[] businesses;
     private GlassdoorDotCom glassdoor;
@@ -37,9 +38,13 @@ public class Map {
 
     public Map(int numPopulation) throws IOException {
         //Creates houses, business, people and groceries/entertainment services
-        residences = new Residence[numPopulation];
-        businesses = new Business[numPopulation];
+        int numResidences = 3 * numPopulation;
+        int numBusinesses = numPopulation / 3;
+
+        residences = new Residence[numResidences];
+        businesses = new Business[numBusinesses];
         population = new ArrayList<Person>(numPopulation);
+
         createGroceriesAndEntertainment(numPopulation * 10);
         businessesGrowthOverTime = new ArrayList<Integer>();
 
@@ -49,7 +54,7 @@ public class Map {
         }
         
         /*Creates list of random residences */
-        for (int i = 0; i < numPopulation; i++) {
+        for (int i = 0; i < residences.length; i++) {
             residences[i] = new Residence(generateRandomPosition(), businesses);
         }
 
@@ -147,6 +152,7 @@ public class Map {
         {
             if (null!=person.getWorkplace()) {
                 person.getWorkplace().handleDeath(person);//Remove person from her former job
+                person.getResidence().removeOwner();
             }
             population.remove(person);//Remove a people from life
 
@@ -156,7 +162,19 @@ public class Map {
     /* Allows a person to add children to the map */
     public void addPerson() throws IOException {
         /* Incomplete, in that it always adds just the first house to the person.  update when residences is done */
-        population.add(Person.createRandomPerson(residences[1],businesses, this));
+        int cheapestHouseCost = 1000000000;
+        Residence bestHouse = null;
+        for (Residence residence: residences) {
+            if (residence != null && residence.getOwner() == null && residence.getRent() < cheapestHouseCost) {
+                cheapestHouseCost = residence.getRent();
+                bestHouse = residence;
+            }
+        }
+        if (bestHouse != null) {
+            population.add(Person.createRandomPerson(bestHouse,businesses, this));
+        } else {
+            System.out.println("A youth dies dies due to poor housing");
+        }
     }
 
     public int getNumberOfPeople() {
@@ -271,7 +289,7 @@ public class Map {
 
     public void printAmbitionVsMoney() {
         for (Person person: population) {
-            System.out.print("( " + person.getPersonality().getAmbition() + ", "+ person.getMoney() + "),  ");
+            System.out.print("( " + person.getPersonality().getAmbition() + ", "+ person.getPersonality().getSkill() + ", "+person.getMoney() + "),  ");
         }
         System.out.println();
     }

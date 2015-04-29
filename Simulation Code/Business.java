@@ -234,8 +234,8 @@ public class Business extends MapConstituent {
 			netProductivity += product;
 		}
 
-		int averageScoreToGrow = 8;
-		int averageScoreToContract = 5;
+		int averageScoreToGrow = 3;
+		int averageScoreToContract = 1;
 
 		/*As a reminder, the growth history represents the actions taken in the last five months
 		+1 means it expanded.  -1 means it contracted.  0 means it did nothing */

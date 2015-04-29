@@ -95,6 +95,11 @@ public class Simulation {
                 count = 0;
             }
 
+            for (Residence residence: map.getResidences()) {
+                if (residence != null && residence.getOwner() == null) {
+                    System.out.println("Empty house yo");
+                }
+            }
 
 			// Print death toll, if any
 			// TODO: Print death toll only on time%statsInterval
@@ -104,6 +109,8 @@ public class Simulation {
 
 			if (i == (24*30 - 1)) {
 				map.printBusinessGrowthOverTime();
+                map.printAmbitionVsMoney();
+                System.out.println(map.getPopulation().size());
 			}
 			
 			// Increment time. If time is midnight, set time to 0
