@@ -17,7 +17,6 @@ public class Simulation {
 		// The interval used to print the statistics.
 		int statsInterval = HOURLY;
 		// Whether to report death or birth during updates
-		// TODO: Implement report birth
 		boolean reportDeath = true, reportBirth = false;
 
 		// Parse command-line arguments
@@ -95,21 +94,21 @@ public class Simulation {
                 count = 0;
             }
 
-            for (Residence residence: map.getResidences()) {
-                if (residence != null && residence.getOwner() == null) {
-                    System.out.println("Empty house yo");
-                }
-            }
+//            for (Residence residence: map.getResidences()) {
+//                if (residence != null && residence.getOwner() == null) {
+//                    System.out.println("Empty house yo");
+//                }
+//            }
 
 			// Print death toll, if any
-			// TODO: Print death toll only on time%statsInterval
 			if (reportDeath) {
 				map.printDeathToll();
 			}
 
 			if (i == (24*30 - 1)) {
 				map.printBusinessGrowthOverTime();
-                map.printAmbitionVsMoney();
+//                map.printAmbitionVsMoney();
+                map.printBabyAndDeadNumList();
                 System.out.println(map.getPopulation().size());
 			}
 			

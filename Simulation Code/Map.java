@@ -24,6 +24,10 @@ public class Map {
     private ArrayList<GroceryStore> groceries;
     private ArrayList<Person> population;
     private ArrayList<Integer> businessesGrowthOverTime;
+    private ArrayList<Integer> numberOfDeadList;
+    private ArrayList<Integer> numberOfBabiesList;
+    private int numDead;
+    private int numBabies;
     // People who died in the current timestep. Updated on update().
     ArrayList<Person> deadPeople = new ArrayList<Person>();
 
@@ -40,6 +44,11 @@ public class Map {
         //Creates houses, business, people and groceries/entertainment services
         int numResidences = 3 * numPopulation;
         int numBusinesses = numPopulation / 3;
+        numBabies = 0;
+        numDead = 0;
+
+        numberOfBabiesList = new ArrayList<Integer>();
+        numberOfDeadList = new ArrayList<Integer>();
 
         residences = new Residence[numResidences];
         businesses = new Business[numBusinesses];
@@ -61,7 +70,6 @@ public class Map {
         //Now instantiate the GlassDoor
         glassdoor = new GlassdoorDotCom(this);
 
-        //TODO: Coupling error with glassdoor
 		/* Creates the individual population */
         for (int i = 0; i < numPopulation; i++) {
             population.add(i,Person.createRandomPerson(residences[i], businesses, this));
@@ -94,6 +102,7 @@ public class Map {
             updateEntertainmentPlaces();
             payRents();
             updateBusinessGrowth();
+            updateBabyAndDeadNumList();
         }
 
         // Every hour, update the population
@@ -103,7 +112,6 @@ public class Map {
 
     }
 
-    //TODO: Businesses shouldn't be static! Allow them to hire people and fire based on revenue
     private void updateBusinesses() {
         for (Business b : businesses) {
             b.update();
@@ -127,14 +135,13 @@ public class Map {
         deadPeople.clear();
 
         // Every hour, update persons
-        //TODO: Cover edge cases: Remove people who died from their jobs and possessions
         for (int i = 0; i < population.size(); i++) {
             boolean status = population.get(i).update(time);
 
             if (status == Person.DEAD) //If  a person is dead, add it to the list of casualties
             {
                 deadPeople.add(population.get(i));
-
+                numDead++;
             }
         }
 
@@ -172,6 +179,7 @@ public class Map {
         }
         if (bestHouse != null) {
             population.add(Person.createRandomPerson(bestHouse,businesses, this));
+            numBabies++;
         } else {
             System.out.println("A youth dies dies due to poor housing");
         }
@@ -192,7 +200,6 @@ public class Map {
         }
     }
 
-    //Todo add time later
     public void printWhoDied()
     {
         if (deadPeople.size() > 0)
@@ -298,6 +305,15 @@ public class Map {
         System.out.println(businessesGrowthOverTime.toString());
     }
 
+    private void updateBabyAndDeadNumList() {
+        numberOfBabiesList.add(numBabies);
+        numberOfDeadList.add(numDead);
+    }
+
+    public void printBabyAndDeadNumList() {
+        System.out.println("Number of dead: " + numberOfDeadList.toString());
+        System.out.println("Numer of babies: " + numberOfBabiesList.toString());
+    }
 
     public Residence[] getResidences() {
         return residences;

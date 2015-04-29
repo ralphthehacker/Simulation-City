@@ -24,7 +24,7 @@ public class Person {
     /* These needs are on a 1 to 10 scale, with 10 being the most dire need */
     public int foodNeed, shelterNeed, funNeed;
     private int money;
-    private int work_hours;//TODO: add this up into the contentment equation
+    private int work_hours;
     private int stateTimeLock; // This variable represents the number of clock cycles that a certain agent is locked to after entering it.
 
     private RandomNameGenerator rg;
@@ -79,10 +79,9 @@ public class Person {
         state = State.SLEEP;
         this.stateTimeLock = StateMachine.getLockTime(State.SLEEP,this);//A person starts free
         this.residence = residence;//Setting a person to own a house
-        this.residence.setOwner(this);//TODO:Make this more readable later
+        this.residence.setOwner(this);
         position = residence.getPosition();
         this.map = map;
-        //TODO: SWITCH THIS TO SYLLABLES WHEN PUSHING
         //rg = new RandomNameGenerator("/Users/ralphblanes/Documents/PROJECTS/City_Sim/final_proj/cx-4230-final-project/Simulation Code/syllables");
         rg = new RandomNameGenerator("syllables");
 
@@ -105,14 +104,12 @@ public class Person {
         {
             this.setWorkHours(this.getWorkplace().getMinimumWorkingHours());
         }
-        //TODO: Edge case = Perpetually Unemployed guy
     }
 
 
     // Update the person's needs and/or state
     // Returns Person.DEAD if person dies. Otherwise,
     // returns Person.ALIVE
-    //TODO: I don't really like to use this method to check death.I will write some proper method later
     public boolean update(int time) throws IOException {
 
         /* Increase age by one day.  Handle babies*/
@@ -126,10 +123,6 @@ public class Person {
         foodNeed = Math.min(foodNeed + 1, 10);
         shelterNeed = Math.min(shelterNeed + 1, 10);
         funNeed = Math.min(funNeed + 1, 10);
-
-        //TODO: Uncomment this to make individuals look for jobs and encapsulate it onto handleStateUpdate() when it works
-        //TODO: This is bugging, handle duplicates
-
 
         if(shelterNeed >= 10)
         {
@@ -318,7 +311,6 @@ public class Person {
     }
 
 
-    // TODO: remember to call update on all the entertainment places once every 24 hours
     /* Handles shopping.  Returns true if the person finds a place to shop at. */
     private boolean handleEntertainmentShopping() {
         ArrayList<Entertainment> funPlaces = this.getMap().getEntertainmentPlaces();
@@ -493,7 +485,6 @@ public class Person {
         int ambition = personality.getAmbition();
         int skill = personality.getSkill();
         int contentment = personality.getContentment();
-        //TODO: DETERMINE HOW PERSONALITY PARAMETERS RELATE TO THE MONEY IMPORTANCE. ERASE THIS WHEN DONE
         return (ambition);
     }
 
@@ -534,7 +525,6 @@ public class Person {
         }
     }
 
-    //TODO: Put this on the update method
     private void updateContentment() {
         double jobFactor;
         double homeFactor;

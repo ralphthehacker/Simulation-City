@@ -14,7 +14,7 @@ public class Residence extends MapConstituent {
 	Something not to forget is how this influences the contentment of a person*/
 	private final int INTEREST = 8;
 	private int morgageLeft, worth, quality;
-    private Person owner; //TODO: Implement feature
+    private Person owner;
     private int foodSupply;
 
 	/* Constructor in which the attributes are randomely generated */
